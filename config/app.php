@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'faker_locale' => 'en_PH',
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

@@ -12,4 +12,14 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./components/Example');
+//admin pages
+require('./pages/dashboard/Dashboard');
+require('./pages/residents/Residents');
+require('./pages/users/Users');
+require('./pages/map/Map');
+require('./pages/schedules/Schedules');
+require('./pages/events/Events');
+require('./pages/announcements/Announcements');
+require('./pages/feedbacks/Feedbacks');
+require('./pages/requests/Requests');
+require('./pages/reports/Reports');
