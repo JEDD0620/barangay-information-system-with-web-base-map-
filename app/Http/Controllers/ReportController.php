@@ -4,82 +4,93 @@ namespace App\Http\Controllers;
 
 use App\Report;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function getPendings(Request $req)
     {
-        //
+        $page = $req->get('page');
+        $perPage = $req->get('perPage');
+        $order = $req->get('order');
+        $sort = $req->get('sort');
+        $filter = $req->get('filter');
+
+        $reports = Report::where('status', 'pending')
+            ->leftJoin('residents', 'reports.resident_id', 'residents.id')
+            ->select(
+                'residents.f_name as resident_name',
+                'residents.address as resident_address',
+                'reports.*'
+            )
+            ->orderBy($sort, $order);
+
+        if (!!isset($filter)) {
+            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%')
+                ->orWhere('reports.type', 'LIKE', '%' . $filter . '%')
+                ->orWhere('reports.purpose', 'LIKE', '%' . $filter . '%');
+        }
+
+        return $reports->paginate($perPage, ['*'], 'page', $page);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getOnGoings(Request $req)
     {
-        //
+        $page = $req->get('page');
+        $perPage = $req->get('perPage');
+        $order = $req->get('order');
+        $sort = $req->get('sort');
+        $filter = $req->get('filter');
+
+        $reports = Report::where('status', 'ongoing')
+            ->leftJoin('residents', 'reports.resident_id', 'residents.id')
+            ->leftJoin('users', 'reports.staff_id', 'users.id')
+            ->select('residents.f_name as resident_name', 'residents.address as resident_address', 'users.f_name as staff_name', 'reports.*')
+            ->orderBy($sort, $order);
+
+        if (!!isset($filter)) {
+            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%')
+                ->orWhere('reports.type', 'LIKE', '%' . $filter . '%')
+                ->orWhere('reports.purpose', 'LIKE', '%' . $filter . '%');
+        }
+
+        return $reports->paginate($perPage, ['*'], 'page', $page);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function gedClosed(Request $req)
     {
-        //
+        $page = $req->get('page');
+        $perPage = $req->get('perPage');
+        $order = $req->get('order');
+        $sort = $req->get('sort');
+        $filter = $req->get('filter');
+
+        $reports = Report::where('status',  'closed')
+            ->leftJoin('residents', 'reports.resident_id', 'residents.id')
+            ->leftJoin('users', 'reports.staff_id', 'users.id')
+            ->select('residents.f_name as resident_name', 'residents.address as resident_address', 'users.f_name as staff_name', 'reports.*')
+            ->orderBy($sort, $order);
+
+        if (!!isset($filter)) {
+            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%')
+                ->orWhere('reports.type', 'LIKE', '%' . $filter . '%')
+                ->orWhere('reports.purpose', 'LIKE', '%' . $filter . '%');
+        }
+
+        return $reports->paginate($perPage, ['*'], 'page', $page);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Report  $report
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Report $report)
+    public function investigateReport($id)
     {
-        //
+        $staffID = Auth::id();
+        Report::find($id)->update(['status' => 'ongoing', 'staff_id' => $staffID]);
+        return true;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Report  $report
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Report $report)
+    public function closeReport($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Report  $report
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Report $report)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Report  $report
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Report $report)
-    {
-        //
+        $staffID = Auth::id();
+        Report::find($id)->update(['status' => 'closed', 'staff_id' => $staffID]);
+        return true;
     }
 }

@@ -1,33 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import ReactDOM from 'react-dom'
-import { Layout } from '../../layout/Layout'
 import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, Toast, Badge } from 'react-bootstrap'
 import Axios from 'axios'
-import { FillPaginate } from '../../elements/FillPaginate'
+import { FillPaginate } from '../../../elements/FillPaginate'
 import moment from 'moment'
-import { DeleteModal, CreateModal, EditModal, ViewModal } from './components/Modals'
+import { ViewClosedModal } from './Modals'
 
-const Events = () => {
-    const [events, setEvents] = useState();
+export const NotPendings = (toggle) => {
+    const [reports, setReports] = useState();
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
-    const [sort, setSort] = useState('posts.id');
+    const [sort, setSort] = useState('reports.id');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(1);
 
     //modals
-    const [createData, setCreateData] = useState(false);
-    const [editData, setEditData] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
     const [viewData, setViewData] = useState(false);
 
     //toast
     const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
-        getEvents()
-    }, [sort, order, perPage, page, filter])
+        getReports()
+    }, [sort, order, perPage, page, filter, toggle])
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
@@ -36,14 +31,14 @@ const Events = () => {
         return () => clearTimeout(delayDebounceFn)
     }, [term])
 
-    const getEvents = (dontNull) => {
+    const getReports = (dontNull) => {
         if (!!!dontNull) {
-            setEvents(null);
+            setReports(null);
         }
 
-        Axios.get(`/api/post/events?page=${page}&perPage=${perPage}&order=${order}&sort=${sort}&filter=${filter}`)
+        Axios.get(`/api/report/closed?page=${page}&perPage=${perPage}&order=${order}&sort=${sort}&filter=${filter}`)
             .then(res => {
-                setEvents(res.data)
+                setReports(res.data)
             })
             .catch(err => console.log(err))
     }
@@ -66,49 +61,11 @@ const Events = () => {
         setPage(1)
     }
 
-    const createEvent = (setModalLoading, data) => {
-        Axios.post(`/api/post`, data)
-            .then(res => {
-                setModalLoading(false);
-                setShowToast(`New Event Created!`);
-                setCreateData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
-            })
-            .catch(err => console.log(err))
-    }
-
-    const editEvent = (setModalLoading, data) => {
-        Axios.put(`/api/post`, data)
-            .then(res => {
-                setModalLoading(false);
-                setShowToast(`${data.f_name} Editted!`);
-                setEditData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
-            })
-            .catch(err => console.log(err))
-    }
-
-    const deleteEvent = (setModalLoading) => {
-        Axios.delete(`/api/post/${deleteData.id}`)
-            .then(res => {
-                setModalLoading(false);
-                setShowToast(`${deleteData.f_name} Deleted!`);
-                setDeleteData(false);
-                getEvents(true);
-            })
-            .catch(err => console.log(err))
-    }
-
     return (
-        <Layout>
-
-            <Row className='mb-3'>
+        <>
+            <Row className='mb-3 mt-5'>
                 <Col md={10}>
-                    <h2>Events <Badge variant="primary">{!!events ? events.total : 0}</Badge></h2>
+                    <h2>Closed Reports <Badge variant="primary">{!!reports ? reports.total : 0}</Badge></h2>
                 </Col>
                 <Col md={2} className='text-right'>
                     <Toast onClose={() => setShowToast(false)} show={!!showToast} delay={3000} autohide>
@@ -135,7 +92,7 @@ const Events = () => {
                         </Dropdown.Menu>
                     </Dropdown>
 
-                    <Button onClick={() => setCreateData(true)}>Create Event</Button>
+                    {/* <Button onClick={() => setCreateData(true)}>Create Report</Button> */}
 
                 </Col>
                 <Col md={3}>
@@ -148,66 +105,52 @@ const Events = () => {
 
             <Row>
                 <Col md={12}>
-                    {!!events ?
+                    {!!reports ?
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'posts.id')}>
+                                    <th onClick={changeSort.bind(this, 'reports.id')}>
                                         <span>ID</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'reports.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th onClick={changeSort.bind(this, 'posts.title')}>
-                                        <span>Title</span>
+                                    <th onClick={changeSort.bind(this, 'residents.f_name')}>
+                                        <span>Resident</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.title' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'residents.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'users.f_name')}>
-                                        <span>Author</span>
+                                        <span>Repondent</span>
                                         <span className="float-right">
                                             <i className={`fa fa-sort${!!sort && sort === 'users.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th onClick={changeSort.bind(this, 'posts.from_date')}>
+
+                                    <th onClick={changeSort.bind(this, 'reports.status')}>
                                         <span>Date</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.from_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'reports.status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th onClick={changeSort.bind(this, 'posts.from_time')}>
-                                        <span>Time</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.from_time' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'posts.updated_at')}>
-                                        <span>Updated</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
+
                                     <th>
                                         <span>Action</span>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {!!events && events.data.map((obj, i) => {
+                                {!!reports && reports.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
                                             <td>{obj.id}</td>
-                                            <td>{obj.title}</td>
-                                            <td>{obj.f_name}</td>
-                                            <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
-                                            <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
+                                            <td>{obj.resident_name}</td>
+                                            <td>{obj.staff_name}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
                                                 <ButtonGroup size='sm'>
                                                     <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
-                                                    <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
-                                                    <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
                                                 </ButtonGroup>
                                             </td>
                                         </tr>
@@ -223,19 +166,16 @@ const Events = () => {
 
             <Row>
                 <Col md={12}>
-                    {!!events && <FillPaginate data={events} setPage={setPage} page={page} />}
+                    {!!reports && reports.data.length > 0 ?
+                        <FillPaginate data={reports} setPage={setPage} page={page} />
+                        :
+                        "there's no closed reports yet ..."
+                    }
                 </Col>
             </Row>
 
-            <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteEvent} />
-            <CreateModal data={createData} setData={setCreateData} handleAction={createEvent} />
-            <ViewModal data={viewData} setData={setViewData} handleAction={setEditData} />
-            <EditModal data={editData} setData={setEditData} handleAction={editEvent} />
+            <ViewClosedModal data={viewData} setData={setViewData} />
 
-        </Layout>
+        </>
     );
-}
-
-if (document.querySelector('#events')) {
-    ReactDOM.render(<Events />, document.querySelector('#events'));
 }

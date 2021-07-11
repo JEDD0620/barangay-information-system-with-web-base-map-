@@ -1,14 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom';
-import { Layout } from '../../layout/Layout';
+import React, { useEffect, useState } from 'react'
+import ReactDOM from 'react-dom'
+import { Layout } from '../../layout/Layout'
+import { Pendings } from './components/Pendings'
+import { NotPendings } from './components/NotPendings'
 
 const Requests = () => {
+    const [toggle, setToggle] = useState(false);
 
     return (
         <Layout>
-            <div>
-                Request
-            </div>
+            <Pendings setToggle={setToggle} toggle={toggle} />
+            <NotPendings toggle={toggle} />
         </Layout>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Layout } from '../../layout/Layout'
-import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, Toast, ToastContainer } from 'react-bootstrap'
+import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, Toast, Badge } from 'react-bootstrap'
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
@@ -103,27 +103,13 @@ const Residents = () => {
             .catch(err => console.log(err))
     }
 
-    const assignResident = (setModalLoading) => {
-        Axios.put(`/api/resident/assign`, { id: assignData.id })
-            .then(res => {
-                setModalLoading(false);
-                if (res.data) {
-                    setShowToast(`${assignData.f_name} set as staff!`);
-                } else {
-                    setShowToast(`${assignData.f_name} unset as staff!`);
-                }
-                setAssignData(false);
-                getResidents(true);
-            })
-            .catch(err => console.log(err))
-    }
 
     return (
         <Layout>
 
             <Row className='mb-3'>
                 <Col md={10}>
-                    <h2>Residents</h2>
+                    <h2>Residents <Badge variant="primary">{!!residents ? residents.total : 0}</Badge></h2>
                 </Col>
                 <Col md={2} className='text-right'>
                     <Toast onClose={() => setShowToast(false)} show={!!showToast} delay={3000} autohide>
@@ -231,14 +217,12 @@ const Residents = () => {
                                             <td>{obj.gender}</td>
                                             <td>{obj.address}</td>
                                             <td>{obj.contact_no}</td>
-                                            <td>{moment(obj.updated_at).calendar()}</td>
+                                            <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
-                                                {obj.role != 'Admin' &&
-                                                    <ButtonGroup size='sm'>
-                                                        <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
-                                                        <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
-                                                    </ButtonGroup>
-                                                }
+                                                <ButtonGroup size='sm'>
+                                                    <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
+                                                    <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
+                                                </ButtonGroup>
                                             </td>
                                         </tr>
                                     )
@@ -258,7 +242,6 @@ const Residents = () => {
             </Row>
 
             <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteResident} />
-            <AssignModal data={assignData} setData={setAssignData} handleAction={assignResident} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createResident} />
             <EditModal data={editData} setData={setEditData} handleAction={editResident} />
 

@@ -17,13 +17,13 @@ class CreateResidentsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->references('id')->on('users');
             $table->foreignId('owner_id')->nullable()->references('id')->on('users');
-            $table->string('role')->default('Resident');
             $table->string('f_name');
             $table->date('b_date');
-            $table->string('job')->nullable();
             $table->string('gender');
             $table->string('address');
             $table->string('contact_no');
+            $table->string('job')->nullable();
+            $table->string('role')->default('Resident');
             $table->timestamps();
         });
     }

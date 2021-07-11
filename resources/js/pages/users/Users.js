@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Layout } from '../../layout/Layout'
-import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, Toast, ToastContainer } from 'react-bootstrap'
+import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, Toast, Badge } from 'react-bootstrap'
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
@@ -97,7 +97,7 @@ const Users = () => {
 
             <Row className='mb-3'>
                 <Col md={10}>
-                    <h2>Users</h2>
+                    <h2>Users <Badge variant="primary">{!!users ? users.total : 0}</Badge></h2>
                 </Col>
                 <Col md={2} className='text-right'>
                     <Toast onClose={() => setShowToast(false)} show={!!showToast} delay={3000} autohide>
@@ -198,12 +198,12 @@ const Users = () => {
                                             <td>{obj.email}</td>
                                             <td>{obj.contact_no}</td>
                                             <td>{!!obj.email_verified_at ? 'yes' : 'no'}</td>
-                                            <td>{moment(obj.updated_at).calendar()}</td>
+                                            <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
                                                 {obj.role != 'Admin' &&
                                                     <ButtonGroup size='sm'>
                                                         <Button variant="info" onClick={() => setAssignData(obj)}>
-                                                            {obj.role == 'Staff' ? 'Unset Staff' : 'Set Staff'}
+                                                            {obj.role == 'Staff' ? 'Unset as Staff' : 'Set as Staff'}
                                                         </Button>
                                                         <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
                                                     </ButtonGroup>

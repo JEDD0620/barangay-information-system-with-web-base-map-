@@ -4,82 +4,68 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function getEvents(Request $req)
     {
-        //
+        $page = $req->get('page');
+        $perPage = $req->get('perPage');
+        $order = $req->get('order');
+        $sort = $req->get('sort');
+        $filter = $req->get('filter');
+
+        $events = Post::where('type', 'Event')
+            ->leftJoin('users', 'posts.user_id', 'users.id')
+            ->select('users.f_name', 'posts.*')
+            ->orderBy($sort, $order);
+
+        if (!!isset($filter)) {
+            $events->where('title', 'LIKE', '%' . $filter . '%');
+        }
+
+        return $events->paginate($perPage, ['*'], 'page', $page);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getAnnouncements(Request $req)
     {
-        //
+        $page = $req->get('page');
+        $perPage = $req->get('perPage');
+        $order = $req->get('order');
+        $sort = $req->get('sort');
+        $filter = $req->get('filter');
+
+        $announcements = Post::where('type', 'Announcement')
+            ->leftJoin('users', 'posts.user_id', 'users.id')
+            ->select('users.f_name', 'posts.*')
+            ->orderBy($sort, $order);
+
+        if (!!isset($filter)) {
+            $announcements->where('title', 'LIKE', '%' . $filter . '%');
+        }
+
+        return $announcements->paginate($perPage, ['*'], 'page', $page);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function createPost(Request $req)
     {
-        //
+        Auth::user()->post()->create($req->all());
+        return true;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $post)
+    public function editPost(Request $req)
     {
-        //
+        $id = $req->id;
+        $temp = $req->all();
+        unset($temp['id']);
+        Post::where('id', $id)->update($temp);
+        return true;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
+    public function deletePost($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Post $post)
-    {
-        //
+        Post::find($id)->delete();
+        return true;
     }
 }

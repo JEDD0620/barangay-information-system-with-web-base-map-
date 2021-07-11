@@ -11,7 +11,10 @@ class FactorySeeder extends Seeder
      */
     public function run()
     {
-        // factory('App\User', 50)->create();
+        factory('App\User', 50)->create();
         factory('App\Resident', 50)->create();
+        factory('App\Post', 50)->create();
+        factory('App\Report', 50)->create();
+        factory('App\Request', 50)->create();
     }
 }

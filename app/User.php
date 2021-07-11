@@ -11,6 +11,10 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
+    public function post(){
+        return $this->hasMany(Post::class, 'user_id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

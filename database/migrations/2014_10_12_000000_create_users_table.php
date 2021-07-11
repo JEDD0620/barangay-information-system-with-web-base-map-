@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('contact_no')->nullable();
             $table->string('role')->default('Resident');
             $table->string('profile_photo')->nullable();
+            $table->string('state')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

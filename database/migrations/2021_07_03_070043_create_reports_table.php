@@ -17,6 +17,7 @@ class CreateReportsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('resident_id')->nullable()->references('id')->on('residents');
+            $table->foreignId('staff_id')->nullable()->references('id')->on('users');
             $table->text('case');
             $table->string('status')->default('Pending');
             $table->timestamps();

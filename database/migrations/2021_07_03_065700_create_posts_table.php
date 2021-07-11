@@ -19,8 +19,9 @@ class CreatePostsTable extends Migration
             $table->string('type');
             $table->string('title');
             $table->text('body');
-            $table->dateTime('from_date')->nullable();
-            $table->dateTime('to_date')->nullable();
+            $table->string('venue')->nullable();
+            $table->date('from_date')->nullable();
+            $table->date('to_date')->nullable();
             $table->time('from_time')->nullable();
             $table->time('to_time')->nullable();
             $table->timestamps();

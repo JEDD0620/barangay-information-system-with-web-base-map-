@@ -39,11 +39,14 @@ export const NavAdmin = ({ user }) => {
                 <li className="nav-item">
                     <a className={`nav-link ${location.pathname == "/requests" && 'active'}`} href="/requests"><i className="fas fa-clipboard-list"></i> Transaction Requests</a>
                 </li>
-                {!!user && user.role == 'Admin' &&
+                <li className="nav-item">
+                    <a className={`nav-link ${location.pathname == "/reports" && 'active'}`} href="/reports"><i className="fas fa-exclamation-triangle"></i> Blotter Reports</a>
+                </li>
+                {/* {!!user && user.role == 'Admin' &&
                     <li className="nav-item">
                         <a className={`nav-link ${location.pathname == "/reports" && 'active'}`} href="/reports"><i className="fas fa-exclamation-triangle"></i> Blotter Reports</a>
                     </li>
-                }
+                } */}
 
             </ul>
         </nav>

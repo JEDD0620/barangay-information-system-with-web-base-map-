@@ -1,14 +1,18 @@
-import React from 'react'
-import ReactDOM from 'react-dom';
-import { Layout } from '../../layout/Layout';
+import React, { useEffect, useState } from 'react'
+import ReactDOM from 'react-dom'
+import { Layout } from '../../layout/Layout'
+import { Pendings } from './components/Pendings'
+import { NotPendings } from './components/NotPendings'
+import { OnGoing } from './components/OnGoing'
 
 const Reports = () => {
+    const [toggle, setToggle] = useState(false);
 
     return (
         <Layout>
-            <div>
-                Reports
-            </div>
+            <Pendings setToggle={setToggle} toggle={toggle} />
+            <OnGoing setToggle={setToggle} toggle={toggle} />
+            <NotPendings toggle={toggle} />
         </Layout>
     );
 }

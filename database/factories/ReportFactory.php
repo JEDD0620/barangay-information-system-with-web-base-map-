@@ -2,7 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Report;
 use App\Resident;
+use App\User;
 use Faker\Generator as Faker;
 
 /*
@@ -16,15 +18,14 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Resident::class, function (Faker $faker) {
-    $gender = $faker->randomElement(['Male', 'Female']);
+$factory->define(Report::class, function (Faker $faker) {
+    $users = User::where('role', '!=', 'Admin')->pluck('id')->toArray();
+    $residents = Resident::pluck('id')->toArray();
 
     return [
-        'f_name' => $faker->name($gender),
-        'b_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-        'gender' => $gender,
-        'address' => $faker->streetAddress,
-        'job' => $faker->jobTitle,
-        'contact_no' => $faker->numerify('092########'),
+        'user_id' => $faker->randomElement($users),
+        'resident_id' => $faker->randomElement($residents),
+        'case' => $faker->realText($maxNbChars = 500, $indexSize = 1),
+        'updated_at' => now()->subWeek(rand(1, 52))->format('Y-m-d'),
     ];
 });
