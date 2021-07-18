@@ -20,6 +20,10 @@ require('./pages/map/Map');
 require('./pages/schedules/Schedules');
 require('./pages/events/Events');
 require('./pages/announcements/Announcements');
-require('./pages/feedbacks/Feedbacks');
 require('./pages/requests/Requests');
 require('./pages/reports/Reports');
+
+
+//public
+require('./pages/feedbacks/Feedbacks');
+require('./pages/feedbacks/Feedback');

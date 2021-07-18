@@ -19,8 +19,9 @@ class EnsureOwner
     {
         $id = $request->route('id');
         $q = DB::table($db[0])->find($id);
+        $authRole = Auth::user()->role == 'Admin' || Auth::user()->role == 'Staff';
 
-        if ($q->user_id == Auth::id()) {
+        if ($q->user_id == Auth::id() || $authRole) {
             return $next($request);
         } else {
             return response('not authorize');

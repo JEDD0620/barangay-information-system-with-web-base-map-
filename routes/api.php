@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestController;
@@ -69,5 +70,13 @@ Route::middleware('verified')->group(function () {
         Route::get('/{id}', [ReportController::class, "getReport"]);
         Route::post('/', [ReportController::class, "createReport"]);
         Route::put('/{id}', [ReportController::class, "editPost"])->middleware('owner:reports');
+    });
+
+    Route::prefix('feedback')->group(function () {
+        Route::get('/', [FeedbackController::class, "getFeedbacks"]);
+        Route::get('/{id}', [FeedbackController::class, "getFeedback"]);
+        Route::post('/{id}/comment', [FeedbackController::class, "newComment"]);
+        Route::put('/{id}', [FeedbackController::class, "deleteComment"])->middleware('owner:feedbacks');
+        Route::delete('/{id}', [FeedbackController::class, "deleteComment"])->middleware('owner:feedbacks');
     });
 });

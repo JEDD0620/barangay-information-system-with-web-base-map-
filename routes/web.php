@@ -29,7 +29,8 @@ Route::middleware('verified')->group(function () {
         Route::view('/schedules', 'admin.schedules');
         Route::view('/events', 'admin.events');
         Route::view('/announcements', 'admin.announcements');
-        Route::view('/feedbacks', 'admin.feedbacks');
+        Route::view('/feedbacks', 'feedbacks');
+        Route::view('/feedback/{title}.{id}', 'feedback');
         Route::view('/requests', 'admin.requests');
         Route::view('/reports', 'admin.reports');
     });

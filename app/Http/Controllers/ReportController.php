@@ -26,9 +26,7 @@ class ReportController extends Controller
             ->orderBy($sort, $order);
 
         if (!!isset($filter)) {
-            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%')
-                ->orWhere('reports.type', 'LIKE', '%' . $filter . '%')
-                ->orWhere('reports.purpose', 'LIKE', '%' . $filter . '%');
+            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%');
         }
 
         return $reports->paginate($perPage, ['*'], 'page', $page);
@@ -49,9 +47,7 @@ class ReportController extends Controller
             ->orderBy($sort, $order);
 
         if (!!isset($filter)) {
-            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%')
-                ->orWhere('reports.type', 'LIKE', '%' . $filter . '%')
-                ->orWhere('reports.purpose', 'LIKE', '%' . $filter . '%');
+            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%');
         }
 
         return $reports->paginate($perPage, ['*'], 'page', $page);
@@ -72,9 +68,7 @@ class ReportController extends Controller
             ->orderBy($sort, $order);
 
         if (!!isset($filter)) {
-            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%')
-                ->orWhere('reports.type', 'LIKE', '%' . $filter . '%')
-                ->orWhere('reports.purpose', 'LIKE', '%' . $filter . '%');
+            $reports->where('residents.f_name', 'LIKE', '%' . $filter . '%');
         }
 
         return $reports->paginate($perPage, ['*'], 'page', $page);

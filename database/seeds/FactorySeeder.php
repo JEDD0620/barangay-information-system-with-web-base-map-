@@ -16,5 +16,6 @@ class FactorySeeder extends Seeder
         factory('App\Post', 50)->create();
         factory('App\Report', 50)->create();
         factory('App\Request', 50)->create();
+        factory('App\Feedback', 150)->create();
     }
 }

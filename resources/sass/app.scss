@@ -26,6 +26,7 @@ main {
 nav {
     padding-top: 1.5rem;
     width: 15%;
+    flex-shrink: 0;
 
     .nav {
         flex-direction: column;
@@ -95,7 +96,31 @@ i {
     right: 3.5%;
 }
 
-
-p{
+p {
     text-indent: 2rem;
+}
+
+.card {
+    flex-direction: row !important;
+
+    img {
+        height: 3rem;
+        width: 3rem;
+        object-fit: cover;
+        margin: 1.25rem 0 1.25rem 1.25rem;
+    }
+
+    p {
+        text-indent: 0;
+    }
+
+    .dropdown{
+        display: inline-block;
+
+        .dropdown-toggle {
+            &::after{
+                display: none;
+            }
+        }
+    }
 }

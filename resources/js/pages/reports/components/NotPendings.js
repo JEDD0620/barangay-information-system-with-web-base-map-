@@ -122,7 +122,7 @@ export const NotPendings = (toggle) => {
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'users.f_name')}>
-                                        <span>Repondent</span>
+                                        <span>Respondent</span>
                                         <span className="float-right">
                                             <i className={`fa fa-sort${!!sort && sort === 'users.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
