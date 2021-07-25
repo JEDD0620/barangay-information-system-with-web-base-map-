@@ -15,6 +15,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Post::class, 'user_id');
     }
 
+    public function requests(){
+        return $this->hasMany(Request::class, 'user_id');
+    }
+
+    public function reports(){
+        return $this->hasMany(Report::class, 'user_id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

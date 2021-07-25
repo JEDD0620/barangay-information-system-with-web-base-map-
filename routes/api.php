@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ResidentController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,7 +35,7 @@ Route::middleware('verified')->group(function () {
 
     Route::prefix('resident')->group(function () {
         Route::get('/', [ResidentController::class, "getResidents"])->middleware('staff');
-        Route::get('/{id}', [ResidentController::class, "getResident"]);
+        Route::get('/search/{search}', [ResidentController::class, "searchResidents"]);
         Route::post('/', [ResidentController::class, "createResident"])->middleware('staff');
         Route::put('/', [ResidentController::class, "editResident"])->middleware('staff');
         Route::delete('/{id}', [ResidentController::class, "deleteResident"])->middleware('staff');
@@ -52,31 +53,41 @@ Route::middleware('verified')->group(function () {
     });
 
     Route::prefix('request')->group(function () {
-        Route::get('/pending', [RequestController::class, "getPendings"])->middleware('staff');
-        Route::get('/not-pending', [RequestController::class, "getNotPendings"])->middleware('staff');
+        Route::get('/pending', [RequestController::class, "getPendings"]);
+        Route::get('/not-pending', [RequestController::class, "getNotPendings"]);
         Route::put('/{id}/approve', [RequestController::class, "approveRequest"])->middleware('staff');
         Route::put('/{id}/disapprove', [RequestController::class, "disapproveRequest"])->middleware('staff');
+        Route::put('/{id}/cancel', [RequestController::class, "cancelRequest"])->middleware('owner:requests');
         Route::get('/{id}', [RequestController::class, "getRequest"])->middleware('owner:requests');
         Route::post('/', [RequestController::class, "createRequest"]);
-        Route::put('/{id}', [RequestController::class, "editPost"])->middleware('owner:requests');
+        Route::put('/{id}', [RequestController::class, "editRequest"])->middleware('owner:requests');
     });
 
     Route::prefix('report')->group(function () {
-        Route::get('/pending', [ReportController::class, "getPendings"])->middleware('staff');
-        Route::get('/ongoing', [ReportController::class, "getOngoings"])->middleware('staff');
-        Route::get('/closed', [ReportController::class, "gedClosed"])->middleware('staff');
+        Route::get('/pending', [ReportController::class, "getPendings"]);
+        Route::get('/ongoing', [ReportController::class, "getOngoings"]);
+        Route::get('/closed', [ReportController::class, "getClosed"]);
         Route::put('/{id}/investigate', [ReportController::class, "investigateReport"])->middleware('staff');
         Route::put('/{id}/close', [ReportController::class, "closeReport"])->middleware('staff');
+        Route::put('/{id}/cancel', [ReportController::class, "cancelReport"])->middleware('owner:reports');
         Route::get('/{id}', [ReportController::class, "getReport"]);
         Route::post('/', [ReportController::class, "createReport"]);
-        Route::put('/{id}', [ReportController::class, "editPost"])->middleware('owner:reports');
+        Route::put('/{id}', [ReportController::class, "editReport"])->middleware('owner:reports');
     });
 
     Route::prefix('feedback')->group(function () {
         Route::get('/', [FeedbackController::class, "getFeedbacks"]);
         Route::get('/{id}', [FeedbackController::class, "getFeedback"]);
+        Route::post('/', [FeedbackController::class, "newFeedback"]);
+        Route::put('/{id}', [FeedbackController::class, "editFeedback"])->middleware('owner:feedbacks');
         Route::post('/{id}/comment', [FeedbackController::class, "newComment"]);
-        Route::put('/{id}', [FeedbackController::class, "deleteComment"])->middleware('owner:feedbacks');
         Route::delete('/{id}', [FeedbackController::class, "deleteComment"])->middleware('owner:feedbacks');
+    });
+
+    Route::prefix('schedule')->group(function () {
+        Route::get('/', [ScheduleController::class, "getSchedules"]);
+        Route::post('/', [ScheduleController::class, "newSchedule"])->middleware('staff');
+        Route::put('/{id}', [ScheduleController::class, "editSchedule"])->middleware('staff');
+        Route::delete('/{id}', [ScheduleController::class, "deleteSchedule"])->middleware('staff');
     });
 });

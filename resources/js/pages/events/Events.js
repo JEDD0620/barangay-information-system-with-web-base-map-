@@ -6,6 +6,7 @@ import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
 import { DeleteModal, CreateModal, EditModal, ViewModal } from './components/Modals'
+import { queryUser } from '../../utils/user'
 
 const Events = () => {
     const [events, setEvents] = useState();
@@ -15,6 +16,7 @@ const Events = () => {
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(1);
+    const [user, setUser] = useState();
 
     //modals
     const [createData, setCreateData] = useState(false);
@@ -28,6 +30,11 @@ const Events = () => {
     useEffect(() => {
         getEvents()
     }, [sort, order, perPage, page, filter])
+
+    useEffect(() => {
+        queryUser(setUser)
+    }, [])
+    
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
@@ -72,9 +79,13 @@ const Events = () => {
                 setModalLoading(false);
                 setShowToast(`New Event Created!`);
                 setCreateData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
+                if (sort == 'updated_at' && order == 'desc' && page == 1) {
+                    getEvents()
+                } else {
+                    setSort('updated_at');
+                    setOrder('desc');
+                    setPage(1);
+                }
             })
             .catch(err => console.log(err))
     }
@@ -83,11 +94,9 @@ const Events = () => {
         Axios.put(`/api/post`, data)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${data.f_name} Editted!`);
+                setShowToast(`${data.f_name} Edited!`);
                 setEditData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
+                getEvents(true);
             })
             .catch(err => console.log(err))
     }
@@ -135,7 +144,9 @@ const Events = () => {
                         </Dropdown.Menu>
                     </Dropdown>
 
-                    <Button onClick={() => setCreateData(true)}>Create Event</Button>
+                    {!!user && (user.role == 'Admin' || user.role == 'Staf') &&
+                        <Button onClick={() => setCreateData(true)}>Create Event</Button>
+                    }
 
                 </Col>
                 <Col md={3}>
@@ -188,9 +199,11 @@ const Events = () => {
                                             <i className={`fa fa-sort${!!sort && sort === 'posts.updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th>
-                                        <span>Action</span>
-                                    </th>
+                                    {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
+                                        <th>
+                                            <span>Action</span>
+                                        </th>
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
@@ -203,13 +216,15 @@ const Events = () => {
                                             <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
                                             <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
-                                            <td className='text-center'>
-                                                <ButtonGroup size='sm'>
-                                                    <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
-                                                    <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
-                                                    <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
-                                                </ButtonGroup>
-                                            </td>
+                                            {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
+                                                <td className='text-center'>
+                                                    <ButtonGroup size='sm'>
+                                                        <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
+                                                        <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
+                                                        <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
+                                                    </ButtonGroup>
+                                                </td>
+                                            }
                                         </tr>
                                     )
                                 })}

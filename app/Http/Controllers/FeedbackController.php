@@ -58,9 +58,31 @@ class FeedbackController extends Controller
         return $events->first();
     }
 
+    public function newFeedback(Request $req)
+    {
+        Feedback::create([
+            'title' => $req->title,
+            'body' => $req->body,
+            'user_id' => Auth::id(),
+        ]);
+    }
+
     public function newComment($id, Request $req)
     {
-        return Feedback::find($id)->comment()->create(['body' => $req->body, 'user_id' => Auth::id()]);
+        return Feedback::find($id)->comment()->create([
+            'body' => $req->body,
+            'user_id' => Auth::id()
+        ]);
+    }
+
+    public function editFeedback($id, Request $req)
+    {
+        Feedback::find($id)->update([
+            'title' => $req->title,
+            'body' => $req->body,
+        ]);
+
+        return true;
     }
 
     public function deleteComment($id)

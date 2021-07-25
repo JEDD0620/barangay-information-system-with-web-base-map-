@@ -38,6 +38,9 @@ const Feedback = () => {
 
         Axios.get(`/api/feedback/${getParamsID()}?page=${page}&perPage=${perPage}&order=${order}&sort=${sort}`)
             .then(res => {
+                if (res.data == '') {
+                    location = '/feedbacks'
+                }
                 setFeedback(res.data)
             })
             .catch(err => console.log(err))
@@ -62,14 +65,11 @@ const Feedback = () => {
     }
 
     const editFeedback = (setModalLoading, data) => {
-        Axios.put(`/api/feedback`, data)
+        Axios.put(`/api/feedback/${data.id}`, data)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${data.f_name} Editted!`);
                 setEditData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
+                getFeedback(true);
             })
             .catch(err => console.log(err))
     }
@@ -77,8 +77,11 @@ const Feedback = () => {
     const deleteFeedback = (setModalLoading) => {
         Axios.delete(`/api/feedback/${deleteData.id}`)
             .then(res => {
+                if (deleteData.id == getParamsID()) {
+                    location = '/feedbacks'
+                }
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name} Deleted!`);
+                setShowToast(`${deleteData.f_name}'s comment Deleted!`);
                 setDeleteData(false);
                 getFeedback(true);
             })

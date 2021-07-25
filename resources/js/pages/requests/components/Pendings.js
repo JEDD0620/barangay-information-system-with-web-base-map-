@@ -3,7 +3,8 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../../elements/FillPaginate'
 import moment from 'moment'
-import { ApproveModal, DisapprovedModal } from './Modals'
+import { ApproveModal, CancelModal, CreateModal, DisapprovedModal, EditModal, ViewModal } from './Modals'
+import { queryUser } from '../../../utils/user'
 
 export const Pendings = ({ toggle, setToggle }) => {
     const [requests, setRequests] = useState();
@@ -13,10 +14,15 @@ export const Pendings = ({ toggle, setToggle }) => {
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(1);
+    const [user, setUser] = useState();
 
     //modals
     const [approveData, setApproveData] = useState(false);
     const [disapproveData, setDisapproveData] = useState(false);
+    const [createData, setCreateData] = useState(false);
+    const [editData, setEditData] = useState(false);
+    const [cancelData, setCancelData] = useState(false);
+    const [viewData, setViewData] = useState(false);
 
     //toast
     const [showToast, setShowToast] = useState(false);
@@ -24,6 +30,10 @@ export const Pendings = ({ toggle, setToggle }) => {
     useEffect(() => {
         getRequests()
     }, [sort, order, perPage, page, filter])
+
+    useEffect(() => {
+        queryUser(setUser)
+    }, [])
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
@@ -86,6 +96,42 @@ export const Pendings = ({ toggle, setToggle }) => {
             .catch(err => console.log(err))
     }
 
+    const cancelRequest = (setModalLoading) => {
+        Axios.put(`/api/request/${cancelData.id}/cancel`)
+            .then(res => {
+                setModalLoading(false);
+                setShowToast(`${cancelData.type} Cancelled!`);
+                setCancelData(false);
+                setToggle(!toggle)
+                getRequests(true);
+            })
+            .catch(err => console.log(err))
+    }
+
+    const createRequest = (setModalLoading, data) => {
+        Axios.post(`/api/request`, data)
+            .then(res => {
+                setModalLoading(false);
+                setShowToast(`Request Created!`);
+                setCreateData(false);
+                setToggle(!toggle)
+                getRequests(true);
+            })
+            .catch(err => console.log(err))
+    }
+
+    const editRequest = (setModalLoading, data) => {
+        Axios.put(`/api/request/${editData.id}`, data)
+            .then(res => {
+                setModalLoading(false);
+                setShowToast(`${editData.type} Cancelled!`);
+                setEditData(false);
+                setToggle(!toggle)
+                getRequests(true);
+            })
+            .catch(err => console.log(err))
+    }
+
     return (
         <>
 
@@ -118,7 +164,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                         </Dropdown.Menu>
                     </Dropdown>
 
-                    {/* <Button onClick={() => setCreateData(true)}>Create Request</Button> */}
+                    <Button onClick={() => setCreateData(true)}>Create Request</Button>
 
                 </Col>
                 <Col md={3}>
@@ -174,10 +220,19 @@ export const Pendings = ({ toggle, setToggle }) => {
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
                                             <td className='text-center'>
-                                                <ButtonGroup size='sm'>
-                                                    <Button variant="success" onClick={() => setApproveData(obj)}>Approve</Button>
-                                                    <Button variant="danger" onClick={() => setDisapproveData(obj)}>Disapproved</Button>
-                                                </ButtonGroup>
+                                                {!!user && user.id != obj.user_id ?
+                                                    <ButtonGroup size='sm'>
+                                                        <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
+                                                        <Button variant="secondy" onClick={() => setApproveData(obj)}>Approve</Button>
+                                                        <Button variant="danger" onClick={() => setDisapproveData(obj)}>Disapproved</Button>
+                                                    </ButtonGroup>
+                                                    :
+                                                    <ButtonGroup size='sm'>
+                                                        <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
+                                                        <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
+                                                        <Button variant="secondary" onClick={() => setCancelData(obj)}>Cancel</Button>
+                                                    </ButtonGroup>
+                                                }
                                             </td>
                                         </tr>
                                     )
@@ -202,6 +257,10 @@ export const Pendings = ({ toggle, setToggle }) => {
 
             <ApproveModal data={approveData} setData={setApproveData} handleAction={approveRequest} />
             <DisapprovedModal data={disapproveData} setData={setDisapproveData} handleAction={disapproveRequest} />
+            <CancelModal data={cancelData} setData={setCancelData} handleAction={cancelRequest} />
+            <CreateModal data={createData} setData={setCreateData} handleAction={createRequest} />
+            <EditModal data={editData} setData={setEditData} handleAction={editRequest} />
+            <ViewModal data={viewData} setData={setViewData} />
 
         </>
     );

@@ -8,10 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ResidentController extends Controller
 {
-    public function getResident()
-    {
-        return Auth::resident();
-    }
 
     public function getResidents(Request $req)
     {
@@ -31,6 +27,11 @@ class ResidentController extends Controller
         }
 
         return $residents->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    public function searchResidents($search)
+    {
+        return Resident::where('f_name', 'LIKE',  '%'.$search.'%')->take(5)->get();
     }
 
     public function createResident(Request $req)

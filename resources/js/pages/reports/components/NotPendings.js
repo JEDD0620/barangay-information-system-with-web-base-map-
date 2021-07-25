@@ -146,7 +146,7 @@ export const NotPendings = (toggle) => {
                                         <tr key={i}>
                                             <td>{obj.id}</td>
                                             <td>{obj.resident_name}</td>
-                                            <td>{obj.staff_name}</td>
+                                            <td>{obj.status=='cancelled'?'Cancelled by Reporter' : obj.staff_name}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
                                                 <ButtonGroup size='sm'>

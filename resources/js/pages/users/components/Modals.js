@@ -23,7 +23,7 @@ export const DeleteModal = ({ data, setData, handleAction }) => {
             <Modal.Body>Are you sure you want to delete {data.username}?</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
-                    Cancel
+                    Close
                 </Button>
                 <Button variant="danger" onClick={onAction} disabled={loading}>
                     {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Delete'}
@@ -58,7 +58,7 @@ export const AssignModal = ({ data, setData, handleAction }) => {
             }
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
-                    Cancel
+                    Close
                 </Button>
                 <Button variant="primary" onClick={onAction} disabled={loading}>
                     {loading ? <Spinner animation="border" size='sm' variant="light" /> : data.role == 'Staff' ? 'Unset as Staff' : 'Set as Staff'}

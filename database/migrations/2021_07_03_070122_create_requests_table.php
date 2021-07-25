@@ -18,7 +18,7 @@ class CreateRequestsTable extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('resident_id')->nullable()->references('id')->on('residents');
             $table->string('type');
-            $table->string('purpose');
+            $table->string('purpose')->nullable();
             $table->dateTime('date')->nullable();
             $table->string('status')->default('pending');
 

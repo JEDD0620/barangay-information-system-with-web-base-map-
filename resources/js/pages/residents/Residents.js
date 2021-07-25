@@ -72,9 +72,13 @@ const Residents = () => {
                 setModalLoading(false);
                 setShowToast(`New Resident Created!`);
                 setCreateData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
+                if(sort == 'updated_at' && order=='desc' && page==1){
+                    getResidents()
+                }else{
+                    setSort('updated_at');
+                    setOrder('desc');
+                    setPage(1);
+                }
             })
             .catch(err => console.log(err))
     }
@@ -83,11 +87,9 @@ const Residents = () => {
         Axios.put(`/api/resident`, data)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${data.f_name} Editted!`);
+                setShowToast(`${data.f_name} Edited!`);
                 setEditData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
+                getResidents(true);
             })
             .catch(err => console.log(err))
     }

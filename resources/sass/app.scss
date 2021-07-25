@@ -27,6 +27,7 @@ nav {
     padding-top: 1.5rem;
     width: 15%;
     flex-shrink: 0;
+    min-width: fit-content;
 
     .nav {
         flex-direction: column;
@@ -101,7 +102,7 @@ p {
 }
 
 .card {
-    flex-direction: row !important;
+    flex-direction: row;
 
     img {
         height: 3rem;
@@ -112,6 +113,7 @@ p {
 
     p {
         text-indent: 0;
+        white-space: break-spaces;
     }
 
     .dropdown{

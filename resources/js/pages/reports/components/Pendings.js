@@ -3,7 +3,8 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../../elements/FillPaginate'
 import moment from 'moment'
-import { ViewModal } from './Modals'
+import { CancelModal, CreateModal, EditModal, ViewModal } from './Modals'
+import { queryUser } from '../../../utils/user'
 
 export const Pendings = ({ toggle, setToggle }) => {
     const [reports, setReports] = useState();
@@ -13,9 +14,13 @@ export const Pendings = ({ toggle, setToggle }) => {
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(1);
+    const [user, setUser] = useState();
 
     //modals
     const [viewData, setViewData] = useState(false);
+    const [createData, setCreateData] = useState(false);
+    const [editData, setEditData] = useState(false);
+    const [cancelData, setCancelData] = useState(false);
 
     //toast
     const [showToast, setShowToast] = useState(false);
@@ -23,6 +28,10 @@ export const Pendings = ({ toggle, setToggle }) => {
     useEffect(() => {
         getReports()
     }, [sort, order, perPage, page, filter])
+
+    useEffect(() => {
+        queryUser(setUser)
+    }, [])
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
@@ -73,6 +82,42 @@ export const Pendings = ({ toggle, setToggle }) => {
             .catch(err => console.log(err))
     }
 
+    const cancelReport = (setModalLoading) => {
+        Axios.put(`/api/report/${cancelData.id}/cancel`)
+            .then(res => {
+                setModalLoading(false);
+                setShowToast(`${cancelData.resident_name} case cancelled!`);
+                setCancelData(false);
+                setToggle(!toggle)
+                getReports(true);
+            })
+            .catch(err => console.log(err))
+    }
+
+    const createReport = (setModalLoading, data) => {
+        Axios.post(`/api/report`, data)
+            .then(res => {
+                setModalLoading(false);
+                setShowToast(`Report created!`);
+                setCreateData(false);
+                setToggle(!toggle)
+                getReports(true);
+            })
+            .catch(err => console.log(err))
+    }
+
+    const editReport = (setModalLoading, data) => {
+        Axios.put(`/api/report/${editData.id}`, data)
+            .then(res => {
+                setModalLoading(false);
+                setShowToast(`Report editted!`);
+                setEditData(false);
+                setToggle(!toggle)
+                getReports(true);
+            })
+            .catch(err => console.log(err))
+    }
+
     return (
         <>
 
@@ -105,7 +150,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                         </Dropdown.Menu>
                     </Dropdown>
 
-                    {/* <Button onClick={() => setCreateData(true)}>Create Report</Button> */}
+                    <Button onClick={() => setCreateData(true)}>Create Report</Button>
 
                 </Col>
                 <Col md={3}>
@@ -162,6 +207,10 @@ export const Pendings = ({ toggle, setToggle }) => {
                                             <td className='text-center'>
                                                 <ButtonGroup size='sm'>
                                                     <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
+                                                    {!!user && user.id == obj.user_id && <>
+                                                        <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
+                                                        <Button variant="secondary" onClick={() => setCancelData(obj)}>Cancel</Button>
+                                                    </>}
                                                 </ButtonGroup>
                                             </td>
                                         </tr>
@@ -186,6 +235,9 @@ export const Pendings = ({ toggle, setToggle }) => {
             </Row>
 
             <ViewModal data={viewData} setData={setViewData} handleAction={onInvestigateReport} />
+            <CancelModal data={cancelData} setData={setCancelData} handleAction={cancelReport} />
+            <CreateModal data={createData} setData={setCreateData} handleAction={createReport} />
+            <EditModal data={editData} setData={setEditData} handleAction={editReport} />
 
         </>
     );

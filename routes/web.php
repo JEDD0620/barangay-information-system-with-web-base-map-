@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -21,28 +22,15 @@ Route::middleware('verified')->group(function () {
     Route::get('/', 'HomeController@index')->name('home');
 
     //admin routes
-    Route::middleware('admin')->group(function () {
-        Route::view('/dashboard', 'admin.dashboard');
-        Route::view('/residents', 'admin.residents');
-        Route::view('/users', 'admin.users');
-        Route::view('/map', 'admin.map');
-        Route::view('/schedules', 'admin.schedules');
-        Route::view('/events', 'admin.events');
-        Route::view('/announcements', 'admin.announcements');
-        Route::view('/feedbacks', 'feedbacks');
-        Route::view('/feedback/{title}.{id}', 'feedback');
-        Route::view('/requests', 'admin.requests');
-        Route::view('/reports', 'admin.reports');
-    });
-
-    //user routes
-    // Route::get('/residents', 'HomeController@index');
-    // Route::get('/users', 'HomeController@index');
-    // Route::get('/map', 'HomeController@index');
-    // Route::get('/schedules', 'HomeController@index');
-    // Route::get('/events', 'HomeController@index');
-    // Route::get('/announcement', 'HomeController@index');
-    // Route::get('/feedbacks', 'HomeController@index');
-    // Route::get('/request', 'HomeController@index');
-    // Route::get('/reports', 'HomeController@index');
+    Route::view('/dashboard', 'pages.dashboard');
+    Route::view('/residents', 'pages.residents')->middleware('admin');
+    Route::view('/users', 'pages.users')->middleware('admin');
+    Route::view('/map', 'pages.map');
+    Route::view('/schedules', 'pages.schedules');
+    Route::view('/events', 'pages.events');
+    Route::view('/announcements', 'pages.announcements');
+    Route::view('/feedbacks', 'pages.feedbacks');
+    Route::view('/feedback/{title}.{id}', 'pages.feedback');
+    Route::view('/requests', 'pages.requests');
+    Route::view('/reports', 'pages.reports');
 });

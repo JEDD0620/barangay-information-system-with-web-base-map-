@@ -104,7 +104,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type='button' variant="secondary" onClick={handleClose}>
-                        Cancel
+                        Close
                     </Button>
                     <Button variant="primary" type='submit' disabled={loading}>
                         {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Create Event'}
@@ -239,7 +239,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type='button' variant="secondary" onClick={handleClose}>
-                        Cancel
+                        Close
                     </Button>
                     <Button variant="warning" type='submit' disabled={loading}>
                         {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Edit Event'}
@@ -272,7 +272,7 @@ export const DeleteModal = ({ data, setData, handleAction }) => {
             <Modal.Body>Are you sure you want to delete {data.title}?</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
-                    Cancel
+                    Close
                 </Button>
                 <Button variant="danger" onClick={onAction} disabled={loading}>
                     {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Delete'}

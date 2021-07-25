@@ -170,7 +170,7 @@ export const NotPendings = (toggle) => {
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
                                             <td
-                                                className={`text-capitalize font-weight-bold text-success ${obj.status == 'approved' ? 'text-success' : 'text-danger'}`}
+                                                className={`text-capitalize font-weight-bold ${obj.status == 'approved' ? 'text-success' : obj.status == 'cancelled' ? 'text-secondary' : 'text-danger'}`}
                                             >
                                                 {obj.status}
                                             </td>

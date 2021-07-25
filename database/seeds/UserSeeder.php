@@ -15,12 +15,23 @@ class UserSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'f_name' => 'Administrator',
-            'username' => 'admin',
-            'email' => 'admin@sfbis.tk',
-            'email_verified_at' => now(),
-            'password' => Hash::make('admin123'),
-            'role' => 'Admin',
+            [
+                'f_name' => 'Administrator',
+                'username' => 'admin',
+                'email' => 'admin@sfbis.test',
+                'email_verified_at' => now(),
+                'password' => Hash::make('admin123'),
+                'role' => 'Admin'
+            ],
+
+            [
+                'f_name' => 'Resident User',
+                'username' => 'resident',
+                'email' => 'resident@sfbis.test',
+                'email_verified_at' => now(),
+                'password' => Hash::make('resident123'),
+                'role' => 'Resident',
+            ]
         ]);
     }
 }

@@ -73,9 +73,13 @@ const Feedbacks = () => {
                 setModalLoading(false);
                 setShowToast(`New Feedback Created!`);
                 setCreateData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
+                if(sort == 'updated_at' && order=='desc' && page==1){
+                    getFeedbacks()
+                }else{
+                    setSort('updated_at');
+                    setOrder('desc');
+                    setPage(1);
+                }
             })
             .catch(err => console.log(err))
     }
@@ -84,11 +88,9 @@ const Feedbacks = () => {
         Axios.put(`/api/feedback`, data)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${data.f_name} Editted!`);
+                setShowToast(`${data.f_name} Edited!`);
                 setEditData(false);
-                setSort('updated_at');
-                setOrder('desc');
-                setPage(1);
+                getFeedbacks(true);
             })
             .catch(err => console.log(err))
     }
@@ -167,7 +169,7 @@ const Feedbacks = () => {
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'comment_count')}>
-                                        <span>Stats</span>
+                                        <span>Comments</span>
                                         <span className="float-right">
                                             <i className={`fa fa-sort${!!sort && sort === 'comment_count' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
@@ -189,7 +191,7 @@ const Feedbacks = () => {
                                         <tr key={i}>
                                             <td><a href={`/feedback/${tosef(obj.title)}.${obj.id}`}>{obj.title}</a></td>
                                             <td>{obj.f_name}</td>
-                                            <td><span>Comments: {obj.comment_count}</span></td>
+                                            <td><span>{obj.comment_count}</span></td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
                                                 <a className='btn btn-sm btn-info' href={`/feedback/${tosef(obj.title)}.${obj.id}`}>view</a>
@@ -213,7 +215,6 @@ const Feedbacks = () => {
 
             <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteFeedback} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createFeedback} />
-            <EditModal data={editData} setData={setEditData} handleAction={editFeedback} />
 
         </Layout>
     );

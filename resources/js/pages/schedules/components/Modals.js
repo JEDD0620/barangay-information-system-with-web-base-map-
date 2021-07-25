@@ -1,6 +1,327 @@
-import React, { useState } from 'react'
-import { Modal, Button, Spinner } from 'react-bootstrap'
+import Axios from 'axios'
+import moment from 'moment'
+import React, { useEffect, useRef, useState } from 'react'
+import { Modal, Button, Spinner, Row, Col, Form } from 'react-bootstrap'
+import Select from 'react-select'
 
+export const CreateModal = ({ data, setData, handleAction }) => {
+    const [loading, setLoading] = useState(false)
+    const [formData, setFormdata] = useState({
+        recurence: '',
+        resident_id: null,
+        duty: moment().format('YYYY-MM-DD'),
+        in: '08:00',
+        out: '17:00'
+    })
+    const [searchInput, setSearchInput] = useState()
+    const [options, setOptions] = useState()
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            if (!!searchInput) {
+                getOptions()
+            }
+        }, 500)
+        return () => clearTimeout(delayDebounceFn)
+    }, [searchInput])
+
+    const getOptions = () => {
+        Axios.get(`/api/resident/search/${searchInput}`)
+            .then(res => {
+                let tempOption = [];
+                res.data.map(obj => {
+                    tempOption.push({
+                        value: obj.id,
+                        label: obj.f_name
+                    })
+                })
+                setOptions(tempOption)
+            })
+            .catch(err => console.log(err))
+    }
+
+    const onAction = (e) => {
+        e.preventDefault();
+        setLoading(true)
+        handleAction(setLoading, formData)
+    }
+
+    const handleClose = () => {
+        setData(false)
+        setLoading(false)
+    }
+
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setFormdata({ ...formData, [name]: value });
+
+        if (name == 'body') {
+            e.target.style.height = "0px";
+            let scrollHeight = e.target.scrollHeight + 16;
+            e.target.style.height = scrollHeight + "px";
+        }
+    };
+
+
+    return (
+        <Modal show={!!data} onHide={handleClose} size='lg'>
+            <Modal.Header closeButton>
+                <Modal.Title>Create Schedule</Modal.Title>
+            </Modal.Header>
+
+            <Form onSubmit={onAction}>
+                <Modal.Body>
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Name</Form.Label>
+                                <Select
+                                    options={options}
+                                    onInputChange={(v) => setSearchInput(v)}
+                                    isSearchable={true}
+                                    placeholder='select residence ...'
+                                    onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
+                                    required
+                                />
+                                <Form.Control type='text' name='fix' className='d-none' defaultValue={formData.resident_id} required />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Duty Date</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    name='duty'
+                                    placeholder="input date here ..."
+                                    required onChange={handleChange}
+                                    value={formData.duty}
+                                    required
+                                    disabled={formData.recurence == 'daily' || formData.recurence == 'weekdays'}
+                                />
+                            </Form.Group>
+                        </Col>
+
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Recurence</Form.Label>
+                                <Select
+                                    options={[
+                                        { label: 'None', value: 'none' },
+                                        { label: 'Weekdays', value: 'weekdays' },
+                                        { label: 'Daily', value: 'daily' },
+                                        { label: 'Weekly', value: 'weekly' },
+                                        { label: 'Monthly', value: 'monthly' },
+                                    ]}
+                                    placeholder='select recurence ...'
+                                    onChange={(e) => setFormdata({ ...formData, recurence: e.value, duty: (e.value == 'daily' || e.value == 'weekdays') ? '' : formData.duty })}
+                                    defaultValue={{ label: 'None', value: 'none' }}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>In Time </Form.Label>
+                                <Form.Control type="time" name='in' defaultValue={formData.in} placeholder="input time here ..." required={!!formData.to_time} onChange={handleChange} required />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Out Time </Form.Label>
+                                <Form.Control type="time" name='out' defaultValue={formData.out} placeholder="input time here ..." onChange={handleChange} required />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button type='button' variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" type='submit' disabled={loading}>
+                        {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Create Schedule'}
+                    </Button>
+                </Modal.Footer>
+            </Form>
+
+        </Modal>
+    )
+}
+
+
+export const EditModal = ({ data, setData, handleAction }) => {
+    const [loading, setLoading] = useState(false)
+    const [formData, setFormdata] = useState(
+        {
+            recurence: data.recurence,
+            resident_id: data.resident_id,
+            duty: data.recurence != 'daily' && data.recurence != 'weekdays' ? moment(data.duty).format('YYYY-MM-DD') : null,
+            in: data.in,
+            out: data.out,
+            id: data.id,
+            f_name: data.f_name
+        }
+    )
+
+    useEffect(() => {
+        setFormdata({
+            recurence: data.recurence,
+            resident_id: data.resident_id,
+            duty: data.recurence != 'daily' && data.recurence != 'weekdays' ? moment(data.duty).format('YYYY-MM-DD') : null,
+            in: data.in,
+            out: data.out,
+            id: data.id,
+            f_name: data.f_name
+        })
+    }, [data])
+
+    const [searchInput, setSearchInput] = useState()
+    const [options, setOptions] = useState()
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            if (!!searchInput) {
+                getOptions()
+            }
+        }, 500)
+        return () => clearTimeout(delayDebounceFn)
+    }, [searchInput])
+
+    const getOptions = () => {
+        Axios.get(`/api/resident/search/${searchInput}`)
+            .then(res => {
+                let tempOption = [];
+                res.data.map(obj => {
+                    tempOption.push({
+                        value: obj.id,
+                        label: obj.f_name
+                    })
+                })
+                setOptions(tempOption)
+            })
+            .catch(err => console.log(err))
+    }
+
+    const onAction = (e) => {
+        e.preventDefault();
+        setLoading(true)
+        handleAction(setLoading, formData)
+    }
+
+    const handleClose = () => {
+        setData(false)
+        setLoading(false)
+    }
+
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setFormdata({ ...formData, [name]: value });
+
+        if (name == 'body') {
+            e.target.style.height = "0px";
+            let scrollHeight = e.target.scrollHeight + 16;
+            e.target.style.height = scrollHeight + "px";
+        }
+    };
+
+    return (
+        <Modal show={!!data} onHide={handleClose} size='lg'>
+            <Modal.Header closeButton>
+                <Modal.Title>Edit {data.f_name} schedule</Modal.Title>
+            </Modal.Header>
+
+            <Form onSubmit={onAction}>
+                <Modal.Body>
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Name</Form.Label>
+                                {!!data &&
+                                    <Select
+                                        options={options}
+                                        onInputChange={(v) => setSearchInput(v)}
+                                        isSearchable={true}
+                                        placeholder='select residence ...'
+                                        onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
+                                        defaultValue={{ label: data.f_name, value: data.resident_id }}
+                                    />
+                                }
+                                <Form.Control type='text' name='fix' className='d-none' defaultValue={formData.resident_id} required />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Duty Date</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    name='duty'
+                                    placeholder="input date here ..."
+                                    required onChange={handleChange}
+                                    defaultValue={formData.duty}
+                                    required
+                                    disabled={formData.recurence == 'daily' || formData.recurence == 'weekdays'}
+                                />
+                            </Form.Group>
+                        </Col>
+
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Recurence</Form.Label>
+                                {!!data &&
+                                    <Select
+                                        options={[
+                                            { label: 'None', value: '' },
+                                            { label: 'Weekdays', value: 'weekdays' },
+                                            { label: 'Daily', value: 'daily' },
+                                            { label: 'Weekly', value: 'weekly' },
+                                            { label: 'Monthly', value: 'monthly' },
+                                        ]}
+                                        placeholder='select recurence ...'
+                                        onChange={(e) => setFormdata({ ...formData, recurence: e.value, duty: (e.value == 'daily' || e.value == 'weekdays') ? '' : formData.duty })}
+                                        defaultValue={{ label: data.recurence.charAt(0).toUpperCase() + data.recurence.slice(1), value: data.recurence }}
+                                    />
+                                }
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>In Time </Form.Label>
+                                <Form.Control type="time" name='in' defaultValue={formData.in} placeholder="input time here ..." required={!!formData.to_time} onChange={handleChange} required />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Out Time </Form.Label>
+                                <Form.Control type="time" name='out' defaultValue={formData.out} placeholder="input time here ..." onChange={handleChange} required />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button type='button' variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="warning" type='submit' disabled={loading}>
+                        {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Edit Schedule'}
+                    </Button>
+                </Modal.Footer>
+            </Form>
+
+        </Modal>
+    )
+}
 
 export const DeleteModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
@@ -18,50 +339,15 @@ export const DeleteModal = ({ data, setData, handleAction }) => {
     return (
         <Modal show={!!data} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Delete {data.username}</Modal.Title>
+                <Modal.Title>Delete Schedule</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Are you sure you want to delete {data.username}?</Modal.Body>
+            <Modal.Body>Are you sure you want to delete {data.f_name} schedule?</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
-                    Cancel
+                    Close
                 </Button>
                 <Button variant="danger" onClick={onAction} disabled={loading}>
                     {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Delete'}
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    )
-}
-
-export const AssignModal = ({ data, setData, handleAction }) => {
-    const [loading, setLoading] = useState(false)
-
-    const onAction = () => {
-        setLoading(true)
-        handleAction(setLoading)
-    }
-
-    const handleClose = () => {
-        setData(false)
-        setLoading(false)
-    }
-
-    return (
-        <Modal show={!!data} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>{data.role == 'Staff' ? 'Unset' : 'Set'} {data.username} as Staff</Modal.Title>
-            </Modal.Header>
-            {data.role == 'Staff' ?
-                <Modal.Body>Are you sure you want to unset {data.username} as Staff?</Modal.Body>
-                :
-                <Modal.Body>Are you sure you want to set {data.username} as Staff?</Modal.Body>
-            }
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Cancel
-                </Button>
-                <Button variant="primary" onClick={onAction} disabled={loading}>
-                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : data.role == 'Staff' ? 'Unset as Staff' : 'Set as Staff'}
                 </Button>
             </Modal.Footer>
         </Modal>
