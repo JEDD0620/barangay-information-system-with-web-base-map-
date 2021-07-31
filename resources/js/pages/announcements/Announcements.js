@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Layout } from '../../layout/Layout'
-import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, Toast, Badge } from 'react-bootstrap'
+import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, Toast, Badge, Card } from 'react-bootstrap'
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
@@ -144,7 +144,7 @@ const Announcements = () => {
                         </Dropdown.Menu>
                     </Dropdown>
 
-                    {!!user && (user.role == 'Admin' || user.role == 'Staf') &&
+                    {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
                         <Button onClick={() => setCreateData(true)}>Create Announcement</Button>
                     }
 
@@ -157,84 +157,114 @@ const Announcements = () => {
                 </Col>
             </Row>
 
-            <Row>
-                <Col md={12}>
-                    {!!announcements ?
-                        <Table striped bordered hover className='mt-3'>
-                            <thead>
-                                <tr>
-                                    <th onClick={changeSort.bind(this, 'posts.id')}>
-                                        <span>ID</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'posts.title')}>
-                                        <span>Title</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.title' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'users.f_name')}>
-                                        <span>Author</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'users.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'posts.from_date')}>
-                                        <span>Date</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.from_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'posts.from_time')}>
-                                        <span>Time</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.from_time' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'posts.updated_at')}>
-                                        <span>Updated</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'posts.updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
-                                        <th>
-                                            <span>Action</span>
+            {!!user && (user.role == 'Admin' || user.role == 'Staff') ?
+                <Row>
+                    <Col md={12}>
+                        {!!announcements ?
+                            <Table striped bordered hover className='mt-3'>
+                                <thead>
+                                    <tr>
+                                        <th onClick={changeSort.bind(this, 'posts.id')}>
+                                            <span>ID</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'posts.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
                                         </th>
+                                        <th onClick={changeSort.bind(this, 'posts.title')}>
+                                            <span>Title</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'posts.title' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
+                                        <th onClick={changeSort.bind(this, 'users.f_name')}>
+                                            <span>Author</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'users.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
+                                        <th onClick={changeSort.bind(this, 'posts.from_date')}>
+                                            <span>Date</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'posts.from_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
+                                        <th onClick={changeSort.bind(this, 'posts.from_time')}>
+                                            <span>Time</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'posts.from_time' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
+                                        <th onClick={changeSort.bind(this, 'posts.updated_at')}>
+                                            <span>Updated</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'posts.updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
+                                        {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
+                                            <th>
+                                                <span>Action</span>
+                                            </th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {!!announcements && announcements.data.map((obj, i) => {
+                                        return (
+                                            <tr key={i}>
+                                                <td>{obj.id}</td>
+                                                <td>{obj.title}</td>
+                                                <td>{obj.f_name}</td>
+                                                <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
+                                                <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
+                                                <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
+                                                {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
+                                                    <td className='text-center'>
+                                                        <ButtonGroup size='sm'>
+                                                            <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
+                                                            <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
+                                                            <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
+                                                        </ButtonGroup>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </Table>
+                            :
+                            <Spinner animation="border" variant="primary" className='mt-5' />
+                        }
+                    </Col>
+                </Row>
+
+                :
+                !!announcements && announcements.data.map(obj => {
+                    return (
+                        <Card className='mt-3' key={obj.id}>
+                            <Card.Body>
+                                <Card.Title>
+                                    {obj.title}
+                                </Card.Title>
+                                <h6>
+                                    {`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ` to ${moment(obj.to_date).format('D MMM YYYY')}` : ''}`}
+                                    {!!obj.from_time &&
+                                        <small>
+                                            {` at ${moment(obj.from_time, "HH:mm:ss").format("hh:mm A")}${!!obj.to_time ? ` to ${moment(obj.to_time, "HH:mm:ss").format("hh:mm A")}` : ''}`}
+                                        </small>
                                     }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {!!announcements && announcements.data.map((obj, i) => {
-                                    return (
-                                        <tr key={i}>
-                                            <td>{obj.id}</td>
-                                            <td>{obj.title}</td>
-                                            <td>{obj.f_name}</td>
-                                            <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
-                                            <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
-                                            <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
-                                            {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
-                                                <td className='text-center'>
-                                                    <ButtonGroup size='sm'>
-                                                        <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
-                                                        <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
-                                                        <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
-                                                    </ButtonGroup>
-                                                </td>
-                                            }
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </Table>
-                        :
-                        <Spinner animation="border" variant="primary" className='mt-5' />
-                    }
-                </Col>
-            </Row>
+                                </h6>
+                                <Card.Text>
+                                    {obj.body}
+                                </Card.Text>
+                                <small className='text-muted'>
+                                    <i className="far fa-clock align-baseline"></i> {moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}
+                                </small>
+                                {/* <Button type="button" variant='link' href='#comment'>Comment</Button> */}
+                            </Card.Body>
+                        </Card>
+                    );
+                })
+            }
 
             <Row>
                 <Col md={12}>

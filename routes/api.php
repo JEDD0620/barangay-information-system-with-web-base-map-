@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestController;
@@ -26,6 +27,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('verified')->group(function () {
 
     //user, usercontroller
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', [HomeController::class, "getdashboard"]);
+    });
+
     Route::get('/users', [UserController::class, "getUsers"])->middleware('staff');
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, "getUser"]);

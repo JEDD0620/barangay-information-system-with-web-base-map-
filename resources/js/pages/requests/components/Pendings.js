@@ -223,7 +223,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                                                 {!!user && user.id != obj.user_id ?
                                                     <ButtonGroup size='sm'>
                                                         <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
-                                                        <Button variant="secondy" onClick={() => setApproveData(obj)}>Approve</Button>
+                                                        <Button variant="success" onClick={() => setApproveData(obj)}>Approve</Button>
                                                         <Button variant="danger" onClick={() => setDisapproveData(obj)}>Disapproved</Button>
                                                     </ButtonGroup>
                                                     :

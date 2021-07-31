@@ -118,7 +118,7 @@ const Schedules = () => {
             <Row>
                 <Col md={7}>
 
-                    {!!user && (user.role == 'Admin' || user.role == 'Staf') &&
+                    {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
                         <Button onClick={() => setCreateData(true)}>Create Schedule</Button>
                     }
 

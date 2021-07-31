@@ -60,7 +60,7 @@ class FeedbackController extends Controller
 
     public function newFeedback(Request $req)
     {
-        Feedback::create([
+        return Feedback::create([
             'title' => $req->title,
             'body' => $req->body,
             'user_id' => Auth::id(),

@@ -252,7 +252,7 @@ export const ViewModal = ({ data, setData, handleAction }) => {
 
     const [user, setUser] = useState()
 
-    useEffect(() => queryUser(setUser), [])
+    useEffect(() => {queryUser(setUser)}, [])
 
     const onAction = () => {
         setLoading(true)
@@ -296,7 +296,7 @@ export const ViewOngoingModal = ({ data, setData, handleAction }) => {
 
     const [user, setUser] = useState()
 
-    useEffect(() => queryUser(setUser), [])
+    useEffect(() => {queryUser(setUser)}, [])
 
     const onAction = () => {
         setLoading(true)
@@ -340,7 +340,7 @@ export const ViewClosedModal = ({ data, setData }) => {
 
     const [user, setUser] = useState()
 
-    useEffect(() => queryUser(setUser), [])
+    useEffect(() => {queryUser(setUser)}, [])
 
     const onAction = () => {
         setLoading(true)
