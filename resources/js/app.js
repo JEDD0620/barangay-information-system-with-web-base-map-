@@ -12,7 +12,8 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-//admin pages
+//pages
+require('./pages/account/Account');
 require('./pages/dashboard/Dashboard');
 require('./pages/residents/Residents');
 require('./pages/users/Users');
@@ -22,8 +23,5 @@ require('./pages/events/Events');
 require('./pages/announcements/Announcements');
 require('./pages/requests/Requests');
 require('./pages/reports/Reports');
-
-
-//public
 require('./pages/feedbacks/Feedbacks');
 require('./pages/feedbacks/Feedback');

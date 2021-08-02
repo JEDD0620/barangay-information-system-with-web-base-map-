@@ -22,6 +22,7 @@ Route::middleware('verified')->group(function () {
     Route::get('/', 'HomeController@index')->name('home');
 
     //admin routes
+    Route::view('/account', 'pages.account');
     Route::view('/dashboard', 'pages.dashboard');
     Route::view('/residents', 'pages.residents')->middleware('admin');
     Route::view('/users', 'pages.users')->middleware('admin');

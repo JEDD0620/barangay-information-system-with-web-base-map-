@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -36,6 +37,21 @@ class UserController extends Controller
     {
         User::find($id)->delete();
         return true;
+    }
+
+    public function updateUser(Request $req, $id)
+    {
+        $user = User::find($id);
+        $user->username = $req->username;
+        $user->f_name = $req->f_name;
+        $user->contact_no = $req->contact_no;
+
+        if (isset($req->password)) {
+            $user->password = Hash::make($req->password);
+        }
+
+        $user->save();
+        return $user;
     }
 
     public function assignUser(Request $req)
