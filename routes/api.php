@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestController;
@@ -95,5 +96,11 @@ Route::middleware('verified')->group(function () {
         Route::post('/', [ScheduleController::class, "newSchedule"])->middleware('staff');
         Route::put('/{id}', [ScheduleController::class, "editSchedule"])->middleware('staff');
         Route::delete('/{id}', [ScheduleController::class, "deleteSchedule"])->middleware('staff');
+    });
+
+    Route::prefix('map')->group(function () {
+        Route::get('/', [MapController::class, "getLoc"]);
+        Route::post('/', [MapController::class, "newLoc"])->middleware('staff');
+        Route::delete('/{id}', [MapController::class, "deleteLoc"])->middleware('staff');
     });
 });
