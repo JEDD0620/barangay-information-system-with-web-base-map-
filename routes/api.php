@@ -9,6 +9,7 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ResidentController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+Auth::routes(['verify' => true]);
 
 
 Route::middleware('verified')->group(function () {
