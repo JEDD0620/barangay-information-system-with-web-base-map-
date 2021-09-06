@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Auth::routes(['verify' => true]);
+
+// Route::view('test', 'pdf/certificate');
+Route::get('test/{id}', [RequestController::class, "approveRequest"]);
 
 Route::middleware('verified')->group(function () {
     Route::get('/', 'HomeController@index')->name('home');

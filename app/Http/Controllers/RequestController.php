@@ -6,6 +6,8 @@ use App\Request;
 use App\Resident;
 use Illuminate\Http\Request as Req;
 use Illuminate\Support\Facades\Auth;
+use PDF;
+use Symfony\Component\HttpFoundation\Response;
 
 class RequestController extends Controller
 {
@@ -103,6 +105,14 @@ class RequestController extends Controller
             );
         }
 
+        if ($request->type == 'Clearance') {
+            $request = Request::leftJoin('residents', 'requests.resident_id', 'residents.id')
+                ->select('requests.*', 'residents.f_name')
+                ->find($id);
+            $request->update(['status' => 'approved']);
+            return $this->generatePDF($request);
+        }
+
         $request->update(['status' => 'approved']);
         return true;
     }
@@ -117,5 +127,16 @@ class RequestController extends Controller
     {
         Request::find($id)->update(['status' => 'cancelled']);
         return true;
+    }
+
+    public function generatePDF($data)
+    {
+        $pdf = PDF::loadView('pdf.certificate', compact('data'));
+        $output = $pdf->output();
+
+        return new Response($output, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' =>  'inline; filename="clearance_' . $data->f_name . '.pdf"',
+        ]);
     }
 }

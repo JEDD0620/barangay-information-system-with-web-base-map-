@@ -5,6 +5,7 @@ import { FillPaginate } from '../../../elements/FillPaginate'
 import moment from 'moment'
 import { ApproveModal, CancelModal, CreateModal, DisapprovedModal, EditModal, ViewModal } from './Modals'
 import { queryUser } from '../../../utils/user'
+import download from 'downloadjs'
 
 export const Pendings = ({ toggle, setToggle }) => {
     const [requests, setRequests] = useState();
@@ -73,8 +74,32 @@ export const Pendings = ({ toggle, setToggle }) => {
     }
 
     const approveRequest = (setModalLoading) => {
-        Axios.put(`/api/request/${approveData.id}/approve`)
+        Axios.put(`/api/request/${approveData.id}/approve`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/pdf'
+            },
+            responseType: "blob"
+        })
             .then(res => {
+                if (approveData.type == 'Clearance') {
+                    let fileName = res.headers['content-disposition'].split('filename=')[1].split(';')[0].replace(/['"]+/g, '');
+
+                    var newBlob = new Blob([res.data], { type: "application/pdf" })
+
+                    const data = window.URL.createObjectURL(newBlob);
+                    var link = document.createElement('a');
+                    link.href = data;
+                    link.download = fileName;
+                    link.click();
+                    setTimeout(function () {
+                        // For Firefox it is necessary to delay revoking the ObjectURL
+                        window.URL.revokeObjectURL(data);
+                    }, 100);
+
+                    // let content = res.headers['content-type'];
+                    // download(new Blob([res.data]), fileName, 'application/pdf')
+                }
                 setModalLoading(false);
                 setShowToast(`${approveData.type} Approved!`);
                 setApproveData(false);
