@@ -6,7 +6,7 @@ import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
 import { DeleteCommentModal, EditModal } from './components/Modals'
-import { getParamsID } from '../../utils/links'
+import { getParams, getParamsID } from '../../utils/links'
 import { queryUser } from '../../utils/user'
 import { CommentForm } from './components/CommentForm'
 
@@ -17,7 +17,7 @@ const Feedback = () => {
     const [sort, setSort] = useState('id');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 
     //modals
     const [editData, setEditData] = useState(false);
@@ -122,8 +122,8 @@ const Feedback = () => {
         <Layout>
             {!!feedback ?
                 <>
-                    <Card>
-                        <Card.Img variant="top rounded-circle" src="/images/profile/user-circle-solid.svg" />
+                    <Card className='flex-column flex-md-row'>
+                        <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                         <Card.Body>
                             <h6>
                                 {feedback.f_name}
@@ -148,8 +148,8 @@ const Feedback = () => {
                         feedback.comment.map(obj => {
                             return (
                                 <div key={obj.id} >
-                                    <Card className='mb-3'>
-                                        <Card.Img variant="top rounded-circle" src="/images/profile/user-circle-solid.svg" />
+                                    <Card className='mb-3 flex-column flex-md-row'>
+                                        <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                                         <Card.Body>
                                             <h6>
                                                 {obj.f_name}
@@ -166,7 +166,7 @@ const Feedback = () => {
                                                 obj.comment.map((obj2, i2) => {
                                                     return (
                                                         <Card key={obj2.id} className='mb-3'>
-                                                            <Card.Img variant="top rounded-circle" src="/images/profile/user-circle-solid.svg" />
+                                                            <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                                                             <Card.Body>
                                                                 <h6>
                                                                     {obj2.f_name}
@@ -187,7 +187,7 @@ const Feedback = () => {
                                                 <CustomToggle eventKey={obj.id}>Reply</CustomToggle>
                                                 <Accordion.Collapse eventKey={obj.id}>
                                                     <Card className='mb-3'>
-                                                        <Card.Img variant="top rounded-circle" src="/images/profile/user-circle-solid.svg" />
+                                                        <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                                                         <Card.Body>
                                                             <h6>
                                                                 {user.f_name}
@@ -208,7 +208,7 @@ const Feedback = () => {
 
                     {!!user &&
                         <Card className='mt-3'>
-                            <Card.Img variant="top rounded-circle" src="/images/profile/user-circle-solid.svg" />
+                            <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                             <Card.Body>
                                 <h6>
                                     {user.f_name}
@@ -221,7 +221,7 @@ const Feedback = () => {
                 :
                 <Spinner animation="border" variant="primary" className='mt-5' />
             }
-
+            <Button variant='primary btn-block mt-3' onClick={() => window.history.back()}>Back</Button>
             <DeleteCommentModal data={deleteData} setData={setDeleteData} handleAction={deleteFeedback} />
             <EditModal data={editData} setData={setEditData} handleAction={editFeedback} />
 

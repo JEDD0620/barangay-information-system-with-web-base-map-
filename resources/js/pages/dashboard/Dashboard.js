@@ -17,6 +17,12 @@ const Dashboard = () => {
         queryUser(setUser)
     }, [])
 
+    useEffect(() => {
+        if (!!user && !!user.id && !!!user.state) {
+            window.location = '/account'
+        }
+    }, [user])
+
     const getDashboard = () => {
         Axios.get(`/api/dashboard`)
             .then(res => setDashboard(res.data))

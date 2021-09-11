@@ -1,5 +1,6 @@
 import React from 'react'
 import { Pagination } from 'react-bootstrap';
+import { setParams } from '../utils/links';
 
 
 export const FillPaginate = ({ data, setPage, page }) => {
@@ -10,17 +11,17 @@ export const FillPaginate = ({ data, setPage, page }) => {
         let nextEllipsis = false;
 
         items.push(
-            <Pagination.First key={1} onClick={() => setPage(1)} />
+            <Pagination.First key={1} onClick={() => hadleSetPage(1)} />
         )
         items.push(
-            <Pagination.Prev key={2} onClick={() => setPage(page === 1 ? 1 : page - 1)} />
+            <Pagination.Prev key={2} onClick={() => hadleSetPage(page === 1 ? 1 : page - 1)} />
         )
 
         for (let num = 1; num <= last_page; num++) {
 
             if ((num > (current_page - 3) && num < (current_page + 3)) || num > (last_page - 3) || num <= 3) {
                 items.push(
-                    <Pagination.Item key={num + 3} active={num === current_page} onClick={() => setPage(num)}>
+                    <Pagination.Item key={num + 3} active={num === current_page} onClick={() => hadleSetPage(num)}>
                         {num}
                     </Pagination.Item>,
                 );
@@ -36,13 +37,18 @@ export const FillPaginate = ({ data, setPage, page }) => {
         }
 
         items.push(
-            <Pagination.Next key={last_page + 4} onClick={() => setPage(page === last_page ? last_page : page + 1)} />
+            <Pagination.Next key={last_page + 4} onClick={() => hadleSetPage(page === last_page ? last_page : page + 1)} />
         )
         items.push(
-            <Pagination.Last key={last_page + 5} onClick={() => setPage(last_page)} />
+            <Pagination.Last key={last_page + 5} onClick={() => hadleSetPage(last_page)} />
         )
 
         return items;
+    }
+
+    const hadleSetPage = (v) => {
+        setParams('page', v)
+        setPage(v)
     }
 
     return (

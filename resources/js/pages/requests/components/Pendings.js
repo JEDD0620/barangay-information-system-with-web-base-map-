@@ -6,15 +6,16 @@ import moment from 'moment'
 import { ApproveModal, CancelModal, CreateModal, DisapprovedModal, EditModal, ViewModal } from './Modals'
 import { queryUser } from '../../../utils/user'
 import download from 'downloadjs'
+import { getParams, setParams } from '../../../utils/links'
 
 export const Pendings = ({ toggle, setToggle }) => {
     const [requests, setRequests] = useState();
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
-    const [sort, setSort] = useState('requests.id');
+    const [sort, setSort] = useState('requests.updated_at');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
     const [user, setUser] = useState();
 
     //modals
@@ -29,7 +30,10 @@ export const Pendings = ({ toggle, setToggle }) => {
     const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
-        getRequests()
+        const delayDebounceFn = setTimeout(() => {
+            getRequests()
+        }, 100)
+        return () => clearTimeout(delayDebounceFn)
     }, [sort, order, perPage, page, filter])
 
     useEffect(() => {
@@ -38,7 +42,11 @@ export const Pendings = ({ toggle, setToggle }) => {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setFilter(term)
+            if (filter != term) {
+                setParams('page', 1);
+                setPage(1);
+                setFilter(term);
+            }
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [term])
@@ -73,8 +81,8 @@ export const Pendings = ({ toggle, setToggle }) => {
         setPage(1)
     }
 
-    const approveRequest = (setModalLoading) => {
-        Axios.put(`/api/request/${approveData.id}/approve`, {}, {
+    const approveRequest = (setModalLoading, formData) => {
+        Axios.put(`/api/request/${approveData.id}/approve`, formData, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/pdf'
@@ -82,24 +90,6 @@ export const Pendings = ({ toggle, setToggle }) => {
             responseType: "blob"
         })
             .then(res => {
-                if (approveData.type == 'Clearance') {
-                    let fileName = res.headers['content-disposition'].split('filename=')[1].split(';')[0].replace(/['"]+/g, '');
-
-                    var newBlob = new Blob([res.data], { type: "application/pdf" })
-
-                    const data = window.URL.createObjectURL(newBlob);
-                    var link = document.createElement('a');
-                    link.href = data;
-                    link.download = fileName;
-                    link.click();
-                    setTimeout(function () {
-                        // For Firefox it is necessary to delay revoking the ObjectURL
-                        window.URL.revokeObjectURL(data);
-                    }, 100);
-
-                    // let content = res.headers['content-type'];
-                    // download(new Blob([res.data]), fileName, 'application/pdf')
-                }
                 setModalLoading(false);
                 setShowToast(`${approveData.type} Approved!`);
                 setApproveData(false);
@@ -194,6 +184,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                 </Col>
                 <Col md={3}>
                     <FormControl
+                    className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -206,12 +197,6 @@ export const Pendings = ({ toggle, setToggle }) => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'requests.id')}>
-                                        <span>ID</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'requests.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
                                     <th onClick={changeSort.bind(this, 'residents.f_name')}>
                                         <span>Resident</span>
                                         <span className="float-right">
@@ -240,7 +225,6 @@ export const Pendings = ({ toggle, setToggle }) => {
                                 {!!requests && requests.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.id}</td>
                                             <td>{obj.type == 'Residency' ? <>{obj.f_name} {<small>from</small>} {obj.address}</> : obj.resident_name}</td>
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>

@@ -21,7 +21,8 @@ class UserSeeder extends Seeder
                 'email' => 'admin@sfbis.test',
                 'email_verified_at' => now(),
                 'password' => Hash::make('admin123'),
-                'role' => 'Admin'
+                'role' => 'Admin',
+                'state' => 'verified',
             ],
 
             [
@@ -31,6 +32,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => Hash::make('resident123'),
                 'role' => 'Resident',
+                'state' => 'verified',
             ]
         ]);
     }

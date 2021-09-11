@@ -6,16 +6,22 @@ import Axios from 'axios'
 export const CreateModal = ({ data, location, setLocation, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
 
-    const [formData, setFormdata] = useState()
+    const [formData, setFormdata] = useState({
+        type: 'Highlights',
+    })
 
     useEffect(() => {
-        setFormdata({
-            lat: location.lat,
-            lng: location.lng,
-        })
+        if (!!location) {
+            setFormdata({
+                lat: !!location.lat ? location.lat : 0,
+                lng: !!location.lng ? location.lng : 0,
+                type: 'Highlights',
+            })
+        }
     }, [location])
 
-    const onAction = () => {
+    const onAction = (e) => {
+        e.preventDefault();
         setLoading(true)
         Axios.post(`/api/map`, formData)
             .then(res => {
@@ -37,7 +43,7 @@ export const CreateModal = ({ data, location, setLocation, setData, handleAction
         const { name, value } = e.target;
         setFormdata({ ...formData, [name]: value });
 
-        if (name == 'body') {
+        if (name == 'details') {
             e.target.style.height = "0px";
             let scrollHeight = e.target.scrollHeight + 16;
             e.target.style.height = scrollHeight + "px";
@@ -71,15 +77,32 @@ export const CreateModal = ({ data, location, setLocation, setData, handleAction
             .catch(err => console.log(err))
     }
 
+    const [fileName, setFileName] = useState("");
+
+    const onChangeFile = (e) => {
+        var reader = new FileReader();
+        reader.readAsDataURL(e.currentTarget.files[0]);
+
+        reader.onload = () => {
+            setFormdata({ ...formData, photo: reader.result })
+        };
+
+        reader.onerror = (error) => {
+            setFormdata({ ...formData, photo: null })
+        };
+        setFileName(e.currentTarget.files[0].name)
+    }
+
+
     return (
         <Modal show={!!data} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Assign Resident Lcoation</Modal.Title>
+                <Modal.Title>Assign Resident Location</Modal.Title>
             </Modal.Header>
             <Form onSubmit={onAction}>
                 <Modal.Body>
                     <Row>
-                        <Col md={12}>
+                        <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Resident</Form.Label>
                                 <Select
@@ -89,6 +112,66 @@ export const CreateModal = ({ data, location, setLocation, setData, handleAction
                                     placeholder='select residence ...'
                                     onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
                                     required
+                                    isDisabled={formData.type == 'Highlights'}
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Type</Form.Label>
+                                <select className="custom-select d-block" name='type' required onChange={handleChange}>
+                                    <option value="Highlights">Highlights</option>
+                                    <option value="Officials">Officials</option>
+                                    <option value="SK">SK</option>
+                                </select>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Photo</Form.Label>
+                                <Form.File
+                                    id="custom-file"
+                                    accept=".jpg, .jpeg"
+                                    label={!!fileName ? fileName : ""}
+                                    custom
+                                    onInput={onChangeFile}
+                                    placeholder="add photo ..."
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Label</Form.Label>
+                                <Form.Control
+                                    disabled={formData.type != 'Highlights'}
+                                    type="text"
+                                    name='label'
+                                    placeholder="input location label ..."
+                                    required
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    name='details'
+                                    placeholder="input location description ..."
+                                    required
+                                    onChange={handleChange}
+                                    style={{
+                                        minHeight: '120px',
+                                        overflow: 'hidden'
+                                    }}
                                 />
                             </Form.Group>
                         </Col>
@@ -109,12 +192,23 @@ export const CreateModal = ({ data, location, setLocation, setData, handleAction
 }
 
 
-export const RemoveModal = ({ data, location, setLocation, setData, handleAction }) => {
+export const RemoveModal = ({ data, location, setLocation, setData, handleAction, residentData }) => {
     const [loading, setLoading] = useState(false)
+    const [removeData, setRemoveData] = useState(false)
+
+    useEffect(() => {
+        if (!!location && !!residentData)
+            residentData.some(obj => {
+                if (obj.lat == location.lat && obj.lng == location.lng) {
+                    setRemoveData(obj);
+                    return true;
+                }
+            });
+    }, [data, location])
 
     const handleDelete = () => {
         setLoading(true)
-        Axios.delete(`/api/map/${data.id}`)
+        Axios.delete(`/api/map/${removeData.id}`)
             .then(res => {
                 handleAction(setLoading)
             })
@@ -130,9 +224,9 @@ export const RemoveModal = ({ data, location, setLocation, setData, handleAction
 
 
     return (
-        <Modal show={!!data} onHide={handleClose}>
+        <Modal show={!!removeData && !!data} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Remove {data.f_name} Lcoation</Modal.Title>
+                <Modal.Title>Remove {data.f_name} Location</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 Are you sure you want to remove {data.f_name}'s location?

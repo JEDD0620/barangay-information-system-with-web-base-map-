@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { Row, Col, Table, Dropdown, FormControl, Spinner, Toast, Badge } from 'react-bootstrap'
 import Axios from 'axios'
 import { FillPaginate } from '../../../elements/FillPaginate'
+import { getParams, setParams } from '../../../utils/links'
+import moment from 'moment-timezone'
 
 export const NotPendings = (toggle) => {
     const [requests, setRequests] = useState();
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
-    const [sort, setSort] = useState('requests.id');
+    const [sort, setSort] = useState('requests.updated_at');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 
     //modals
 
@@ -23,7 +25,11 @@ export const NotPendings = (toggle) => {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setFilter(term)
+            if (filter != term) {
+                setParams('page', 1);
+                setPage(1);
+                setFilter(term);
+            }
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [term])
@@ -116,6 +122,7 @@ export const NotPendings = (toggle) => {
                 </Col>
                 <Col md={3}>
                     <FormControl
+                    className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -128,12 +135,6 @@ export const NotPendings = (toggle) => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'requests.id')}>
-                                        <span>ID</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'requests.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
                                     <th onClick={changeSort.bind(this, 'residents.f_name')}>
                                         <span>Resident</span>
                                         <span className="float-right">
@@ -153,6 +154,13 @@ export const NotPendings = (toggle) => {
                                         </span>
                                     </th>
 
+                                    <th onClick={changeSort.bind(this, 'requests.date')}>
+                                        <span>Claim Date</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'requests.date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
+
                                     <th onClick={changeSort.bind(this, 'requests.status')}>
                                         <span>Status</span>
                                         <span className="float-right">
@@ -165,10 +173,10 @@ export const NotPendings = (toggle) => {
                                 {!!requests && requests.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.id}</td>
                                             <td>{obj.type == 'Residency' ? <>{obj.f_name} {<small>from</small>} {obj.address}</> : obj.resident_name}</td>
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
+                                            <td>{moment(obj.date).format('D MMM YYYY')}</td>
                                             <td
                                                 className={`text-capitalize font-weight-bold ${obj.status == 'approved' ? 'text-success' : obj.status == 'cancelled' ? 'text-secondary' : 'text-danger'}`}
                                             >

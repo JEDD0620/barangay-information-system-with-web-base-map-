@@ -4,6 +4,7 @@ import { Layout } from '../../layout/Layout'
 import { Row, Col, Button, FormControl, Spinner, Toast, Badge, Form, Container } from 'react-bootstrap'
 import Axios from 'axios'
 import { queryUser } from '../../utils/user'
+import { Residency } from './components/Residency'
 
 const Account = () => {
     const [user, setUser] = useState({})
@@ -108,6 +109,8 @@ const Account = () => {
                         </Col>
                     </Row>
                 </Form>
+
+                <Residency user={user}/>
             </Container>
 
         </Layout>

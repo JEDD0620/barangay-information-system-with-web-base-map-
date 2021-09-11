@@ -7,15 +7,16 @@ import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
 import { DeleteModal, CreateModal, EditModal, ViewModal } from './components/Modals'
 import { queryUser } from '../../utils/user'
+import { getParams, setParams } from '../../utils/links'
 
 const Events = () => {
     const [events, setEvents] = useState();
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
-    const [sort, setSort] = useState('posts.id');
+    const [sort, setSort] = useState('posts.from_date');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
     const [user, setUser] = useState();
 
     //modals
@@ -28,7 +29,10 @@ const Events = () => {
     const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
-        getEvents()
+        const delayDebounceFn = setTimeout(() => {
+            getEvents()
+        }, 100)
+        return () => clearTimeout(delayDebounceFn)
     }, [sort, order, perPage, page, filter])
 
     useEffect(() => {
@@ -38,7 +42,11 @@ const Events = () => {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setFilter(term)
+            if (filter != term) {
+                setParams('page', 1);
+                setPage(1);
+                setFilter(term);
+            }
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [term])
@@ -151,6 +159,7 @@ const Events = () => {
                 </Col>
                 <Col md={3}>
                     <FormControl
+                    className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -164,12 +173,6 @@ const Events = () => {
                             <Table striped bordered hover className='mt-3'>
                                 <thead>
                                     <tr>
-                                        <th onClick={changeSort.bind(this, 'posts.id')}>
-                                            <span>ID</span>
-                                            <span className="float-right">
-                                                <i className={`fa fa-sort${!!sort && sort === 'posts.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                            </span>
-                                        </th>
                                         <th onClick={changeSort.bind(this, 'posts.title')}>
                                             <span>Title</span>
                                             <span className="float-right">
@@ -211,7 +214,6 @@ const Events = () => {
                                     {!!events && events.data.map((obj, i) => {
                                         return (
                                             <tr key={i}>
-                                                <td>{obj.id}</td>
                                                 <td>{obj.title}</td>
                                                 <td>{obj.f_name}</td>
                                                 <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>

@@ -7,15 +7,16 @@ import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
 import { DeleteModal, CreateModal, EditModal, ViewModal } from './components/Modals'
 import { queryUser } from '../../utils/user'
+import { getParams, setParams } from '../../utils/links'
 
 const Announcements = () => {
     const [announcements, setAnnouncements] = useState();
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
-    const [sort, setSort] = useState('posts.id');
+    const [sort, setSort] = useState('posts.updated_at');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 
     const [user, setUser] = useState();
 
@@ -29,7 +30,10 @@ const Announcements = () => {
     const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
-        getAnnouncements()
+        const delayDebounceFn = setTimeout(() => {
+            getAnnouncements()
+        }, 100)
+        return () => clearTimeout(delayDebounceFn)
     }, [sort, order, perPage, page, filter])
 
     useEffect(() => {
@@ -38,7 +42,11 @@ const Announcements = () => {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setFilter(term)
+            if (filter != term) {
+                setParams('page', 1);
+                setPage(1);
+                setFilter(term);
+            }
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [term])
@@ -151,6 +159,7 @@ const Announcements = () => {
                 </Col>
                 <Col md={3}>
                     <FormControl
+                        className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -164,12 +173,6 @@ const Announcements = () => {
                             <Table striped bordered hover className='mt-3'>
                                 <thead>
                                     <tr>
-                                        <th onClick={changeSort.bind(this, 'posts.id')}>
-                                            <span>ID</span>
-                                            <span className="float-right">
-                                                <i className={`fa fa-sort${!!sort && sort === 'posts.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                            </span>
-                                        </th>
                                         <th onClick={changeSort.bind(this, 'posts.title')}>
                                             <span>Title</span>
                                             <span className="float-right">
@@ -211,7 +214,6 @@ const Announcements = () => {
                                     {!!announcements && announcements.data.map((obj, i) => {
                                         return (
                                             <tr key={i}>
-                                                <td>{obj.id}</td>
                                                 <td>{obj.title}</td>
                                                 <td>{obj.f_name}</td>
                                                 <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
@@ -241,14 +243,15 @@ const Announcements = () => {
                 !!announcements && announcements.data.map(obj => {
                     return (
                         <Card className='mt-3' key={obj.id}>
-                            <Card.Body>
-                                <Card.Title>
+                            <Card.Body className='text-center ml-4 mr-4'>
+                                <Card.Title className='text-primary'>
                                     {obj.title}
                                 </Card.Title>
                                 <h6>
                                     {`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ` to ${moment(obj.to_date).format('D MMM YYYY')}` : ''}`}
                                     {!!obj.from_time &&
                                         <small>
+                                            <br />
                                             {` at ${moment(obj.from_time, "HH:mm:ss").format("hh:mm A")}${!!obj.to_time ? ` to ${moment(obj.to_time, "HH:mm:ss").format("hh:mm A")}` : ''}`}
                                         </small>
                                     }
@@ -257,7 +260,7 @@ const Announcements = () => {
                                     {obj.body}
                                 </Card.Text>
                                 <small className='text-muted'>
-                                    <i className="far fa-clock align-baseline"></i> {moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}
+                                    <i className="far fa-clock align-baseline"></i> Posted: {moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}
                                 </small>
                                 {/* <Button type="button" variant='link' href='#comment'>Comment</Button> */}
                             </Card.Body>

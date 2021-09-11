@@ -80,7 +80,6 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                                     placeholder='select residence ...'
                                     onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
                                     required
-                                    isDisabled={formData.type == 'Residency'}
                                 />
                             </Form.Group>
                         </Col>
@@ -130,64 +129,6 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                             </Form.Group>
                         </Col>
                     </Row>
-
-                    {formData.type == 'Residency' &&
-                        <>
-                            <Row>
-                                <Col md={12}>
-                                    <h5 className='mt-3'>Residency Details</h5>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Full Name</Form.Label>
-                                        <Form.Control type="text" name='f_name' placeholder="input full name ..." required onChange={handleChange} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Job</Form.Label>
-                                        <Form.Control type="text" name='job' placeholder="input job ..." onChange={handleChange} />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Birthday</Form.Label>
-                                        <Form.Control type="date" name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Gender</Form.Label>
-                                        <select className="custom-select d-block" name='gender' required onChange={handleChange}>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Address</Form.Label>
-                                        <Form.Control type="text" name='address' placeholder="input address ..." required onChange={handleChange} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Contact Number</Form.Label>
-                                        <Form.Control type="tel" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                        </>
-                    }
 
                 </Modal.Body>
                 <Modal.Footer>
@@ -307,7 +248,6 @@ export const EditModal = ({ data, setData, handleAction }) => {
                                         isSearchable={true}
                                         placeholder='select residence ...'
                                         onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
-                                        isDisabled={formData.type == 'Residency'}
                                         defaultValue={{ value: data.resident_id, label: data.resident_name }}
                                     />
                                 }
@@ -363,64 +303,6 @@ export const EditModal = ({ data, setData, handleAction }) => {
                         </Col>
                     </Row>
 
-                    {formData.type == 'Residency' &&
-                        <>
-                            <Row>
-                                <Col md={12}>
-                                    <h5 className='mt-3'>Residency Details</h5>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Full Name</Form.Label>
-                                        <Form.Control type="text" name='f_name' placeholder="input full name ..." required onChange={handleChange} defaultValue={data.f_name} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Job</Form.Label>
-                                        <Form.Control type="text" name='job' placeholder="input job ..." onChange={handleChange} defaultValue={data.job} />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Birthday</Form.Label>
-                                        <Form.Control type="date" name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} defaultValue={data.b_date} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Gender</Form.Label>
-                                        <select className="custom-select d-block" name='gender' required onChange={handleChange} defaultValue={data.gender}>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Address</Form.Label>
-                                        <Form.Control type="text" name='address' placeholder="input address ..." required onChange={handleChange} defaultValue={data.address} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Contact Number</Form.Label>
-                                        <Form.Control type="tel" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} defaultValue={data.contact_no} />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                        </>
-                    }
-
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type='button' variant="secondary" onClick={handleClose}>
@@ -438,6 +320,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
 
 export const ViewModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
+    const [formData, setFormData] = useState(false)
 
     const onAction = () => {
         setLoading(true)
@@ -484,10 +367,12 @@ export const ViewModal = ({ data, setData, handleAction }) => {
 
 export const ApproveModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
+    const [formData, setFormData] = useState(false)
 
-    const onAction = () => {
+    const onAction = (e) => {
+        e.preventDefault();
         setLoading(true)
-        handleAction(setLoading)
+        handleAction(setLoading, formData)
     }
 
     const handleClose = () => {
@@ -495,38 +380,39 @@ export const ApproveModal = ({ data, setData, handleAction }) => {
         setLoading(false)
     }
 
+    const handleChange = (e) => {
+        setFormData({ date: e.target.value })
+    }
+
     return (
         <Modal show={!!data} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Approve {data.type}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                Are you sure you want to Approve this {data.type}? <br />
-                Resident: {data.type == 'Residency' ? data.f_name : data.resident_name} <br />
+            <Form onSubmit={onAction} >
+                <Modal.Body>
+                    Are you sure you want to Approve this {data.type} for {data.resident_name}? <br />
+                    Resident: {data.type == 'Residency' ? data.f_name : data.resident_name} <br />
 
-                {data.type == 'Residency' ?
-                    <>
-                        {'Address: ' + data.address}<br />
-                        {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
-                        {'Gender: ' + data.gender}<br />
-                        {'Contact No.: ' + data.contact_no}<br />
-                        {!!data.job && 'Job: ' + data.job}
-                    </>
-                    :
-                    <>
-                        Address: {data.resident_address} <br />
-                        Contact No: {data.resident_contact_no} <br />
-                    </>
-                }
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                <Button variant="success" onClick={onAction} disabled={loading}>
-                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Approve'}
-                </Button>
-            </Modal.Footer>
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3 mt-3">
+                                <Form.Label>Claim Date</Form.Label>
+                                <Form.Control type="date" name='date' placeholder="set claim date" required onChange={handleChange} />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                </Modal.Body>
+                <Modal.Footer >
+                    <Button type='button' variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button type='submit' variant="success" disabled={loading}>
+                        {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Approve'}
+                    </Button>
+                </Modal.Footer>
+            </Form>
         </Modal>
     )
 }

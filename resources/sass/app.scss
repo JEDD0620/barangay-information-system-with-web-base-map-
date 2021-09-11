@@ -13,14 +13,26 @@
     box-sizing: border-box;
 }
 
+@mixin mobile {
+    @media (max-width: 599px) {
+        @content;
+    }
+}
+
 body {
     margin: 0;
     overflow: hidden;
+    @include mobile(){
+        overflow: scroll;
+    }
 }
 
 main {
     display: flex;
     height: 100vh;
+    @include mobile(){
+        display: unset;
+    }
 }
 
 nav {
@@ -28,6 +40,10 @@ nav {
     width: 15%;
     flex-shrink: 0;
     min-width: fit-content;
+
+    @include mobile(){
+        width: 100%;
+    }
 
     .nav {
         flex-direction: column;
@@ -40,6 +56,8 @@ nav {
             text-align: center;
         }
 
+        .nav
+
         .nav-item {
             margin-top: 1rem;
             margin-left: 1rem;
@@ -49,6 +67,10 @@ nav {
 
             .nav-link.active {
                 color: $primary;
+
+                @include mobile(){
+                    color: $dark !important;
+                }
             }
         }
     }
@@ -102,7 +124,7 @@ p {
 }
 
 .card {
-    flex-direction: row;
+    // flex-direction: row;
 
     img {
         height: 3rem;
@@ -116,11 +138,11 @@ p {
         white-space: break-spaces;
     }
 
-    .dropdown{
+    .dropdown {
         display: inline-block;
 
         .dropdown-toggle {
-            &::after{
+            &::after {
                 display: none;
             }
         }

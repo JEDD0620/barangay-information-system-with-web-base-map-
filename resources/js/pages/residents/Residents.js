@@ -6,15 +6,17 @@ import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
 import { DeleteModal, AssignModal, CreateModal, EditModal } from './components/Modals'
+import { getParams, setParams } from '../../utils/links'
+import { PendingResident } from './components/PendingResident'
 
 const Residents = () => {
     const [residents, setResidents] = useState();
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
-    const [sort, setSort] = useState('id');
+    const [sort, setSort] = useState('updated_at');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 
     //modals
     const [createData, setCreateData] = useState(false);
@@ -26,12 +28,19 @@ const Residents = () => {
     const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
-        getResidents()
+        const delayDebounceFn = setTimeout(() => {
+            getResidents()
+        }, 100)
+        return () => clearTimeout(delayDebounceFn)
     }, [sort, order, perPage, page, filter])
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setFilter(term)
+            if (filter != term) {
+                setParams('page', 1);
+                setPage(1);
+                setFilter(term);
+            }
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [term])
@@ -72,9 +81,9 @@ const Residents = () => {
                 setModalLoading(false);
                 setShowToast(`New Resident Created!`);
                 setCreateData(false);
-                if(sort == 'updated_at' && order=='desc' && page==1){
+                if (sort == 'updated_at' && order == 'desc' && page == 1) {
                     getResidents()
-                }else{
+                } else {
                     setSort('updated_at');
                     setOrder('desc');
                     setPage(1);
@@ -108,7 +117,7 @@ const Residents = () => {
 
     return (
         <Layout>
-
+            <PendingResident />
             <Row className='mb-3'>
                 <Col md={10}>
                     <h2>Residents <Badge variant="primary">{!!residents ? residents.total : 0}</Badge></h2>
@@ -143,6 +152,7 @@ const Residents = () => {
                 </Col>
                 <Col md={3}>
                     <FormControl
+                    className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -155,12 +165,6 @@ const Residents = () => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'id')}>
-                                        <span>ID</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
                                     <th onClick={changeSort.bind(this, 'f_name')}>
                                         <span>Full Name</span>
                                         <span className="float-right">
@@ -212,7 +216,6 @@ const Residents = () => {
                                 {!!residents && residents.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.id}</td>
                                             <td>{obj.f_name}</td>
                                             <td>{obj.role}</td>
                                             <td>{moment(obj.b_date).format('D MMM YYYY')}</td>

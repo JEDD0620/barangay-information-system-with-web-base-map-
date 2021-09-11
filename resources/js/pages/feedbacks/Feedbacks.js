@@ -6,7 +6,7 @@ import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
 import { DeleteModal, AssignModal, CreateModal, EditModal } from './components/Modals'
-import { tosef } from '../../utils/links'
+import { getParams, setParams, tosef } from '../../utils/links'
 
 const Feedbacks = () => {
     const [feedbacks, setFeedbacks] = useState();
@@ -15,7 +15,7 @@ const Feedbacks = () => {
     const [sort, setSort] = useState('feedbacks.id');
     const [order, setOrder] = useState('desc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 
     //modals
     const [createData, setCreateData] = useState(false);
@@ -27,12 +27,19 @@ const Feedbacks = () => {
     const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
-        getFeedbacks()
+        const delayDebounceFn = setTimeout(() => {
+            getFeedbacks()
+        }, 100)
+        return () => clearTimeout(delayDebounceFn)
     }, [sort, order, perPage, page, filter])
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setFilter(term)
+            if (filter != term) {
+                setParams('page', 1);
+                setPage(1);
+                setFilter(term);
+            }
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [term])
@@ -73,9 +80,9 @@ const Feedbacks = () => {
                 setModalLoading(false);
                 setShowToast(`New Feedback Created!`);
                 setCreateData(false);
-                if(sort == 'updated_at' && order=='desc' && page==1){
+                if (sort == 'updated_at' && order == 'desc' && page == 1) {
                     getFeedbacks()
-                }else{
+                } else {
                     setSort('updated_at');
                     setOrder('desc');
                     setPage(1);
@@ -144,6 +151,7 @@ const Feedbacks = () => {
                 </Col>
                 <Col md={3}>
                     <FormControl
+                    className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />

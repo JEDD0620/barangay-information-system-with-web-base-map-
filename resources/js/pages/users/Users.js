@@ -6,15 +6,16 @@ import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
 import { DeleteModal, AssignModal } from './components/Modals'
+import { getParams, setParams } from '../../utils/links'
 
 const Users = () => {
     const [users, setUsers] = useState();
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
-    const [sort, setSort] = useState('id');
+    const [sort, setSort] = useState('updated_at');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 
     //modals
     const [newModal, setNewModal] = useState(false);
@@ -26,12 +27,19 @@ const Users = () => {
     const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
-        getUsers()
+        const delayDebounceFn = setTimeout(() => {
+            getUsers()
+        }, 100)
+        return () => clearTimeout(delayDebounceFn)
     }, [sort, order, perPage, page, filter])
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setFilter(term)
+            if (filter != term) {
+                setParams('page', 1);
+                setPage(1);
+                setFilter(term);
+            }
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [term])
@@ -129,6 +137,7 @@ const Users = () => {
                 </Col>
                 <Col md={3}>
                     <FormControl
+                    className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -141,12 +150,6 @@ const Users = () => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'id')}>
-                                        <span>ID</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
                                     <th onClick={changeSort.bind(this, 'f_name')}>
                                         <span>Full Name</span>
                                         <span className="float-right">
@@ -192,7 +195,6 @@ const Users = () => {
                                 {!!users && users.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.id}</td>
                                             <td>{obj.f_name}</td>
                                             <td>{obj.username}</td>
                                             <td>{obj.email}</td>

@@ -17,6 +17,7 @@ class PostController extends Controller
         $filter = $req->get('filter');
 
         $events = Post::where('type', 'Event')
+            ->whereDate('from_date', '>=', now()->format('Y-m-d'))
             ->leftJoin('users', 'posts.user_id', 'users.id')
             ->select('users.f_name', 'posts.*')
             ->orderBy($sort, $order);

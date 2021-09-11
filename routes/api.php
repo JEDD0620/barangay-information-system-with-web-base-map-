@@ -42,11 +42,14 @@ Route::middleware('verified')->group(function () {
 
     Route::prefix('resident')->group(function () {
         Route::get('/', [ResidentController::class, "getResidents"])->middleware('staff');
+        Route::get('/pending', [ResidentController::class, "getPending"])->middleware('staff');
+        Route::put('/approve', [ResidentController::class, "approveResident"])->middleware('staff');
+        Route::get('/{id}', [ResidentController::class, "getResident"]);
         Route::get('/search/{search}', [ResidentController::class, "searchResidents"]);
-        Route::post('/', [ResidentController::class, "createResident"])->middleware('staff');
+        Route::post('/', [ResidentController::class, "createResident"]);
         Route::put('/', [ResidentController::class, "editResident"])->middleware('staff');
         Route::delete('/{id}', [ResidentController::class, "deleteResident"])->middleware('staff');
-        Route::put('/assign', [ResidentController::class, "assignResident"])->middleware('admin');
+        Route::put('/assign', [ResidentController::class, "assignResident"])->middleware('staff');
     });
 
     Route::prefix('post')->group(function () {

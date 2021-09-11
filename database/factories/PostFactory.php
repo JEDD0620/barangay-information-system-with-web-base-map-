@@ -19,7 +19,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Post::class, function (Faker $faker) {
     $users = App\User::where('role', 'Staff')->pluck('id')->toArray();
-    $fromDate  = Carbon::create(2021, 7, 10, 0, 0, 0);
+    $fromDate  = Carbon::create(2021, 9, 30, 0, 0, 0);
     $getTime = $faker->time($format = 'H:i', $max = null, $min = 'now');
     $fromTime = $faker->randomElement([$getTime, null]);
 

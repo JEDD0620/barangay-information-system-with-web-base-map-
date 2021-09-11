@@ -89,31 +89,30 @@ class RequestController extends Controller
         return true;
     }
 
-    public function approveRequest($id)
+    public function approveRequest(Req $req, $id)
     {
         $request = Request::find($id);
-        if ($request->type == 'Residency') {
-            Resident::create(
-                $request->only([
-                    'address',
-                    'b_date',
-                    'contact_no',
-                    'f_name',
-                    'gender',
-                    'job',
-                ])
-            );
-        }
+        // if ($request->type == 'Residency') {
+        //     Resident::create(
+        //         $request->only([
+        //             'address',
+        //             'b_date',
+        //             'contact_no',
+        //             'f_name',
+        //             'gender',
+        //             'job',
+        //         ])
+        //     );
+        // }
 
-        if ($request->type == 'Clearance') {
-            $request = Request::leftJoin('residents', 'requests.resident_id', 'residents.id')
-                ->select('requests.*', 'residents.f_name')
-                ->find($id);
-            $request->update(['status' => 'approved']);
-            return $this->generatePDF($request);
-        }
-
-        $request->update(['status' => 'approved']);
+        // if ($request->type == 'Clearance') {
+        //     $request = Request::leftJoin('residents', 'requests.resident_id', 'residents.id')
+        //         ->select('requests.*', 'residents.f_name')
+        //         ->find($id);
+        //     $request->update(['status' => 'approved']);
+        //     return $this->generatePDF($request);
+        // }
+        $request->update(['status' => 'approved', 'date' => $req->date]);
         return true;
     }
 

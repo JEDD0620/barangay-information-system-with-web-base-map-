@@ -28,7 +28,7 @@ Route::middleware('verified')->group(function () {
     //admin routes
     Route::view('/account', 'pages.account');
     Route::view('/dashboard', 'pages.dashboard');
-    Route::view('/residents', 'pages.residents')->middleware('admin');
+    Route::view('/residents', 'pages.residents')->middleware('staff');
     Route::view('/users', 'pages.users')->middleware('admin');
     Route::view('/map', 'pages.map');
     Route::view('/schedules', 'pages.schedules');

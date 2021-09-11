@@ -4,15 +4,16 @@ import Axios from 'axios'
 import { FillPaginate } from '../../../elements/FillPaginate'
 import moment from 'moment'
 import { ViewClosedModal } from './Modals'
+import { getParams, setParams } from '../../../utils/links'
 
 export const NotPendings = (toggle) => {
     const [reports, setReports] = useState();
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
-    const [sort, setSort] = useState('reports.id');
+    const [sort, setSort] = useState('reports.updated_at');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 
     //modals
     const [viewData, setViewData] = useState(false);
@@ -26,7 +27,11 @@ export const NotPendings = (toggle) => {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setFilter(term)
+            if (filter != term) {
+                setParams('page', 1);
+                setPage(1);
+                setFilter(term);
+            }
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [term])
@@ -97,6 +102,7 @@ export const NotPendings = (toggle) => {
                 </Col>
                 <Col md={3}>
                     <FormControl
+                    className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -109,12 +115,6 @@ export const NotPendings = (toggle) => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'reports.id')}>
-                                        <span>ID</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'reports.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
                                     <th onClick={changeSort.bind(this, 'residents.f_name')}>
                                         <span>Resident</span>
                                         <span className="float-right">
@@ -144,7 +144,6 @@ export const NotPendings = (toggle) => {
                                 {!!reports && reports.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.id}</td>
                                             <td>{obj.resident_name}</td>
                                             <td>{obj.status=='cancelled'?'Cancelled by Reporter' : obj.staff_name}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>

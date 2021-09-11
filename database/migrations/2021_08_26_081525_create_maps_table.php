@@ -15,7 +15,11 @@ class CreateMapsTable extends Migration
     {
         Schema::create('maps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('resident_id');
+            $table->foreignId('resident_id')->nullable();
+            $table->string('label')->nullable();
+            $table->string('type');
+            $table->string('photo')->nullable();
+            $table->text('details');
             $table->string('lat');
             $table->string('lng');
             $table->timestamps();

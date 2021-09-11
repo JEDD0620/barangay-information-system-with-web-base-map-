@@ -11,7 +11,7 @@ import _, { add } from 'lodash'
 
 const Schedules = () => {
     const [schedules, setSchedules] = useState([]);
-    const [sort, setSort] = useState('schedules.id');
+    const [sort, setSort] = useState('schedules.updated_at');
     const [order, setOrder] = useState('asc');
 
     const [user, setUser] = useState();
@@ -138,12 +138,6 @@ const Schedules = () => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'schedules.id')}>
-                                        <span>ID</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'schedules.id' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
                                     <th onClick={changeSort.bind(this, 'residents.f_name')}>
                                         <span>Name</span>
                                         <span className="float-right">
@@ -211,7 +205,6 @@ const Schedules = () => {
                                     if (!!duty || obj.recurence == 'weekdays' || obj.recurence == 'daily') {
                                         return (
                                             <tr key={i}>
-                                                <td>{obj.id}</td>
                                                 <td>{obj.f_name}</td>
                                                 <td>{!!duty ? moment(duty).format('D MMM YYYY') : <span className='text-capitalize'>{obj.recurence}</span>}</td>
                                                 <td>{moment(obj.in, 'HH:mm:ss').format('hh:mm A')}</td>

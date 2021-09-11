@@ -10,5 +10,9 @@ class Map extends Model
         'resident_id',
         'lat',
         'lng',
+        'details',
+        'label',
+        'type',
+        'photo',
     ];
 }
