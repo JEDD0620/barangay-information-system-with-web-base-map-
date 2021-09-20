@@ -258,7 +258,7 @@ const Events = () => {
                                     {obj.body}
                                 </Card.Text>
                                 <small className='text-muted'>
-                                    <i className="far fa-clock align-baseline"></i> {moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}
+                                    <i className="far fa-clock align-baseline"></i> Posted: {moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}
                                 </small>
                                 {/* <Button type="button" variant='link' href='#comment'>Comment</Button> */}
                             </Card.Body>

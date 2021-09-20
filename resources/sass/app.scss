@@ -22,7 +22,7 @@
 body {
     margin: 0;
     overflow: hidden;
-    @include mobile(){
+    @include mobile() {
         overflow: scroll;
     }
 }
@@ -30,7 +30,7 @@ body {
 main {
     display: flex;
     height: 100vh;
-    @include mobile(){
+    @include mobile() {
         display: unset;
     }
 }
@@ -41,7 +41,7 @@ nav {
     flex-shrink: 0;
     min-width: fit-content;
 
-    @include mobile(){
+    @include mobile() {
         width: 100%;
     }
 
@@ -56,9 +56,7 @@ nav {
             text-align: center;
         }
 
-        .nav
-
-        .nav-item {
+        .nav .nav-item {
             margin-top: 1rem;
             margin-left: 1rem;
             font-size: 0.875rem;
@@ -68,7 +66,7 @@ nav {
             .nav-link.active {
                 color: $primary;
 
-                @include mobile(){
+                @include mobile() {
                     color: $dark !important;
                 }
             }
@@ -147,4 +145,8 @@ p {
             }
         }
     }
+}
+
+.nav-link.active {
+    background-color: $primary;
 }

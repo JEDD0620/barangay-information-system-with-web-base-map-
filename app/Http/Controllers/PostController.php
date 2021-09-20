@@ -38,6 +38,7 @@ class PostController extends Controller
         $filter = $req->get('filter');
 
         $announcements = Post::where('type', 'Announcement')
+            ->whereDate('to_date', '>=', now()->format('Y-m-d'))
             ->leftJoin('users', 'posts.user_id', 'users.id')
             ->select('users.f_name', 'posts.*')
             ->orderBy($sort, $order);
