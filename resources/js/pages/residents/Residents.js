@@ -14,7 +14,7 @@ const Residents = () => {
     const [filter, setFilter] = useState('');
     const [term, setTerm] = useState('');
     const [sort, setSort] = useState('updated_at');
-    const [order, setOrder] = useState('asc');
+    const [order, setOrder] = useState('desc');
     const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 

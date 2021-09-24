@@ -45,12 +45,12 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                                 <Form.Label>Role</Form.Label>
                                 <select className="custom-select d-block" name='role' required onChange={handleChange}>
                                     <option value="Resident">Resident</option>
-                                    <option value="Captain">Brgy.Kapitan</option>
-                                    <option value="Captain">Brgy.Kagawad</option>
-                                    <option value="Kagawad">SK Chairman</option>
-                                    <option value="Kagawad">SK Kagawad</option>
-                                    <option value="Kagawad">Brgy.Treasurer</option>
-                                    <option value="Kagawad">Brgy.Secretary</option>
+                                    <option value="Brgy.Kapitan">Brgy.Kapitan</option>
+                                    <option value="Brgy.Kagawad">Brgy.Kagawad</option>
+                                    <option value="SK Chairman">SK Chairman</option>
+                                    <option value="SK Kagawad">SK Kagawad</option>
+                                    <option value="Brgy.Treasurer">Brgy.Treasurer</option>
+                                    <option value="Brgy.Secretary">Brgy.Secretary</option>
                                 </select>
                             </Form.Group>
                         </Col>
@@ -84,7 +84,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Contact Number</Form.Label>
-                                <Form.Control type="tel" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                <Form.Control type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -196,7 +196,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Contact Number</Form.Label>
-                                <Form.Control defaultValue={data.contact_no} type="tel" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                <Form.Control defaultValue={data.contact_no} type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>

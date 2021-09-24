@@ -203,6 +203,9 @@ const Announcements = () => {
                                                 <i className={`fa fa-sort${!!sort && sort === 'posts.updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
+                                        <th>
+                                            <span>Status</span>
+                                        </th>
                                         {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
                                             <th>
                                                 <span>Action</span>
@@ -219,6 +222,11 @@ const Announcements = () => {
                                                 <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
                                                 <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
                                                 <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
+                                                <td>{(!!obj.to_date && moment(obj.from_date).unix() <= moment().unix() && moment(obj.to_date).unix() >= moment().unix()) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
+                                                    'Ongoing'
+                                                    :
+                                                    'Upcomming'
+                                                }</td>
                                                 {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
                                                     <td className='text-center'>
                                                         <ButtonGroup size='sm'>
@@ -246,6 +254,14 @@ const Announcements = () => {
                             <Card.Body className='text-center ml-4 mr-4'>
                                 <Card.Title className='text-primary'>
                                     {obj.title}
+
+                                    <br />
+
+                                    {(!!obj.to_date && moment(obj.from_date).unix() <= moment().unix() && moment(obj.to_date).unix() >= moment().unix()) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
+                                        <Badge variant='success'>Ongoing</Badge>
+                                        :
+                                        <Badge variant='warning'>Upcomming</Badge>
+                                    }
                                 </Card.Title>
                                 <h6>
                                     {`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ` to ${moment(obj.to_date).format('D MMM YYYY')}` : ''}`}
@@ -254,6 +270,7 @@ const Announcements = () => {
                                             <br />
                                             {` at ${moment(obj.from_time, "HH:mm:ss").format("hh:mm A")}${!!obj.to_time ? ` to ${moment(obj.to_time, "HH:mm:ss").format("hh:mm A")}` : ''}`}
                                         </small>
+
                                     }
                                 </h6>
                                 <Card.Text>

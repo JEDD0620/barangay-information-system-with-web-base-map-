@@ -17,6 +17,7 @@ const Schedules = () => {
     const [user, setUser] = useState();
     const [multiplier, setMultiplier] = useState(0);
     const weekdays = useRef(['Mon', 'Thu', 'Wed', 'Tue', 'Fri']);
+    const weekends = useRef(['Sat', 'Sun']);
 
     //modals
     const [createData, setCreateData] = useState(false);
@@ -184,37 +185,73 @@ const Schedules = () => {
                                 {!!schedules && schedules.map((obj, i) => {
                                     let duty = obj.duty
                                     if (obj.recurence == 'monthly') {
-                                        _.times(7, (v) => {
-                                            if (moment().add(multiplier, 'weeks').add(v, 'days').date() == moment(obj.duty).date()) {
-                                                duty = moment().add(multiplier, 'weeks').add(v, 'days').format('YYYY-MM-DD')
-                                            } else {
-                                                duty = null;
-                                            }
-                                        })
+                                        let adata = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'months')
+                                        let assigned = false;
+                                        if (adata >= 0 && adata < obj.times) {
+                                            _.times(7, (v) => {
+                                                if (moment().add(multiplier, 'weeks').add(v, 'days').date() == moment(obj.duty).date()) {
+                                                    duty = moment().add(multiplier, 'weeks').add(v, 'days').format('YYYY-MM-DD')
+                                                    assigned = true;
+                                                } else {
+                                                    if (!assigned) {
+                                                        duty = null;
+                                                    }
+                                                }
+                                            })
+                                        } else {
+                                            duty = null
+                                        }
 
                                     }
 
                                     if (obj.recurence == 'weekly') {
-                                        _.times(7, (v) => {
-                                            if (moment().add(multiplier, 'weeks').add(v, 'days').day() == moment(obj.duty).day()) {
-                                                duty = moment().add(multiplier, 'weeks').add(v, 'days').format('YYYY-MM-DD')
-                                            }
-                                        })
+                                        let adata = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'weeks')
+                                        if (adata >= 0 && adata < obj.times) {
+                                            _.times(7, (v) => {
+                                                if (moment().add(multiplier, 'weeks').add(v, 'days').day() == moment(obj.duty).day()) {
+                                                    duty = moment().add(multiplier, 'weeks').add(v, 'days').format('YYYY-MM-DD')
+                                                }
+                                            })
+                                        } else {
+                                            duty = null
+                                        }
                                     }
 
-                                    if (!!duty || obj.recurence == 'weekdays' || obj.recurence == 'daily') {
+                                    if (obj.recurence == 'weekdays' || obj.recurence == 'weekends') {
+                                        let adata = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'weeks')
+                                        if (adata >= 0 && adata < obj.times) {
+
+                                        } else {
+                                            duty = null
+                                        }
+                                    }
+
+                                    // dailyData = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'days');
+
+                                    if (obj.recurence == 'daily') {
+                                        let adata = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'days')
+                                        console.log(adata);
+                                        if (adata >= -obj.times && adata < obj.times) {
+
+                                        } else {
+                                            duty = null
+                                        }
+                                    }
+
+                                    if (!!duty) {
                                         return (
                                             <tr key={i}>
                                                 <td>{obj.f_name}</td>
-                                                <td>{!!duty ? moment(duty).format('D MMM YYYY') : <span className='text-capitalize'>{obj.recurence}</span>}</td>
+                                                <td>{obj.recurence == 'none' ? moment(duty).format('D MMM YYYY') : <span className='text-capitalize'>{obj.recurence}</span>}</td>
                                                 <td>{moment(obj.in, 'HH:mm:ss').format('hh:mm A')}</td>
                                                 <td>{moment(obj.out, 'HH:mm:ss').format('hh:mm A')}</td>
                                                 <td className={`pl-0 pr-0 border-0 ${multiplier == 0 && 'bg-success'}`}>
                                                     <div
                                                         className={`
-                                                    ${moment().add(multiplier, 'weeks').add(0, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && 'bg-primary '}
+                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(0, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
+                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(-1, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(-1, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
                                                     ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(0, 'days').format('ddd')) && 'bg-primary '}
+                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(0, 'days').format('ddd')) && 'bg-primary '}
                                                     `}
                                                     >
                                                         &nbsp;
@@ -223,9 +260,10 @@ const Schedules = () => {
                                                 <td className='pl-0 pr-0 border-0'>
                                                     <div
                                                         className={`
-                                                    ${moment().add(multiplier, 'weeks').add(1, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && 'bg-primary '}
+                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(1, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
+                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(0, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(0, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
                                                     ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(1, 'days').format('ddd')) && 'bg-primary '}
+                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(1, 'days').format('ddd')) && 'bg-primary '}
                                                 `}
                                                     >
                                                         &nbsp;
@@ -234,9 +272,10 @@ const Schedules = () => {
                                                 <td className='pl-0 pr-0 border-0'>
                                                     <div
                                                         className={`
-                                                    ${moment().add(multiplier, 'weeks').add(2, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && 'bg-primary '}
+                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(2, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
+                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(1, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(1, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
                                                     ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(2, 'days').format('ddd')) && 'bg-primary '}
+                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(2, 'days').format('ddd')) && 'bg-primary '}
                                                 `}
                                                     >
                                                         &nbsp;
@@ -245,9 +284,10 @@ const Schedules = () => {
                                                 <td className='pl-0 pr-0 border-0'>
                                                     <div
                                                         className={`
-                                                    ${moment().add(multiplier, 'weeks').add(3, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && 'bg-primary '}
+                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(3, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
+                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(2, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(2, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
                                                     ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(3, 'days').format('ddd')) && 'bg-primary '}
+                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(3, 'days').format('ddd')) && 'bg-primary '}
                                                 `}
                                                     >
                                                         &nbsp;
@@ -256,9 +296,10 @@ const Schedules = () => {
                                                 <td className='pl-0 pr-0 border-0'>
                                                     <div
                                                         className={`
-                                                    ${moment().add(multiplier, 'weeks').add(4, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && 'bg-primary '}
+                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(4, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
+                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(3, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(3, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
                                                     ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(4, 'days').format('ddd')) && 'bg-primary '}
+                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(4, 'days').format('ddd')) && 'bg-primary '}
                                                 `}
                                                     >
                                                         &nbsp;
@@ -267,9 +308,10 @@ const Schedules = () => {
                                                 <td className='pl-0 pr-0 border-0'>
                                                     <div
                                                         className={`
-                                                    ${moment().add(multiplier, 'weeks').add(5, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && 'bg-primary '}
+                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(5, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
+                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(4, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(4, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
                                                     ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(5, 'days').format('ddd')) && 'bg-primary '}
+                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(5, 'days').format('ddd')) && 'bg-primary '}
                                                 `}
                                                     >
                                                         &nbsp;
@@ -278,9 +320,10 @@ const Schedules = () => {
                                                 <td className='pl-0 pr-0 border-0'>
                                                     <div
                                                         className={`
-                                                    ${moment().add(multiplier, 'weeks').add(6, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && 'bg-primary '}
+                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(6, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
+                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(5, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(5, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
                                                     ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(6, 'days').format('ddd')) && 'bg-primary '}
+                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(6, 'days').format('ddd')) && 'bg-primary '}
                                                 `}
                                                     >
                                                         &nbsp;

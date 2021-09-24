@@ -3,7 +3,6 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Schedule;
-use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 /*
@@ -19,12 +18,14 @@ use Faker\Generator as Faker;
 
 $factory->define(Schedule::class, function (Faker $faker) {
     $residents = App\Resident::pluck('id')->toArray();
-    $recurence = $faker->randomElement(['weekdays', 'daily', 'weekly', 'monthly', 'none']);
+    $recurence = $faker->randomElement(['weekdays', 'weekends','daily', 'weekly', 'monthly', 'none']);
+    // $recurence = $faker->randomElement(['weekdays', 'daily', 'none']);
 
     return [
         'resident_id' => $faker->randomElement($residents),
-        'duty' =>  $recurence != 'daily' && $recurence != 'weekdays' ? now()->addDay(rand(0, 30)) : null,
+        'duty' =>  now()->addDay(rand(0, 30)),
         'recurence' => $recurence,
+        'times' => rand(1, 2),
         'in' => now()->addHour(rand(1, 24))->setSecond(0)->setMinute(0),
         'out' => now()->addHour(rand(1, 24))->setSecond(0)->setMinute(0),
         'note' => $faker->realText($maxNbChars = 500, $indexSize = 2),

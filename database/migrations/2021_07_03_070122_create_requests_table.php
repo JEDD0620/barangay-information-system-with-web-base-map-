@@ -15,8 +15,8 @@ class CreateRequestsTable extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('resident_id')->nullable()->references('id')->on('residents');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('resident_id')->nullable();
             $table->string('type');
             $table->string('purpose')->nullable();
             $table->dateTime('date')->nullable();

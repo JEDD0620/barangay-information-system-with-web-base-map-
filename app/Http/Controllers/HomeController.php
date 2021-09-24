@@ -31,7 +31,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard');
+        return redirect('/dashboard');
+        // return view('pages.dashboard');
     }
 
     public function getdashboard()
@@ -42,8 +43,14 @@ class HomeController extends Controller
                 'residents_count' => Resident::count(),
                 'users_count' => User::count(),
                 'schedules_count' => Schedule::count(),
-                'events_count' => Post::where('type', 'event')->count(),
-                'announcements_count' => Post::where('type', 'announcement')->count(),
+                'events_count' => Post::where('type', 'event')->where(function ($q) {
+                    $q->whereDate('from_date', '>=', now()->format('Y-m-d'))
+                        ->orWhereDate('to_date', '>=', now()->format('Y-m-d'));
+                })->count(),
+                'announcements_count' => Post::where('type', 'announcement')->where(function ($q) {
+                    $q->whereDate('from_date', '>=', now()->format('Y-m-d'))
+                        ->orWhereDate('to_date', '>=', now()->format('Y-m-d'));
+                })->count(),
                 'request_count' => AppRequest::where('status', 'pending')->count(),
                 'reports_count' => Report::where('status', 'pending')->count(),
                 'feedbacks_count' => Feedback::whereNull('parent_id')->count(),

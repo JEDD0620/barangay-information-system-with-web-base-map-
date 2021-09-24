@@ -47,7 +47,7 @@ nav {
 
     .nav {
         flex-direction: column;
-        font-size: 1.25rem;
+        font-size: 1rem;
 
         i {
             font-size: 1.5rem;
@@ -80,13 +80,13 @@ nav {
         margin-bottom: 0.5rem;
 
         i {
-            font-size: 7rem;
+            font-size: 6rem;
             vertical-align: middle;
         }
 
         div {
             font-weight: 500;
-            font-size: 1.25rem;
+            font-size: 1.125rem;
             margin-top: 0.5rem;
             text-transform: capitalize;
         }
@@ -149,4 +149,12 @@ p {
 
 .nav-link.active {
     background-color: $primary;
+}
+
+.log-icon {
+    margin-top: -4rem !important;
+    height: 7rem !important;
+    width: 7rem !important;
+    background-color: white;
+    border-radius: 50%;
 }

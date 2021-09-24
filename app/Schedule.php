@@ -10,6 +10,7 @@ class Schedule extends Model
         'resident_id',
         'duty',
         'recurence',
+        'times',
         'in',
         'out',
         'note'

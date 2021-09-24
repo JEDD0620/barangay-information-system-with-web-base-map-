@@ -73,18 +73,20 @@ class ResidentController extends Controller
     public function approveResident(Request $req)
     {
         $resident =  Resident::find($req->id);
-        $resident->update(['role' => 'Resident']);
-
-        $user = User::find($resident->owner_id);
-        $user->state = 'verified';
-        $user->save();
+        $resident->role = 'Resident';
+        $resident->save();
+        if (isset($resident->owner_id)) {
+            $user = User::find($resident->owner_id);
+            $user->state = 'verified';
+            $user->save();
+        }
 
         return true;
     }
 
     public function searchResidents($search)
     {
-        return Resident::where('f_name', 'LIKE',  '%' . $search . '%')->take(5)->get();
+        return Resident::where('role', '!=', 'Request')->where('f_name', 'LIKE',  '%' . $search . '%')->take(5)->get();
     }
 
     public function createResident(Request $req)

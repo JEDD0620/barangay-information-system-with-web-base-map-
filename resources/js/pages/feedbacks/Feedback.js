@@ -110,7 +110,7 @@ const Feedback = () => {
                         <i className="fas fa-ellipsis-h"></i>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => setEditData(val)}>Edit</Dropdown.Item>
+                        {/* <Dropdown.Item onClick={() => setEditData(val)}>Edit</Dropdown.Item> */}
                         <Dropdown.Item onClick={() => setDeleteData(val)}>Delete</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -223,7 +223,7 @@ const Feedback = () => {
             }
             <Button variant='primary btn-block mt-3' onClick={() => window.history.back()}>Back</Button>
             <DeleteCommentModal data={deleteData} setData={setDeleteData} handleAction={deleteFeedback} />
-            <EditModal data={editData} setData={setEditData} handleAction={editFeedback} />
+            {/* <EditModal data={editData} setData={setEditData} handleAction={editFeedback} /> */}
 
         </Layout>
     );

@@ -12,7 +12,7 @@ export const User = ({ user, dashboard }) => {
         <Row>
 
             <Col md={4} >
-                <Card className='text-center mb-4 text-dark' style={{ height: '25vh' }}>
+                <Card className='text-center mb-4 text-dark flex-row' style={{ height: '25vh' }}>
 
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <a className='btn btn-link text-dark d-block' href='/events'>
@@ -31,7 +31,7 @@ export const User = ({ user, dashboard }) => {
             </Col>
 
             <Col md={4} >
-                <Card className='text-center mb-4 text-dark' style={{ height: '25vh' }}>
+                <Card className='text-center mb-4 text-dark flex-row' style={{ height: '25vh' }}>
 
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <a className='btn btn-link text-dark d-block' href='/announcements'>
@@ -50,7 +50,7 @@ export const User = ({ user, dashboard }) => {
             </Col>
 
             <Col md={4} >
-                <Card className='text-center mb-4 text-dark' style={{ height: '25vh' }}>
+                <Card className='text-center mb-4 text-dark flex-row' style={{ height: '25vh' }}>
 
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <a className='btn btn-link text-dark d-block' href='/schedules'>
@@ -69,7 +69,7 @@ export const User = ({ user, dashboard }) => {
             </Col>
 
             <Col md={12}>
-                <Card className='mb-4 text-dark' style={{ height: '25vh' }}>
+                <Card className='mb-4 text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <a className='btn btn-link text-dark d-block' href='/map'>
                             <Card.Title>
@@ -85,7 +85,7 @@ export const User = ({ user, dashboard }) => {
 
 
             <Col md={4} >
-                <Card className='text-center mb-4 text-dark' style={{ height: '25vh' }}>
+                <Card className='text-center mb-4 text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <a className='btn btn-link text-dark d-block' href='/requests' >
                             <Card.Title>
@@ -104,7 +104,7 @@ export const User = ({ user, dashboard }) => {
             </Col>
 
             <Col md={4} >
-                <Card className='text-center mb-4 text-dark' style={{ height: '25vh' }}>
+                <Card className='text-center mb-4 text-dark flex-row' style={{ height: '25vh' }}>
 
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <a className='btn btn-link text-dark d-block' href='/reports'>
@@ -124,7 +124,7 @@ export const User = ({ user, dashboard }) => {
             </Col>
 
             <Col md={4} >
-                <Card className='text-center mb-4 text-dark' style={{ height: '25vh' }}>
+                <Card className='text-center mb-4 text-dark flex-row' style={{ height: '25vh' }}>
 
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <a className='btn btn-link text-dark d-block' href='/feedbacks'>

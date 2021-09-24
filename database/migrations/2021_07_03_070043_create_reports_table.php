@@ -15,9 +15,9 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('resident_id')->nullable()->references('id')->on('residents');
-            $table->foreignId('staff_id')->nullable()->references('id')->on('users');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('resident_id')->nullable();
+            $table->unsignedBigInteger('staff_id')->nullable();
             $table->text('case');
             $table->string('status')->default('Pending');
             $table->timestamps();

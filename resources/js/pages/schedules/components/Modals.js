@@ -7,11 +7,12 @@ import Select from 'react-select'
 export const CreateModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormdata] = useState({
-        recurence: '',
+        recurence: 'none',
         resident_id: null,
         duty: moment().format('YYYY-MM-DD'),
         in: '08:00',
-        out: '17:00'
+        out: '17:00',
+        times: 1,
     })
     const [searchInput, setSearchInput] = useState()
     const [options, setOptions] = useState()
@@ -99,26 +100,38 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                                     required onChange={handleChange}
                                     value={formData.duty}
                                     required
-                                    disabled={formData.recurence == 'daily' || formData.recurence == 'weekdays'}
+                                    disabled={formData.recurence == 'weekdays' || formData.recurence == 'weekends'}
                                 />
                             </Form.Group>
                         </Col>
 
-                        <Col md={6}>
+                        <Col md={3}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Recurence</Form.Label>
+                                <Form.Label>Repeat</Form.Label>
                                 <Select
                                     options={[
                                         { label: 'None', value: 'none' },
                                         { label: 'Weekdays', value: 'weekdays' },
+                                        { label: 'Weekends', value: 'weekends' },
                                         { label: 'Daily', value: 'daily' },
                                         { label: 'Weekly', value: 'weekly' },
                                         { label: 'Monthly', value: 'monthly' },
                                     ]}
                                     placeholder='select recurence ...'
-                                    onChange={(e) => setFormdata({ ...formData, recurence: e.value, duty: (e.value == 'daily' || e.value == 'weekdays') ? '' : formData.duty })}
+                                    onChange={(e) => setFormdata({ ...formData, recurence: e.value, duty: (e.value == 'weekends' || e.value == 'weekdays') ? moment().format('YYYY-MM-DD') : formData.duty })}
                                     defaultValue={{ label: 'None', value: 'none' }}
                                 />
+                            </Form.Group>
+                        </Col>
+                        <Col md={3}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>{
+                                    (formData.recurence == 'weekdays' || formData.recurence == 'weekends' || formData.recurence == 'weekly') ? "No. of Weeks"
+                                        : formData.recurence == 'daily' ? 'No. of Days'
+                                            : formData.recurence == 'monthly' ? 'No. of Months'
+                                                : <span>&nbsp;</span>
+                                }</Form.Label>
+                                <Form.Control disabled={formData.recurence == 'none'} type="number" defaultValue={1} name='times' required={!!formData.to_time} onChange={handleChange} required />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -160,11 +173,12 @@ export const EditModal = ({ data, setData, handleAction }) => {
         {
             recurence: data.recurence,
             resident_id: data.resident_id,
-            duty: data.recurence != 'daily' && data.recurence != 'weekdays' ? moment(data.duty).format('YYYY-MM-DD') : null,
+            duty: moment(data.duty).format('YYYY-MM-DD'),
             in: data.in,
             out: data.out,
             id: data.id,
-            f_name: data.f_name
+            f_name: data.f_name,
+            times: data.times
         }
     )
 
@@ -172,11 +186,12 @@ export const EditModal = ({ data, setData, handleAction }) => {
         setFormdata({
             recurence: data.recurence,
             resident_id: data.resident_id,
-            duty: data.recurence != 'daily' && data.recurence != 'weekdays' ? moment(data.duty).format('YYYY-MM-DD') : null,
+            duty: moment(data.duty).format('YYYY-MM-DD'),
             in: data.in,
             out: data.out,
             id: data.id,
-            f_name: data.f_name
+            f_name: data.f_name,
+            times: data.times
         })
     }, [data])
 
@@ -265,30 +280,42 @@ export const EditModal = ({ data, setData, handleAction }) => {
                                     name='duty'
                                     placeholder="input date here ..."
                                     required onChange={handleChange}
-                                    defaultValue={formData.duty}
+                                    defaultValue={moment(data.duty).format('YYYY-MM-DD')}
                                     required
-                                    disabled={formData.recurence == 'daily' || formData.recurence == 'weekdays'}
+                                    disabled={formData.recurence == 'weekends' || formData.recurence == 'weekdays'}
                                 />
                             </Form.Group>
                         </Col>
 
-                        <Col md={6}>
+                        <Col md={3}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Recurence</Form.Label>
+                                <Form.Label>Repeat</Form.Label>
                                 {!!data &&
                                     <Select
                                         options={[
-                                            { label: 'None', value: '' },
+                                            { label: 'None', value: 'none' },
                                             { label: 'Weekdays', value: 'weekdays' },
+                                            { label: 'Weekends', value: 'weekends' },
                                             { label: 'Daily', value: 'daily' },
                                             { label: 'Weekly', value: 'weekly' },
                                             { label: 'Monthly', value: 'monthly' },
                                         ]}
                                         placeholder='select recurence ...'
-                                        onChange={(e) => setFormdata({ ...formData, recurence: e.value, duty: (e.value == 'daily' || e.value == 'weekdays') ? '' : formData.duty })}
+                                        onChange={(e) => setFormdata({ ...formData, recurence: e.value, duty: (e.value == 'daily' || e.value == 'weekdays') ? moment().format('YYYY-MM-DD') : formData.duty })}
                                         defaultValue={{ label: data.recurence.charAt(0).toUpperCase() + data.recurence.slice(1), value: data.recurence }}
                                     />
                                 }
+                            </Form.Group>
+                        </Col>
+                        <Col md={3}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>{
+                                    (formData.recurence == 'weekdays' || formData.recurence == 'weekends' || formData.recurence == 'weekly') ? "No. of Weeks"
+                                        : formData.recurence == 'daily' ? 'No. of Days'
+                                            : formData.recurence == 'monthly' ? 'No. of Months'
+                                                : <span>&nbsp;</span>
+                                }</Form.Label>
+                                <Form.Control disabled={formData.recurence == 'none'} defaultValue={formData.times} type="number" name='times' required={!!formData.to_time} onChange={handleChange} required />
                             </Form.Group>
                         </Col>
                     </Row>

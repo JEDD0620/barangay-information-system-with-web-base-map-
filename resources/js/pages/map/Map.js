@@ -11,7 +11,7 @@ import { pick } from 'lodash';
 const params = {
     v: 'weekly',
     key: 'AIzaSyCcXqxbe5qJEi8g6ZhMPScT3yH8p1bQD9M',
-    mapTypeId: "terrain",
+    mapTypeId: "satellite",
 };
 
 function handleClick() {
@@ -28,7 +28,7 @@ const Map = () => {
     const [location, setLocation] = useState(false);
     const [user, setuser] = useState();
 
-    const [zoom, setZoom] = useState(15);
+    const [zoom, setZoom] = useState(16);
     const [info, setInfo] = useState(false);
     const [center, setCenter] = useState({
         lat: 15.427334136369526,
@@ -154,6 +154,7 @@ const Map = () => {
                 zoom={zoom}
                 params={params}
                 onMapCreated={onMapCreated}
+                mapTypeId='satellite'
 
             >
 

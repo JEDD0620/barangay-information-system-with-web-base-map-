@@ -23,7 +23,7 @@ export const Layout = ({ children }) => {
                         <Navbar.Collapse id="basic-navbar-nav">
                             {!!user && (user.role == 'Admin' || user.role == 'Staff') ?
                                 <>
-                                    <Nav.Link className={`${location.pathname == "/dashboard" && 'active'}`} href="/dashboard"><i className="fas fa-th"></i> Dashboard</Nav.Link>
+                                    <Nav.Link className={`${(location.pathname == "/dashboard" || location.pathname == "") && 'active'}`} href="/dashboard"><i className="fas fa-th"></i> Dashboard</Nav.Link>
                                     <Nav.Link className={`${location.pathname == "/residents" && 'active'}`} href="/residents"><i className="fas fa-house-user"></i> Residents</Nav.Link>
                                     <Nav.Link className={`${location.pathname == "/users" && 'active'}`} href="/users"><i className="fas fa-users-cog"></i> Users</Nav.Link>
                                     <Nav.Link className={`${location.pathname == "/map" && 'active'}`} href="/map"><i className="fas fa-map-marked-alt"></i> Brgy. Map</Nav.Link>
@@ -39,7 +39,7 @@ export const Layout = ({ children }) => {
                                 </>
                                 :
                                 <>
-                                    <Nav.Link className={`${location.pathname == "/dashboard" && 'active'}`} href="/dashboard"><i className="fas fa-th"></i> Dashboard</Nav.Link>
+                                    <Nav.Link className={`${(location.pathname == "/dashboard" || location.pathname == "") && 'active'}`} href="/dashboard"><i className="fas fa-th"></i> Dashboard</Nav.Link>
                                     <Nav.Link className={`${location.pathname == "/map" && 'active'}`} href="/map"><i className="fas fa-map-marked-alt"></i> Brgy. Map</Nav.Link>
                                     <Nav.Link className={`${location.pathname == "/schedules" && 'active'}`} href="/schedules"><i className="fas fa-calendar-day"></i> Schedules</Nav.Link>
                                     <Nav.Link className={`${location.pathname == "/events" && 'active'}`} href="/events"><i className="far fa-calendar-alt"></i> Events</Nav.Link>

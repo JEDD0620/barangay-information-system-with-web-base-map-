@@ -98,7 +98,7 @@ const Account = () => {
                         <Col md={6}>
                             <Form.Group>
                                 <Form.Label>Contact No</Form.Label>
-                                <Form.Control type="text" name='contact_no' defaultValue={!!user ? user.contact_no : ''} disabled={!!!user} onChange={handleChange} required />
+                                <Form.Control type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' defaultValue={!!user ? user.contact_no : ''} disabled={!!!user} onChange={handleChange} required />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -110,7 +110,7 @@ const Account = () => {
                     </Row>
                 </Form>
 
-                <Residency user={user}/>
+                <Residency user={user} />
             </Container>
 
         </Layout>

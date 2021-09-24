@@ -7,7 +7,7 @@ export const Admin = ({user, dashboard}) => {
     return (
         <Row>
             <Col md={4} >
-                <Card onClick={() => location = '/residents'} className='text-center mb-4 btn btn-primary text-dark' style={{ height: '25vh' }}>
+                <Card onClick={() => location = '/residents'} className='text-center mb-4 btn btn-primary text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <Card.Title>
                             <i style={{ fontSize: "4rem" }} className="fas fa-house-user"></i>
@@ -23,7 +23,7 @@ export const Admin = ({user, dashboard}) => {
             </Col>
 
             <Col md={4} >
-                <Card onClick={() => location = '/users'} className='text-center mb-4 btn btn-primary text-dark' style={{ height: '25vh' }}>
+                <Card onClick={() => location = '/users'} className='text-center mb-4 btn btn-primary text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <Card.Title>
                             <i style={{ fontSize: "4rem" }} className="fas fa-users-cog"></i>
@@ -39,7 +39,7 @@ export const Admin = ({user, dashboard}) => {
             </Col>
 
             <Col md={4} >
-                <Card onClick={() => location = '/schedules'} className='text-center mb-4 btn btn-primary text-dark' style={{ height: '25vh' }}>
+                <Card onClick={() => location = '/schedules'} className='text-center mb-4 btn btn-primary text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <Card.Title>
                             <i style={{ fontSize: "4rem" }} className="fas fas fa-calendar-day"></i>
@@ -55,7 +55,7 @@ export const Admin = ({user, dashboard}) => {
             </Col>
 
             <Col md={4} >
-                <Card onClick={() => location = '/requests'} className='text-center mb-4 btn btn-primary text-dark' style={{ height: '25vh' }}>
+                <Card onClick={() => location = '/requests'} className='text-center mb-4 btn btn-primary text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <Card.Title>
                             <i style={{ fontSize: "4rem" }} className="fas fa-clipboard-list"></i>
@@ -71,7 +71,7 @@ export const Admin = ({user, dashboard}) => {
             </Col>
 
             <Col md={4} >
-                <Card className='text-center mb-4 bg-primary text-light' style={{ height: '25vh' }}>
+                <Card className='text-center mb-4 bg-primary text-light flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <h1 className='mb-0'>
                             BIS
@@ -81,7 +81,7 @@ export const Admin = ({user, dashboard}) => {
             </Col>
 
             <Col md={4} >
-                <Card onClick={() => location = '/reports'} className='text-center mb-4 btn btn-primary text-dark' style={{ height: '25vh' }}>
+                <Card onClick={() => location = '/reports'} className='text-center mb-4 btn btn-primary text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <Card.Title>
                             <i style={{ fontSize: "4rem" }} className="fas fa-exclamation-triangle"></i>
@@ -97,7 +97,7 @@ export const Admin = ({user, dashboard}) => {
             </Col>
 
             <Col md={4} >
-                <Card onClick={() => location = '/events'} className='text-center mb-4 btn btn-primary text-dark' style={{ height: '25vh' }}>
+                <Card onClick={() => location = '/events'} className='text-center mb-4 btn btn-primary text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <Card.Title>
                             <i style={{ fontSize: "4rem" }} className="fas fa-calendar-alt"></i>
@@ -113,7 +113,7 @@ export const Admin = ({user, dashboard}) => {
             </Col>
 
             <Col md={4} >
-                <Card onClick={() => location = '/announcements'} className='text-center mb-4 btn btn-primary text-dark' style={{ height: '25vh' }}>
+                <Card onClick={() => location = '/announcements'} className='text-center mb-4 btn btn-primary text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <Card.Title>
                             <i style={{ fontSize: "4rem" }} className="fas fa-bullhorn"></i>
@@ -129,7 +129,7 @@ export const Admin = ({user, dashboard}) => {
             </Col>
 
             <Col md={4} >
-                <Card onClick={() => location = '/feedbacks'} className='text-center mb-4 btn btn-primary text-dark' style={{ height: '25vh' }}>
+                <Card onClick={() => location = '/feedbacks'} className='text-center mb-4 btn btn-primary text-dark flex-row' style={{ height: '25vh' }}>
                     <Card.Body style={{ placeSelf: 'center' }}>
                         <Card.Title>
                             <i style={{ fontSize: "4rem" }} className="fas fa-flag"></i>

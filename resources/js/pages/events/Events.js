@@ -159,7 +159,7 @@ const Events = () => {
                 </Col>
                 <Col md={3}>
                     <FormControl
-                    className='mt-2 mt-md-0'
+                        className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -203,6 +203,9 @@ const Events = () => {
                                                 <i className={`fa fa-sort${!!sort && sort === 'posts.updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
+                                        <th>
+                                            <span>Status</span>
+                                        </th>
                                         {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
                                             <th>
                                                 <span>Action</span>
@@ -219,6 +222,11 @@ const Events = () => {
                                                 <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
                                                 <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
                                                 <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
+                                                <td>{(!!obj.to_date && moment(obj.from_date).unix() <= moment().unix() && moment(obj.to_date).unix() >= moment().unix()) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
+                                                    'Ongoing'
+                                                    :
+                                                    'Upcomming'
+                                                }</td>
                                                 {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
                                                     <td className='text-center'>
                                                         <ButtonGroup size='sm'>
@@ -244,7 +252,11 @@ const Events = () => {
                         <Card className='mt-3' key={obj.id}>
                             <Card.Body>
                                 <Card.Title>
-                                    {obj.title}
+                                    {obj.title} {(!!obj.to_date && moment(obj.from_date).unix() <= moment().unix() && moment(obj.to_date).unix() >= moment().unix()) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
+                                        <Badge variant='success'>Ongoing</Badge>
+                                        :
+                                        <Badge variant='warning'>Upcomming</Badge>
+                                    }
                                 </Card.Title>
                                 <h6>
                                     {`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ` to ${moment(obj.to_date).format('D MMM YYYY')}` : ''}`}

@@ -184,7 +184,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                 </Col>
                 <Col md={3}>
                     <FormControl
-                    className='mt-2 mt-md-0'
+                        className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -215,6 +215,12 @@ export const Pendings = ({ toggle, setToggle }) => {
                                             <i className={`fa fa-sort${!!sort && sort === 'requests.purpose' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
+                                    <th onClick={changeSort.bind(this, 'requests.created_at')}>
+                                        <span>Created</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'requests.created_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
 
                                     <th>
                                         <span>Action</span>
@@ -228,6 +234,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                                             <td>{obj.type == 'Residency' ? <>{obj.f_name} {<small>from</small>} {obj.address}</> : obj.resident_name}</td>
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
+                                            <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
                                                 {!!user && user.id != obj.user_id ?
                                                     <ButtonGroup size='sm'>

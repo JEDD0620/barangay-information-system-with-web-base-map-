@@ -187,7 +187,7 @@ export const CreateRequest = ({ data, setData }) => {
                                 <Col md={6}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Contact Number</Form.Label>
-                                        <Form.Control type="tel" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                        <Form.Control type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                                     </Form.Group>
                                 </Col>
                             </Row>
