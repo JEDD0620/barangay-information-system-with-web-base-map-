@@ -128,7 +128,7 @@ export const CreateModal = ({ data, location, setLocation, setData, handleAction
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={4}>
+                        <Col md={12}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Photo</Form.Label>
                                 <Form.File
