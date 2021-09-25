@@ -222,7 +222,7 @@ const Announcements = () => {
                                                 <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
                                                 <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
                                                 <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
-                                                <td>{(!!obj.to_date && moment(obj.from_date).unix() <= moment().unix() && moment(obj.to_date).unix() >= moment().unix()) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
+                                                <td>{(!!obj.to_date && moment().isBetween(obj.from_date, obj.to_date, 'days', '[]')) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
                                                     moment().isBetween(moment(obj.from_time, "HH:mm:ss"), moment(obj.to_time, "HH:mm:ss")) || (!!!obj.to_time && moment().isAfter(moment(obj.from_time, "HH:mm:ss"))) || !!!obj.from_time ?
                                                         "Ongoing"
                                                         : moment().isAfter(moment(obj.to_time, "HH:mm:ss")) ?
@@ -261,7 +261,7 @@ const Announcements = () => {
 
                                     <br />
 
-                                    {(!!obj.to_date && moment(obj.from_date).unix() <= moment().unix() && moment(obj.to_date).unix() >= moment().unix()) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
+                                    {(!!obj.to_date && moment().isBetween(obj.from_date, obj.to_date, 'days', '[]')) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
                                         moment().isBetween(moment(obj.from_time, "HH:mm:ss"), moment(obj.to_time, "HH:mm:ss")) || (!!!obj.to_time && moment().isAfter(moment(obj.from_time, "HH:mm:ss"))) || !!!obj.from_time ?
                                             <Badge variant='success'>Ongoing</Badge>
                                             : moment().isAfter(moment(obj.to_time, "HH:mm:ss")) ?
