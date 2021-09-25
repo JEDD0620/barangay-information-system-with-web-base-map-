@@ -114,8 +114,8 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                                         { label: 'Weekdays', value: 'weekdays' },
                                         { label: 'Weekends', value: 'weekends' },
                                         { label: 'Daily', value: 'daily' },
-                                        { label: 'Weekly', value: 'weekly' },
-                                        { label: 'Monthly', value: 'monthly' },
+                                        // { label: 'Weekly', value: 'weekly' },
+                                        // { label: 'Monthly', value: 'monthly' },
                                     ]}
                                     placeholder='select recurence ...'
                                     onChange={(e) => setFormdata({ ...formData, recurence: e.value, duty: (e.value == 'weekends' || e.value == 'weekdays') ? moment().format('YYYY-MM-DD') : formData.duty })}
@@ -297,8 +297,8 @@ export const EditModal = ({ data, setData, handleAction }) => {
                                             { label: 'Weekdays', value: 'weekdays' },
                                             { label: 'Weekends', value: 'weekends' },
                                             { label: 'Daily', value: 'daily' },
-                                            { label: 'Weekly', value: 'weekly' },
-                                            { label: 'Monthly', value: 'monthly' },
+                                            // { label: 'Weekly', value: 'weekly' },
+                                            // { label: 'Monthly', value: 'monthly' },
                                         ]}
                                         placeholder='select recurence ...'
                                         onChange={(e) => setFormdata({ ...formData, recurence: e.value, duty: (e.value == 'daily' || e.value == 'weekdays') ? moment().format('YYYY-MM-DD') : formData.duty })}

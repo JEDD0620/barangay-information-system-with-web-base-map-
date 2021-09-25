@@ -76,7 +76,10 @@ class ReportController extends Controller
         $sort = $req->get('sort');
         $filter = $req->get('filter');
 
-        $reports = Report::where('status',  'closed')->orWhere('status', 'cancelled')
+        $reports = Report::where(function ($q) {
+            $q->where('status',  'closed')
+                ->orWhere('status', 'cancelled');
+        })
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
             ->leftJoin('users', 'reports.staff_id', 'users.id')
             ->select(
@@ -105,7 +108,7 @@ class ReportController extends Controller
         return true;
     }
 
-    public function editReport (Request $req, $id)
+    public function editReport(Request $req, $id)
     {
         Report::find($id)->update($req->all());
         return true;

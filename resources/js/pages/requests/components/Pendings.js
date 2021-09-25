@@ -231,7 +231,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                                 {!!requests && requests.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.type == 'Residency' ? <>{obj.f_name} {<small>from</small>} {obj.address}</> : obj.resident_name}</td>
+                                            <td>{obj.resident_name}</td>
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>

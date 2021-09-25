@@ -2,7 +2,7 @@ import Axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 
-export const Residency = ({ user }) => {
+export const Residency = ({ user, setToast }) => {
     const [loading, setLoading] = useState(false);
     const [sent, setSent] = useState(false);
     const [formData, setFormData] = useState({
@@ -52,6 +52,7 @@ export const Residency = ({ user }) => {
             .then(res => {
                 setLoading(false)
                 setSent(true)
+                setToast('Residency Updated!')
             })
             .catch(err => console.log(err))
     }

@@ -36,9 +36,11 @@ class RequestController extends Controller
         }
 
         if (!!isset($filter)) {
-            $requests->where('residents.f_name', 'LIKE', '%' . $filter . '%')
-                ->orWhere('requests.type', 'LIKE', '%' . $filter . '%')
-                ->orWhere('requests.purpose', 'LIKE', '%' . $filter . '%');
+            $requests->where(function ($q) use ($filter) {
+                $q->where('residents.f_name', 'LIKE', '%' . $filter . '%')
+                    ->orWhere('requests.type', 'LIKE', '%' . $filter . '%')
+                    ->orWhere('requests.purpose', 'LIKE', '%' . $filter . '%');
+            });
         }
 
         return $requests->paginate($perPage, ['*'], 'page', $page);
@@ -69,9 +71,11 @@ class RequestController extends Controller
         }
 
         if (!!isset($filter)) {
-            $requests->where('residents.f_name', 'LIKE', '%' . $filter . '%')
-                ->orWhere('requests.type', 'LIKE', '%' . $filter . '%')
-                ->orWhere('requests.purpose', 'LIKE', '%' . $filter . '%');
+            $requests->where(function ($q) use ($filter) {
+                $q->where('residents.f_name', 'LIKE', '%' . $filter . '%')
+                    ->orWhere('requests.type', 'LIKE', '%' . $filter . '%')
+                    ->orWhere('requests.purpose', 'LIKE', '%' . $filter . '%');
+            });
         }
 
         return $requests->paginate($perPage, ['*'], 'page', $page);
@@ -79,7 +83,11 @@ class RequestController extends Controller
 
     public function createRequest(Req $req)
     {
-        Auth::user()->requests()->create($req->all());
+
+        $data = $req->all();
+        if (!isset($data['resident_id']))
+            $data['resident_id'] = Auth::id();
+        Auth::user()->requests()->create($data);
         return true;
     }
 

@@ -28,7 +28,8 @@ const Account = () => {
             .then(res => {
                 localStorage.removeItem('user');
                 localStorage.setItem('user', JSON.stringify(res.data))
-                location.reload()
+                setShowToast('User Account Updated!')
+                // location.reload()
             })
             .catch(err => console.log(err))
     }
@@ -52,7 +53,6 @@ const Account = () => {
                         </Toast.Header>
                     </Toast>
                 </Col>
-
             </Row>
 
             <Container>
@@ -62,7 +62,7 @@ const Account = () => {
                         <Col md={6}>
                             <Form.Group>
                                 <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" name='username' defaultValue={!!user ? user.username : ''} disabled={!!!user} onChange={handleChange} required />
+                                <Form.Control pattern='[A-Za-z]{8,}$' title='small case letters only, min of 8' type="text" name='username' defaultValue={!!user ? user.username : ''} disabled={!!!user} onChange={handleChange} required />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
@@ -77,13 +77,13 @@ const Account = () => {
                         <Col md={6}>
                             <Form.Group>
                                 <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder='fill to change password ...' minLength={8} name='password' disabled={!!!user} onChange={handleChange} />
+                                <Form.Control pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Alphanumeric only, min of 8" type="password" placeholder='fill to change password ...' minLength={8} name='password' disabled={!!!user} onChange={handleChange} />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
                             <Form.Group>
                                 <Form.Label>Confirm Password {!isValid && <Form.Text className='text-danger d-inline-block mt-0'> *password did not matched!</Form.Text>}</Form.Label>
-                                <Form.Control type="password" placeholder='fill to change password ...' name='c_password' disabled={!!!user} onChange={handleChange} />
+                                <Form.Control pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Alphanumeric only, min of 8" type="password" placeholder='fill to change password ...' name='c_password' disabled={!!!user} onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -110,7 +110,7 @@ const Account = () => {
                     </Row>
                 </Form>
 
-                <Residency user={user} />
+                <Residency user={user} setToast={setShowToast}/>
             </Container>
 
         </Layout>

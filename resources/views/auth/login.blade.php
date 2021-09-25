@@ -20,7 +20,7 @@
                             <!-- <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label> -->
 
                             <div class="col-md-12">
-                                <input placeholder="enter username ..." id="username" pattern="[A-Za-z0-9]+" title="Alphanumeric only, 8 min length" type="username" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+                                <input placeholder="enter username ..." id="username" type="username" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
 
                                 @error('username')
                                 <span class="invalid-feedback" role="alert">
@@ -34,7 +34,7 @@
                             <!-- <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label> -->
 
                             <div class="col-md-12">
-                                <input placeholder="enter password ..." id="password" type="password" pattern="[A-Za-z0-9]+" title="Alphanumeric only, 8 min length" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                <input placeholder="enter password ..." id="password" type="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Alphanumeric only, 8 min length" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 
                                 @error('password')
                                 <span class="invalid-feedback" role="alert">

@@ -486,17 +486,8 @@ export const CancelModal = ({ data, setData, handleAction }) => {
             </Modal.Header>
             <Modal.Body>
                 Are you sure you want to cancel this {data.type}? <br />
-                Resident: {data.type == 'Residency' ? data.f_name : data.resident_name} <br />
+                Resident: {data.resident_name} <br />
 
-                {data.type == 'Residency' &&
-                    <>
-                        {'Address: ' + data.address}<br />
-                        {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
-                        {'Gender: ' + data.gender}<br />
-                        {'Contact No.: ' + data.contact_no}<br />
-                        {!!data.job && 'Job: ' + data.job}
-                    </>
-                }
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>

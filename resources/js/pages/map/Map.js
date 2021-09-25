@@ -76,6 +76,7 @@ const Map = () => {
     const onMapCreated = (map) => {
         map.setOptions({
             disableDefaultUI: true,
+            streetViewControl:true,
             styles: [
                 {
                     featureType: "poi",
