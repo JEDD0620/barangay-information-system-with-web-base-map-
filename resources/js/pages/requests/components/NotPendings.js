@@ -176,7 +176,7 @@ export const NotPendings = (toggle) => {
                                             <td>{obj.resident_name}</td>
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
-                                            <td>{!!date ? moment(obj.date).format('D MMM YYYY') : "No Claim Date"}</td>
+                                            <td>{!!obj.date ? moment(obj.date).format('D MMM YYYY') : "No Claim Date"}</td>
                                             <td
                                                 className={`text-capitalize font-weight-bold ${obj.status == 'approved' ? 'text-success' : obj.status == 'cancelled' ? 'text-secondary' : 'text-danger'}`}
                                             >
