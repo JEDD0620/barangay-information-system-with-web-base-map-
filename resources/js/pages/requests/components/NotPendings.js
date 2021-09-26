@@ -122,7 +122,7 @@ export const NotPendings = (toggle) => {
                 </Col>
                 <Col md={3}>
                     <FormControl
-                    className='mt-2 mt-md-0'
+                        className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -176,7 +176,7 @@ export const NotPendings = (toggle) => {
                                             <td>{obj.resident_name}</td>
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
-                                            <td>{moment(obj.date).format('D MMM YYYY')}</td>
+                                            <td>{!!date ? moment(obj.date).format('D MMM YYYY') : "No Claim Date"}</td>
                                             <td
                                                 className={`text-capitalize font-weight-bold ${obj.status == 'approved' ? 'text-success' : obj.status == 'cancelled' ? 'text-secondary' : 'text-danger'}`}
                                             >

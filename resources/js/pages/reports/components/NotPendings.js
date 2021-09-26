@@ -102,7 +102,7 @@ export const NotPendings = (toggle) => {
                 </Col>
                 <Col md={3}>
                     <FormControl
-                    className='mt-2 mt-md-0'
+                        className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -128,10 +128,10 @@ export const NotPendings = (toggle) => {
                                         </span>
                                     </th>
 
-                                    <th onClick={changeSort.bind(this, 'reports.status')}>
+                                    <th onClick={changeSort.bind(this, 'reports.updated_at')}>
                                         <span>Date</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'reports.status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'reports.updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
 
@@ -145,7 +145,7 @@ export const NotPendings = (toggle) => {
                                     return (
                                         <tr key={i}>
                                             <td>{obj.resident_name}</td>
-                                            <td>{obj.status=='cancelled'?'Cancelled by Reporter' : obj.staff_name}</td>
+                                            <td>{obj.status == 'cancelled' ? 'Cancelled by Reporter' : obj.staff_name}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
                                                 <ButtonGroup size='sm'>

@@ -140,10 +140,10 @@ export const OnGoing = ({ toggle, setToggle }) => {
                                         </span>
                                     </th>
 
-                                    <th onClick={changeSort.bind(this, 'reports.status')}>
+                                    <th onClick={changeSort.bind(this, 'reports.updated_at')}>
                                         <span>Date</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'reports.status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'reports.updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
                                     <th>
