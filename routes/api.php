@@ -36,8 +36,8 @@ Route::middleware('verified')->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, "getUser"]);
         Route::delete('/{id}', [UserController::class, "deleteUser"])->middleware('admin');
-        Route::put('/{id}', [UserController::class, "updateUser"]);
         Route::put('/assign', [UserController::class, "assignUser"])->middleware('admin');
+        Route::put('/{id}', [UserController::class, "updateUser"]);
     });
 
     Route::prefix('resident')->group(function () {

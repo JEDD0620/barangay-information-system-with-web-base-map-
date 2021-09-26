@@ -61,8 +61,14 @@ class HomeController extends Controller
                 'request_count' => AppRequest::where('user_id', Auth::id())->where('status', 'pending')->count(),
                 'reports_count' => Report::where('user_id', Auth::id())->where('status', 'pending')->count(),
                 'schedules_count' => Schedule::count(),
-                'events_count' => Post::where('type', 'event')->count(),
-                'announcements_count' => Post::where('type', 'announcement')->count(),
+                'events_count' => Post::where('type', 'event')->where(function ($q) {
+                    $q->whereDate('from_date', '>=', now()->format('Y-m-d'))
+                        ->orWhereDate('to_date', '>=', now()->format('Y-m-d'));
+                })->count(),
+                'announcements_count' => Post::where('type', 'announcement')->where(function ($q) {
+                    $q->whereDate('from_date', '>=', now()->format('Y-m-d'))
+                        ->orWhereDate('to_date', '>=', now()->format('Y-m-d'));
+                })->count(),
                 'feedbacks_count' => Feedback::where('user_id', Auth::id())->whereNull('parent_id')->count(),
             ];
     }

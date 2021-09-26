@@ -179,7 +179,9 @@ export const Pendings = ({ toggle, setToggle }) => {
                         </Dropdown.Menu>
                     </Dropdown>
 
-                    <Button onClick={() => setCreateData(true)}>Create Request</Button>
+                    {!!user && user.role == 'Resident' &&
+                        <Button onClick={() => setCreateData(true)}>Create Request</Button>
+                    }
 
                 </Col>
                 <Col md={3}>

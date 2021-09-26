@@ -57,6 +57,7 @@ class UserController extends Controller
     public function assignUser(Request $req)
     {
         $user = User::find($req->id);
+
         if ($user->role == 'Staff') {
             $user->role = 'Resident';
             $user->save();

@@ -173,7 +173,7 @@ export const NotPendings = (toggle) => {
                                 {!!requests && requests.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.type == 'Residency' ? <>{obj.f_name} {<small>from</small>} {obj.address}</> : obj.resident_name}</td>
+                                            <td>{obj.resident_name}</td>
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
                                             <td>{moment(obj.date).format('D MMM YYYY')}</td>

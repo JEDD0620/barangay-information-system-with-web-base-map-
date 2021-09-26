@@ -158,12 +158,14 @@ export const Pendings = ({ toggle, setToggle }) => {
                         </Dropdown.Menu>
                     </Dropdown>
 
-                    <Button onClick={() => setCreateData(true)}>Create Report</Button>
+                    {!!user && user.role == 'Resident' &&
+                        <Button onClick={() => setCreateData(true)}>Create Report</Button>
+                    }
 
                 </Col>
                 <Col md={3}>
                     <FormControl
-                    className='mt-2 mt-md-0'
+                        className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
