@@ -15,17 +15,31 @@ class PostController extends Controller
         $order = $req->get('order');
         $sort = $req->get('sort');
         $filter = $req->get('filter');
+        $dateSet = $req->get('dateSet');
 
         $events = Post::where('type', 'Event')
-            ->where(function ($q) {
-                $q->whereDate('from_date', '>=', now()->format('Y-m-d'))
-                    ->orWhereDate('to_date', '>=', now()->format('Y-m-d'));
-            })
             ->leftJoin('users', 'posts.user_id', 'users.id')
             ->select('users.f_name', 'posts.*')
             ->orderBy($sort, $order);
 
-        if (!!isset($filter)) {
+        if (isset($dateSet) && $dateSet == 'done') {
+            $events->where(function ($q) {
+                $q->where(function ($q2) {
+                    $q2->whereDate('from_date', '<', now()->format('Y-m-d'))
+                        ->where('to_date', null);
+                })
+                    ->orWhere(function ($q2) {
+                        $q2->whereDate('to_date', '<', now()->format('Y-m-d'));
+                    });
+            });
+        } else {
+            $events->where(function ($q) {
+                $q->whereDate('from_date', '>=', now()->format('Y-m-d'))
+                    ->orWhereDate('to_date', '>=', now()->format('Y-m-d'));
+            });
+        }
+
+        if (isset($filter) && $filter != "") {
             $events->where('title', 'LIKE', '%' . $filter . '%');
         }
 
@@ -39,17 +53,32 @@ class PostController extends Controller
         $order = $req->get('order');
         $sort = $req->get('sort');
         $filter = $req->get('filter');
+        $dateSet = $req->get('dateSet');
 
-        $announcements = Post::where('type', 'Announcement')
-            ->where(function ($q) {
+        $announcements = Post::where('type', 'Announcement');
+
+        if (isset($dateSet) && $dateSet == 'done') {
+            $announcements->where(function ($q) {
+                $q->where(function ($q2) {
+                    $q2->whereDate('from_date', '<', now()->format('Y-m-d'))
+                        ->where('to_date', null);
+                })
+                    ->orWhere(function ($q2) {
+                        $q2->whereDate('to_date', '<', now()->format('Y-m-d'));
+                    });
+            });
+        } else {
+            $announcements->where(function ($q) {
                 $q->whereDate('from_date', '>=', now()->format('Y-m-d'))
                     ->orWhereDate('to_date', '>=', now()->format('Y-m-d'));
-            })
-            ->leftJoin('users', 'posts.user_id', 'users.id')
+            });
+        }
+
+        $announcements->leftJoin('users', 'posts.user_id', 'users.id')
             ->select('users.f_name', 'posts.*')
             ->orderBy($sort, $order);
 
-        if (!!isset($filter)) {
+        if (isset($filter) && $filter != "") {
             $announcements->where('title', 'LIKE', '%' . $filter . '%');
         }
 

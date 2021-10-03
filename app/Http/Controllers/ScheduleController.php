@@ -10,18 +10,8 @@ class ScheduleController extends Controller
 {
     public function getSchedules(Request $req)
     {
-        $order = $req->get('order');
-        $sort = $req->get('sort');
-        $filter = $req->get('filter');
-        $multiplier = $req->get('multiplier');
-
-        $now = now()->addWeek($multiplier);
-
-        $residents = Schedule::whereBetween(DB::raw('DATE(schedules.duty)'), [$now->format('Y-m-d'), $now->addDay(6)->format('Y-m-d')])
-            ->orWhere('recurence', '!=', 'none')
-            ->leftJoin('residents', 'schedules.resident_id', 'residents.id')
-            ->select('residents.f_name', 'schedules.*')
-            ->orderBy($sort, $order);
+        $residents = Schedule::leftJoin('residents', 'schedules.resident_id', 'residents.id')
+            ->select('residents.f_name', 'schedules.*');
 
         if (!!isset($filter)) {
             $residents->where('f_name', 'LIKE', '%' . $filter . '%')

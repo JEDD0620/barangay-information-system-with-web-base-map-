@@ -8,6 +8,7 @@ import moment from 'moment'
 import { DeleteModal, CreateModal, EditModal, ViewModal } from './components/Modals'
 import { queryUser } from '../../utils/user'
 import { getParams, setParams } from '../../utils/links'
+import { capitalize } from 'lodash'
 
 const Announcements = () => {
     const [announcements, setAnnouncements] = useState();
@@ -16,6 +17,7 @@ const Announcements = () => {
     const [sort, setSort] = useState('posts.updated_at');
     const [order, setOrder] = useState('asc');
     const [perPage, setPerPage] = useState(10);
+    const [dateSet, setDateSet] = useState("current");
     const [page, setPage] = useState(!!getParams('page') ? parseInt(getParams('page')) : 1);
 
     const [user, setUser] = useState();
@@ -34,7 +36,7 @@ const Announcements = () => {
             getAnnouncements()
         }, 100)
         return () => clearTimeout(delayDebounceFn)
-    }, [sort, order, perPage, page, filter])
+    }, [sort, order, perPage, page, filter, dateSet])
 
     useEffect(() => {
         queryUser(setUser)
@@ -56,7 +58,7 @@ const Announcements = () => {
             setAnnouncements(null);
         }
 
-        Axios.get(`/api/post/announcements?page=${page}&perPage=${perPage}&order=${order}&sort=${sort}&filter=${filter}`)
+        Axios.get(`/api/post/announcements?page=${page}&perPage=${perPage}&order=${order}&sort=${sort}&filter=${filter}&dateSet=${dateSet}`)
             .then(res => {
                 setAnnouncements(res.data)
             })
@@ -141,6 +143,15 @@ const Announcements = () => {
                 <Col md={9}>
                     <Dropdown className='d-inline mr-4'>
                         <Dropdown.Toggle variant='outline-primary' id="dropdown-basic" className='pl-3 pr-3'>
+                            {capitalize(dateSet)}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => setDateSet('current')}>Current</Dropdown.Item>
+                            <Dropdown.Item onClick={() => setDateSet('done')}>Done</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown className='d-inline mr-4'>
+                        <Dropdown.Toggle variant='outline-primary' id="dropdown-basic" className='pl-3 pr-3'>
                             {perPage}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
@@ -222,14 +233,21 @@ const Announcements = () => {
                                                 <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
                                                 <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
                                                 <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
-                                                <td>{(!!obj.to_date && moment().isBetween(obj.from_date, obj.to_date, 'days', '[]')) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
-                                                    moment().isBetween(moment(obj.from_time, "HH:mm:ss"), moment(obj.to_time, "HH:mm:ss")) || (!!!obj.to_time && moment().isAfter(moment(obj.from_time, "HH:mm:ss"))) || !!!obj.from_time ?
-                                                        "Ongoing"
-                                                        : moment().isAfter(moment(obj.to_time, "HH:mm:ss")) ?
-                                                            "Done"
-                                                            : "Upcomming"
-                                                    :
-                                                    'Upcomming'
+                                                <td>{
+                                                    (!!!obj.to_date && moment().isSame(obj.from_date)) || (moment().isBetween(obj.from_date, obj.to_date, 'days', '[]')) ?
+                                                        (moment().isBetween(moment(obj.from_time, "HH:mm:ss"), moment(obj.to_time, "HH:mm:ss"))) || (!!!obj.to_time && !!!obj.from_time) ?
+                                                            'Ongoing'
+                                                            : (moment().isBefore(moment(obj.from_time, "HH:mm:ss"))) ?
+                                                                'Upcomming'
+                                                                : (!!!obj.to_time && moment().isAfter(moment(obj.from_time, "HH:mm:ss"))) ?
+                                                                    'Ongoing'
+                                                                    :
+                                                                    'Just Done'
+
+                                                        : (!!!obj.to_date && moment().isBefore(obj.from_date)) ?
+                                                            'Upcomming'
+                                                            :
+                                                            'Done'
                                                 }</td>
                                                 {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
                                                     <td className='text-center'>
@@ -261,14 +279,21 @@ const Announcements = () => {
 
                                     <br />
 
-                                    {(!!obj.to_date && moment().isBetween(obj.from_date, obj.to_date, 'days', '[]')) || (!!!obj.to_date && moment(obj.from_date).unix() <= moment().unix()) ?
-                                        moment().isBetween(moment(obj.from_time, "HH:mm:ss"), moment(obj.to_time, "HH:mm:ss")) || (!!!obj.to_time && moment().isAfter(moment(obj.from_time, "HH:mm:ss"))) || !!!obj.from_time ?
-                                            <Badge variant='success'>Ongoing</Badge>
-                                            : moment().isAfter(moment(obj.to_time, "HH:mm:ss")) ?
+                                    {
+                                        (!!!obj.to_date && moment().isSame(obj.from_date)) || (moment().isBetween(obj.from_date, obj.to_date, 'days', '[]')) ?
+                                            (moment().isBetween(moment(obj.from_time, "HH:mm:ss"), moment(obj.to_time, "HH:mm:ss"))) || (!!!obj.to_time && !!!obj.from_time) ?
+                                                <Badge variant='success'>Ongoing</Badge>
+                                                : (moment().isBefore(moment(obj.from_time, "HH:mm:ss"))) ?
+                                                    <Badge variant='warning'>Upcomming</Badge>
+                                                    : (!!!obj.to_time && moment().isAfter(moment(obj.from_time, "HH:mm:ss"))) ?
+                                                        <Badge variant='success'>Ongoing</Badge>
+                                                        :
+                                                        <Badge variant='secondary'>Just Done</Badge>
+
+                                            : (!!!obj.to_date && moment().isBefore(obj.from_date)) ?
+                                                <Badge variant='warning'>Upcomming</Badge>
+                                                :
                                                 <Badge variant='secondary'>Done</Badge>
-                                                : <Badge variant='warning'>Upcomming</Badge>
-                                        :
-                                        <Badge variant='warning'>Upcomming</Badge>
                                     }
                                 </Card.Title>
                                 <h6>

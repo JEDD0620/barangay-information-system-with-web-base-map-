@@ -18,7 +18,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Schedule::class, function (Faker $faker) {
     $residents = App\Resident::pluck('id')->toArray();
-    $recurence = $faker->randomElement(['weekdays', 'weekends','daily', 'weekly', 'monthly', 'none']);
+    $recurence = $faker->randomElement(['weekdays', 'weekends','daily', 'none']);
     // $recurence = $faker->randomElement(['weekdays', 'daily', 'none']);
 
     return [

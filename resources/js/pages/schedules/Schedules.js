@@ -7,7 +7,9 @@ import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
 import { DeleteModal, CreateModal, EditModal, ViewModal } from './components/Modals'
 import { queryUser } from '../../utils/user'
-import _, { add } from 'lodash'
+import FullCalendar from '@fullcalendar/react' // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import interactionPlugin from "@fullcalendar/interaction"
 
 const Schedules = () => {
     const [schedules, setSchedules] = useState([]);
@@ -15,33 +17,93 @@ const Schedules = () => {
     const [order, setOrder] = useState('asc');
 
     const [user, setUser] = useState();
-    const [multiplier, setMultiplier] = useState(0);
-    const weekdays = useRef(['Mon', 'Thu', 'Wed', 'Tue', 'Fri']);
-    const weekends = useRef(['Sat', 'Sun']);
 
     //modals
     const [createData, setCreateData] = useState(false);
     const [editData, setEditData] = useState(false);
     const [deleteData, setDeleteData] = useState(false);
     const [viewData, setViewData] = useState(false);
+    const [events, setEvents] = useState([]);
 
     //toast
     const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
         getSchedules()
-    }, [order, multiplier])
+    }, [order])
 
     useEffect(() => {
         queryUser(setUser)
     }, [])
 
-    const getSchedules = (dontNull) => {
-        if (!!!dontNull) {
-            setSchedules(null);
-        }
+    useEffect(() => {
+        setEvents([])
+        let temp = [];
+        schedules.forEach(obj => {
+            if (obj.recurence == 'none') {
+                temp.push({
+                    data: obj,
+                    title: `${obj.f_name} ${moment(obj.in, 'HH:mm:ss').format('hh:mm A')} - ${moment(obj.out, 'HH:mm:ss').format('hh:mm A')}`,
+                    date: obj.duty,
+                    color: '#38c172'
+                })
+            }
 
-        Axios.get(`/api/schedule?order=${order}&sort=${sort}&multiplier=${multiplier}`)
+            if (obj.recurence == 'daily') {
+                let end = moment(obj.duty).add(obj.times, 'day').format('YYYY-MM-DD')
+                temp.push({
+                    data: obj,
+                    title: `${obj.f_name} ${moment(obj.in, 'HH:mm:ss').format('hh:mm A')} - ${moment(obj.out, 'HH:mm:ss').format('hh:mm A')}`,
+                    start: obj.duty,
+                    end: end,
+                    color: '#9561e2'
+                })
+            }
+
+            if (obj.recurence == 'weekdays') {
+                [...Array(obj.times)].map((_, i) => {
+                    let d = moment(obj.duty).add(i, 'week');
+                    let start = moment().day("Monday").year(d.year()).week(d.week()).format('YYYY-MM-DD')
+                    let end = moment().day("Saturday").year(d.year()).week(d.week()).format('YYYY-MM-DD')
+                    temp.push({
+                        data: obj,
+                        title: `${obj.f_name} ${moment(obj.in, 'HH:mm:ss').format('hh:mm A')} - ${moment(obj.out, 'HH:mm:ss').format('hh:mm A')}`,
+                        start: start,
+                        end: end,
+                        color: '#3490dc'
+                    })
+                })
+            }
+
+            if (obj.recurence == 'weekends') {
+                [...Array(obj.times)].map((_, i) => {
+                    let d = moment(obj.duty).add(i, 'week');
+                    let start = moment().day("Sunday").year(d.year()).week(d.week()).format('YYYY-MM-DD')
+                    let end = moment().day("Saturday").year(d.year()).week(d.week()).format('YYYY-MM-DD')
+                    console.log(end);
+                    temp.push({
+                        data: obj,
+                        title: `${obj.f_name} ${moment(obj.in, 'HH:mm:ss').format('hh:mm A')} - ${moment(obj.out, 'HH:mm:ss').format('hh:mm A')}`,
+                        date: start,
+                        color: '#f66d9b'
+                    })
+                    temp.push({
+                        data: obj,
+                        title: `${obj.f_name} ${moment(obj.in, 'HH:mm:ss').format('hh:mm A')} - ${moment(obj.out, 'HH:mm:ss').format('hh:mm A')}`,
+                        date: end,
+                        color: '#f66d9b'
+                    })
+                })
+            }
+        })
+
+        setEvents(temp)
+
+    }, [schedules])
+
+    const getSchedules = () => {
+
+        Axios.get(`/api/schedule`)
             .then(res => {
                 setSchedules(res.data)
             })
@@ -83,7 +145,7 @@ const Schedules = () => {
                 setModalLoading(false);
                 setShowToast(`${data.f_name} schedule Edited!`);
                 setEditData(false);
-                getSchedules(true);
+                getSchedules();
             })
             .catch(err => console.log(err))
     }
@@ -94,9 +156,14 @@ const Schedules = () => {
                 setModalLoading(false);
                 setShowToast(`${deleteData.f_name} schedule Deleted!`);
                 setDeleteData(false);
-                getSchedules(true);
+                getSchedules();
             })
             .catch(err => console.log(err))
+    }
+
+    const handleEvent = (e) => {
+        if (!!user && (user.role == 'Admin' || user.role == 'Staff'))
+            setEditData(e.event.extendedProps.data)
     }
 
     return (
@@ -104,7 +171,10 @@ const Schedules = () => {
 
             <Row className='mb-3'>
                 <Col md={10}>
-                    <h2>Schedules</h2>
+                    <h2 className="d-inline-block">Schedules</h2>
+                    {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
+                        <Button className="ml-3 align-top" onClick={() => setCreateData(true)}>Create Schedule</Button>
+                    }
                 </Col>
                 <Col md={2} className='text-right'>
                     <Toast onClose={() => setShowToast(false)} show={!!showToast} delay={3000} autohide>
@@ -116,242 +186,17 @@ const Schedules = () => {
 
             </Row>
 
-            <Row>
-                <Col md={7}>
-
-                    {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
-                        <Button onClick={() => setCreateData(true)}>Create Schedule</Button>
-                    }
-
-
-                </Col>
-                <Col md={5} className='text-right'>
-                    <h3 className='d-inline-block mb-0 ml-3 align-middle'>{moment().add(multiplier, 'weeks').format('DD MMM YYYY')} - {moment().add(multiplier, 'weeks').add(6, 'days').format('DD MMM YYYY')}</h3>
-                    <Button variant='outline-primary' className='ml-3' onClick={() => { setMultiplier(0) }}>Today</Button>
-                    <Button variant='outline-primary' className='ml-1' onClick={() => { setMultiplier(multiplier - 1) }}><i className='fas fa-angle-left'></i></Button>
-                    <Button variant='outline-primary' className='ml-1' onClick={() => { setMultiplier(multiplier + 1) }}><i className='fas fa-angle-right'></i></Button>
-                </Col>
-            </Row>
-
-            <Row>
-                <Col md={12}>
-                    {!!schedules ?
-                        <Table striped bordered hover className='mt-3'>
-                            <thead>
-                                <tr>
-                                    <th onClick={changeSort.bind(this, 'residents.f_name')}>
-                                        <span>Name</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'residents.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'schedules.duty')}>
-                                        <span>Duty</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'schedules.duty' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'schedules.in')}>
-                                        <span>In</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'schedules.in' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'schedules.out')}>
-                                        <span>Out</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'schedules.out' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-
-                                    {
-                                        _.times(7, (v) => {
-                                            return (
-                                                <th key={v} className={v == 0 && multiplier == 0 ? 'bg-success' : ''}>
-                                                    <span>{moment().add(multiplier, 'weeks').add(v, 'days').format('ddd DD')}</span>
-                                                </th>
-                                            )
-                                        })
-                                    }
-
-                                    {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
-                                        <th>
-                                            <span>Action</span>
-                                        </th>
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {!!schedules && schedules.map((obj, i) => {
-                                    let duty = obj.duty
-                                    if (obj.recurence == 'monthly') {
-                                        let adata = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'months')
-                                        let assigned = false;
-                                        if (adata >= 0 && adata < obj.times) {
-                                            _.times(7, (v) => {
-                                                if (moment().add(multiplier, 'weeks').add(v, 'days').date() == moment(obj.duty).date()) {
-                                                    duty = moment().add(multiplier, 'weeks').add(v, 'days').format('YYYY-MM-DD')
-                                                    assigned = true;
-                                                } else {
-                                                    if (!assigned) {
-                                                        duty = null;
-                                                    }
-                                                }
-                                            })
-                                        } else {
-                                            duty = null
-                                        }
-
-                                    }
-
-                                    if (obj.recurence == 'weekly') {
-                                        let adata = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'weeks')
-                                        if (adata >= 0 && adata < obj.times) {
-                                            _.times(7, (v) => {
-                                                if (moment().add(multiplier, 'weeks').add(v, 'days').day() == moment(obj.duty).day()) {
-                                                    duty = moment().add(multiplier, 'weeks').add(v, 'days').format('YYYY-MM-DD')
-                                                }
-                                            })
-                                        } else {
-                                            duty = null
-                                        }
-                                    }
-
-                                    if (obj.recurence == 'weekdays' || obj.recurence == 'weekends') {
-                                        let adata = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'weeks')
-                                        if (adata >= 0 && adata < obj.times) {
-
-                                        } else {
-                                            duty = null
-                                        }
-                                    }
-
-                                    // dailyData = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'days');
-
-                                    if (obj.recurence == 'daily') {
-                                        let adata = moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').diff(moment(obj.duty), 'days')
-                                        console.log(adata);
-                                        if (adata >= -obj.times && adata < obj.times) {
-
-                                        } else {
-                                            duty = null
-                                        }
-                                    }
-
-                                    if (!!duty) {
-                                        return (
-                                            <tr key={i}>
-                                                <td>{obj.f_name}</td>
-                                                <td>{obj.recurence == 'none' ? moment(duty).format('D MMM YYYY') : <span className='text-capitalize'>{obj.recurence}</span>}</td>
-                                                <td>{moment(obj.in, 'HH:mm:ss').format('hh:mm A')}</td>
-                                                <td>{moment(obj.out, 'HH:mm:ss').format('hh:mm A')}</td>
-                                                <td className={`pl-0 pr-0 border-0 ${multiplier == 0 && 'bg-success'}`}>
-                                                    <div
-                                                        className={`
-                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(0, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(-1, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(-1, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(0, 'days').format('ddd')) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(0, 'days').format('ddd')) && 'bg-primary '}
-                                                    `}
-                                                    >
-                                                        &nbsp;
-                                                    </div>
-                                                </td>
-                                                <td className='pl-0 pr-0 border-0'>
-                                                    <div
-                                                        className={`
-                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(1, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(0, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(0, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(1, 'days').format('ddd')) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(1, 'days').format('ddd')) && 'bg-primary '}
-                                                `}
-                                                    >
-                                                        &nbsp;
-                                                    </div>
-                                                </td>
-                                                <td className='pl-0 pr-0 border-0'>
-                                                    <div
-                                                        className={`
-                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(2, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(1, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(1, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(2, 'days').format('ddd')) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(2, 'days').format('ddd')) && 'bg-primary '}
-                                                `}
-                                                    >
-                                                        &nbsp;
-                                                    </div>
-                                                </td>
-                                                <td className='pl-0 pr-0 border-0'>
-                                                    <div
-                                                        className={`
-                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(3, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(2, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(2, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(3, 'days').format('ddd')) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(3, 'days').format('ddd')) && 'bg-primary '}
-                                                `}
-                                                    >
-                                                        &nbsp;
-                                                    </div>
-                                                </td>
-                                                <td className='pl-0 pr-0 border-0'>
-                                                    <div
-                                                        className={`
-                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(4, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(3, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(3, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(4, 'days').format('ddd')) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(4, 'days').format('ddd')) && 'bg-primary '}
-                                                `}
-                                                    >
-                                                        &nbsp;
-                                                    </div>
-                                                </td>
-                                                <td className='pl-0 pr-0 border-0'>
-                                                    <div
-                                                        className={`
-                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(5, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(4, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(4, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(5, 'days').format('ddd')) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(5, 'days').format('ddd')) && 'bg-primary '}
-                                                `}
-                                                    >
-                                                        &nbsp;
-                                                    </div>
-                                                </td>
-                                                <td className='pl-0 pr-0 border-0'>
-                                                    <div
-                                                        className={`
-                                                    ${(obj.recurence != 'weekdays' && obj.recurence != 'weekends') && moment().add(multiplier, 'weeks').add(6, 'days').format('YYYY-MM-DD') == duty && 'bg-primary '}
-                                                    ${obj.recurence == 'daily' && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(5, 'days').diff(moment(obj.duty), 'days') >= 0 && moment().add(multiplier < 0 ? multiplier - 1 : multiplier, 'weeks').add(5, 'days').diff(moment(obj.duty), 'days') < (obj.times - 1) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekdays' && weekdays.current.includes(moment().add(multiplier, 'weeks').add(6, 'days').format('ddd')) && 'bg-primary '}
-                                                    ${obj.recurence == 'weekends' && weekends.current.includes(moment().add(multiplier, 'weeks').add(6, 'days').format('ddd')) && 'bg-primary '}
-                                                `}
-                                                    >
-                                                        &nbsp;
-                                                    </div>
-                                                </td>
-                                                {!!user && (user.role == 'Admin' || user.role == 'Staff') &&
-                                                    <td className='text-center'>
-                                                        <ButtonGroup size='sm'>
-                                                            <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
-                                                            <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
-                                                        </ButtonGroup>
-                                                    </td>
-                                                }
-                                            </tr>
-                                        )
-                                    }
-                                })}
-                            </tbody>
-                        </Table>
-                        :
-                        <Spinner animation="border" variant="primary" className='mt-5' />
-                    }
-                </Col>
-            </Row>
+            <FullCalendar
+                plugins={[dayGridPlugin, interactionPlugin]}
+                initialView="dayGridMonth"
+                dateClick={() => console.log('ok')}
+                eventClick={handleEvent}
+                events={events}
+            />
 
             <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteSchedule} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createSchedule} />
-            <EditModal data={editData} setData={setEditData} handleAction={editSchedule} />
+            <EditModal data={editData} setData={setEditData} handleAction={editSchedule} setDeleteData={setDeleteData} />
 
         </Layout>
     );

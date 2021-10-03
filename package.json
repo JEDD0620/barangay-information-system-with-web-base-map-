@@ -26,6 +26,9 @@
         "vue-template-compiler": "^2.6.14"
     },
     "dependencies": {
+        "@fullcalendar/daygrid": "^5.9.0",
+        "@fullcalendar/interaction": "^5.9.0",
+        "@fullcalendar/react": "^5.9.0",
         "@googlemaps/js-api-loader": "^1.12.1",
         "admin-lte": "^3.1.0",
         "downloadjs": "^1.4.7",

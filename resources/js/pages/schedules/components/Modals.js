@@ -18,6 +18,17 @@ export const CreateModal = ({ data, setData, handleAction }) => {
     const [options, setOptions] = useState()
 
     useEffect(() => {
+        setFormdata({
+            recurence: 'none',
+            resident_id: null,
+            duty: moment().format('YYYY-MM-DD'),
+            in: '08:00',
+            out: '17:00',
+            times: 1,
+        })
+    }, [data])
+
+    useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (!!searchInput) {
                 getOptions()
@@ -100,7 +111,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                                     required onChange={handleChange}
                                     value={formData.duty}
                                     required
-                                    disabled={formData.recurence == 'weekdays' || formData.recurence == 'weekends'}
+                                // disabled={formData.recurence == 'weekdays' || formData.recurence == 'weekends'}
                                 />
                             </Form.Group>
                         </Col>
@@ -167,7 +178,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
 }
 
 
-export const EditModal = ({ data, setData, handleAction }) => {
+export const EditModal = ({ data, setData, handleAction, setDeleteData }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormdata] = useState(
         {
@@ -282,7 +293,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
                                     required onChange={handleChange}
                                     defaultValue={moment(data.duty).format('YYYY-MM-DD')}
                                     required
-                                    disabled={formData.recurence == 'weekends' || formData.recurence == 'weekdays'}
+                                // disabled={formData.recurence == 'weekends' || formData.recurence == 'weekdays'}
                                 />
                             </Form.Group>
                         </Col>
@@ -339,6 +350,9 @@ export const EditModal = ({ data, setData, handleAction }) => {
                 <Modal.Footer>
                     <Button type='button' variant="secondary" onClick={handleClose}>
                         Close
+                    </Button>
+                    <Button type='button' variant="danger" onClick={() => {setDeleteData(data); setData(false)}}>
+                        Delete
                     </Button>
                     <Button variant="warning" type='submit' disabled={loading}>
                         {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Edit Schedule'}
