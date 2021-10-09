@@ -3,7 +3,7 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../../elements/FillPaginate'
 import moment from 'moment'
-import { CancelModal, CreateModal, EditModal, ViewModal } from './Modals'
+import { CancelModal, CreateModal, DeleteModal, EditModal, ViewModal } from './Modals'
 import { queryUser } from '../../../utils/user'
 import { getParams, setParams } from '../../../utils/links'
 
@@ -22,6 +22,7 @@ export const Pendings = ({ toggle, setToggle }) => {
     const [createData, setCreateData] = useState(false);
     const [editData, setEditData] = useState(false);
     const [cancelData, setCancelData] = useState(false);
+    const [deleteData, setDeleteData] = useState(false);
 
     //toast
     const [showToast, setShowToast] = useState(false);
@@ -126,6 +127,18 @@ export const Pendings = ({ toggle, setToggle }) => {
             .catch(err => console.log(err))
     }
 
+    const deleteReport = (setModalLoading, data) => {
+        Axios.delete(`/api/report/${deleteData.id}`)
+            .then(res => {
+                setModalLoading(false);
+                setShowToast(`Report Deleted!`);
+                setDeleteData(false);
+                setToggle(!toggle)
+                getReports(true);
+            })
+            .catch(err => console.log(err))
+    }
+
     return (
         <>
 
@@ -213,8 +226,8 @@ export const Pendings = ({ toggle, setToggle }) => {
                                                     <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
                                                     {!!user && user.id == obj.user_id && <>
                                                         <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
-                                                        <Button variant="secondary" onClick={() => setCancelData(obj)}>Cancel</Button>
                                                     </>}
+                                                    <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
                                                 </ButtonGroup>
                                             </td>
                                         </tr>
@@ -242,6 +255,7 @@ export const Pendings = ({ toggle, setToggle }) => {
             <CancelModal data={cancelData} setData={setCancelData} handleAction={cancelReport} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createReport} />
             <EditModal data={editData} setData={setEditData} handleAction={editReport} />
+            <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteReport} />
 
         </>
     );

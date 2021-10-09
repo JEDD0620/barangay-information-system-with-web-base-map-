@@ -252,7 +252,7 @@ export const ViewModal = ({ data, setData, handleAction }) => {
 
     const [user, setUser] = useState()
 
-    useEffect(() => {queryUser(setUser)}, [])
+    useEffect(() => { queryUser(setUser) }, [])
 
     const onAction = () => {
         setLoading(true)
@@ -296,7 +296,7 @@ export const ViewOngoingModal = ({ data, setData, handleAction }) => {
 
     const [user, setUser] = useState()
 
-    useEffect(() => {queryUser(setUser)}, [])
+    useEffect(() => { queryUser(setUser) }, [])
 
     const onAction = () => {
         setLoading(true)
@@ -340,7 +340,7 @@ export const ViewClosedModal = ({ data, setData }) => {
 
     const [user, setUser] = useState()
 
-    useEffect(() => {queryUser(setUser)}, [])
+    useEffect(() => { queryUser(setUser) }, [])
 
     const onAction = () => {
         setLoading(true)
@@ -408,6 +408,46 @@ export const CancelModal = ({ data, setData, handleAction }) => {
                 </Button>
                 <Button variant="danger" onClick={onAction} disabled={loading}>
                     {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Cancel Request '}
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    )
+}
+
+export const DeleteModal = ({ data, setData, handleAction }) => {
+    const [loading, setLoading] = useState(false)
+
+    const onAction = () => {
+        setLoading(true)
+        handleAction(setLoading)
+    }
+
+    const handleClose = () => {
+        setData(false)
+        setLoading(false)
+    }
+
+    return (
+        <Modal show={!!data} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Delete {data.type}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                Are you sure you want to delete this report? <br />
+                Resident: {data.resident_name} <br />
+                Address: {data.resident_address} <br />
+                Contact No: {data.resident_contact_no} <br />
+                <p className='mt-3'>
+                    {data.case}
+                </p>
+
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="danger" onClick={onAction} disabled={loading}>
+                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Delete '}
                 </Button>
             </Modal.Footer>
         </Modal>

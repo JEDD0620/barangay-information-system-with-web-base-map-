@@ -83,6 +83,7 @@ Route::middleware('verified')->group(function () {
         Route::get('/{id}', [ReportController::class, "getReport"]);
         Route::post('/', [ReportController::class, "createReport"]);
         Route::put('/{id}', [ReportController::class, "editReport"])->middleware('owner:reports');
+        Route::delete('/{id}', [ReportController::class, "deleteReport"])->middleware('owner:reports');
     });
 
     Route::prefix('feedback')->group(function () {

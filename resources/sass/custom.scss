@@ -12,3 +12,8 @@
 @import "./fa/scss/solid.scss";
 @import "./fa/scss/regular.scss";
 @import "./fa/scss/brands.scss";
+
+.fc-h-event .fc-event-title{
+    overflow: visible !important;
+    white-space: normal !important;
+}

@@ -133,4 +133,10 @@ class ReportController extends Controller
         Report::find($id)->update(['status' => 'cancelled']);
         return true;
     }
+    public function deleteReport($id)
+    {
+        Report::find($id)->delete();
+        return true;
+    }
+    
 }

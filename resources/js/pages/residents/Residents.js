@@ -201,6 +201,12 @@ const Residents = () => {
                                             <i className={`fa fa-sort${!!sort && sort === 'contact_no' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
+                                    <th onClick={changeSort.bind(this, 'job')}>
+                                        <span>Job</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'job' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
                                     <th onClick={changeSort.bind(this, 'updated_at')}>
                                         <span>Updated</span>
                                         <span className="float-right">
@@ -222,6 +228,7 @@ const Residents = () => {
                                             <td>{obj.gender}</td>
                                             <td>{obj.address}</td>
                                             <td>{obj.contact_no}</td>
+                                            <td>{obj.job}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
                                                 <ButtonGroup size='sm'>
