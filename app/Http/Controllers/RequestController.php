@@ -86,7 +86,8 @@ class RequestController extends Controller
 
         $data = $req->all();
         if (!isset($data['resident_id']))
-            $data['resident_id'] = Auth::id();
+            $data['resident_id'] = Resident::where('owner_id', Auth::id())->first()->id;
+        // return (Auth::user());
         Auth::user()->requests()->create($data);
         return true;
     }

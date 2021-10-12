@@ -180,7 +180,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                     </Dropdown>
 
                     {!!user && user.role == 'Resident' &&
-                        <Button onClick={() => setCreateData(true)}>Create Request</Button>
+                        <Button onClick={() => setCreateData(true)} disabled={!(user?.state == "verified")}>Create Request</Button>
                     }
 
                 </Col>

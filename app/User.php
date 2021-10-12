@@ -24,6 +24,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Report::class, 'user_id');
     }
 
+    public function resident(){
+        return $this->hasOne(Resident::class, 'owner_id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
