@@ -11,7 +11,7 @@ export const Residency = ({ user, setToast }) => {
         gender: 'Male',
         address: '',
         contact_no: '',
-        job: '',
+        // job: '',
         role: 'Request',
     });
 
@@ -38,7 +38,7 @@ export const Residency = ({ user, setToast }) => {
                         gender: !!res.data.gender ? res.data.gender : '',
                         address: !!res.data.address ? res.data.address : '',
                         contact_no: !!res.data.contact_no ? res.data.contact_no : '',
-                        job: !!res.data.job ? res.data.job : '',
+                        // job: !!res.data.job ? res.data.job : '',
                         role: !!res.data.role ? res.data.role : 'Request',
                     })
             })
@@ -66,18 +66,18 @@ export const Residency = ({ user, setToast }) => {
             </Row>
 
             <Row>
-                <Col md={6}>
+                <Col md={12}>
                     <Form.Group className="mb-3">
                         <Form.Label>Full Name</Form.Label>
                         <Form.Control value={formData.f_name} type="text" name='f_name' placeholder="input full name ..." required onChange={handleChange} />
                     </Form.Group>
                 </Col>
-                <Col md={6}>
+                {/* <Col md={6}>
                     <Form.Group className="mb-3">
                         <Form.Label>Job</Form.Label>
                         <Form.Control value={formData.job} type="text" name='job' placeholder="input job ..." onChange={handleChange} />
                     </Form.Group>
-                </Col>
+                </Col> */}
             </Row>
 
             <Row>

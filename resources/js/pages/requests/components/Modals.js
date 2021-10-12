@@ -3,6 +3,7 @@ import moment from 'moment'
 import React, { useEffect, useRef, useState } from 'react'
 import { Modal, Button, Spinner, Row, Col, Form } from 'react-bootstrap'
 import Select from 'react-select'
+import { queryUser } from '../../../utils/user'
 
 export const CreateModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
@@ -10,6 +11,12 @@ export const CreateModal = ({ data, setData, handleAction }) => {
         type: 'Indigency',
         gender: 'Male',
     })
+
+    const [user, setUser] = useState();
+
+    useEffect(() => {
+        queryUser(setUser)
+    }, [])
 
     const [searchInput, setSearchInput] = useState()
     const [options, setOptions] = useState()
@@ -77,7 +84,8 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                                     options={options}
                                     onInputChange={(v) => setSearchInput(v)}
                                     isSearchable={true}
-                                    placeholder='select residence ...'
+                                    isDisabled
+                                    placeholder={user?.f_name}
                                     onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
                                     required
                                 />
@@ -146,6 +154,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
 }
 
 export const EditModal = ({ data, setData, handleAction }) => {
+    const [user, setUser] = useState()
     const [loading, setLoading] = useState(false)
     const [formData, setFormdata] = useState({
         id: data.id,
@@ -159,8 +168,12 @@ export const EditModal = ({ data, setData, handleAction }) => {
         b_date: data.b_date,
         gender: data.gender,
         contact_no: data.contact_no,
-        job: data.job,
+        // job: data.job,
     })
+
+    useEffect(() => {
+        queryUser(setUser)
+    }, [])
 
     useEffect(() => {
         setFormdata({
@@ -175,7 +188,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
             b_date: data.b_date,
             gender: data.gender,
             contact_no: data.contact_no,
-            job: data.job,
+            // job: data.job,
         })
     }, [data])
 
@@ -246,9 +259,10 @@ export const EditModal = ({ data, setData, handleAction }) => {
                                         options={options}
                                         onInputChange={(v) => setSearchInput(v)}
                                         isSearchable={true}
-                                        placeholder='select residence ...'
-                                        onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
-                                        defaultValue={{ value: data.resident_id, label: data.resident_name }}
+                                        isDisabled
+                                        placeholder={user?.f_name}
+                                    // onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
+                                    // defaultValue={{ value: data.resident_id, label: data.resident_name }}
                                     />
                                 }
                             </Form.Group>
@@ -347,7 +361,7 @@ export const ViewModal = ({ data, setData, handleAction }) => {
                         {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
                         {'Gender: ' + data.gender}<br />
                         {'Contact No.: ' + data.contact_no}<br />
-                        {!!data.job && 'Job: ' + data.job}
+                        {/* {!!data.job && 'Job: ' + data.job} */}
                     </>
                     :
                     <>
@@ -445,7 +459,7 @@ export const DisapprovedModal = ({ data, setData, handleAction }) => {
                         {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
                         {'Gender: ' + data.gender}<br />
                         {'Contact No.: ' + data.contact_no}<br />
-                        {!!data.job && 'Job: ' + data.job}
+                        {/* {!!data.job && 'Job: ' + data.job} */}
                     </>
                     :
                     <>

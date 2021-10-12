@@ -151,12 +151,12 @@ export const CreateRequest = ({ data, setData }) => {
                                         <Form.Control type="text" name='f_name' placeholder="input full name ..." required onChange={handleChange} />
                                     </Form.Group>
                                 </Col>
-                                <Col md={6}>
+                                {/* <Col md={6}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Job</Form.Label>
                                         <Form.Control type="text" name='job' placeholder="input job ..." onChange={handleChange} />
                                     </Form.Group>
-                                </Col>
+                                </Col> */}
                             </Row>
 
                             <Row>
