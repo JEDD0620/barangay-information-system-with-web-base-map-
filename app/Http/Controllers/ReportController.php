@@ -18,7 +18,9 @@ class ReportController extends Controller
 
         $reports = Report::where('status', 'pending')
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
+            ->leftJoin('users', 'reports.user_id', 'users.id')
             ->select(
+                'users.f_name as reporter_name',
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
                 'residents.contact_no as resident_contact_no',
@@ -47,12 +49,14 @@ class ReportController extends Controller
 
         $reports = Report::where('status', 'ongoing')
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
-            ->leftJoin('users', 'reports.staff_id', 'users.id')
+            ->leftJoin('users as staff', 'reports.staff_id', 'staff.id')
+            ->leftJoin('users as reporter', 'reports.user_id', 'reporter.id')
             ->select(
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
                 'residents.contact_no as resident_contact_no',
-                'users.f_name as staff_name',
+                'staff.f_name as staff_name',
+                'reporter.f_name as reporter_name',
                 'reports.*'
             )
             ->orderBy($sort, $order);
@@ -81,12 +85,14 @@ class ReportController extends Controller
                 ->orWhere('status', 'cancelled');
         })
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
-            ->leftJoin('users', 'reports.staff_id', 'users.id')
+            ->leftJoin('users as staff', 'reports.staff_id', 'staff.id')
+            ->leftJoin('users as reporter', 'reports.user_id', 'reporter.id')
             ->select(
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
                 'residents.contact_no as resident_contact_no',
-                'users.f_name as staff_name',
+                'staff.f_name as staff_name',
+                'reporter.f_name as reporter_name',
                 'reports.*'
             )
             ->orderBy($sort, $order);
@@ -138,5 +144,4 @@ class ReportController extends Controller
         Report::find($id)->delete();
         return true;
     }
-    
 }

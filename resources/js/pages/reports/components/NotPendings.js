@@ -115,6 +115,12 @@ export const NotPendings = (toggle) => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
+                                <th onClick={changeSort.bind(this, 'reporter.f_name')}>
+                                        <span>Reporter</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'residents.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
                                     <th onClick={changeSort.bind(this, 'residents.f_name')}>
                                         <span>Resident</span>
                                         <span className="float-right">
@@ -144,6 +150,7 @@ export const NotPendings = (toggle) => {
                                 {!!reports && reports.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
+                                            <td>{obj.reporter_name}</td>
                                             <td>{obj.resident_name}</td>
                                             <td>{obj.status == 'cancelled' ? 'Cancelled by Reporter' : obj.staff_name}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
