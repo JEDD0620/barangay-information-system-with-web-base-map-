@@ -244,7 +244,7 @@ const Announcements = () => {
                                                                     :
                                                                     'Just Done'
 
-                                                        : (!!!obj.to_date && moment().isBefore(obj.from_date)) ?
+                                                        : ((!!!obj.to_date && moment().isBefore(obj.from_date))) || ((!!obj.to_date && moment().isBefore(obj.to_date)) || moment().isBefore(obj.from_date)) ?
                                                             'Upcomming'
                                                             :
                                                             'Done'
@@ -290,7 +290,7 @@ const Announcements = () => {
                                                         :
                                                         <Badge variant='secondary'>Just Done</Badge>
 
-                                            : (!!!obj.to_date && moment().isBefore(obj.from_date)) ?
+                                            : ((!!!obj.to_date && moment().isBefore(obj.from_date))) || ((!!obj.to_date && moment().isBefore(obj.to_date)) || moment().isBefore(obj.from_date)) ?
                                                 <Badge variant='warning'>Upcomming</Badge>
                                                 :
                                                 <Badge variant='secondary'>Done</Badge>

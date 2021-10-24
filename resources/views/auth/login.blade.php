@@ -49,7 +49,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
-                                    <label class="form-check-label text-warning" for="remember">
+                                    <label class="form-check-label" for="remember">
                                         {{ __('Remember Me') }}
                                     </label>
                                 </div>
@@ -58,7 +58,7 @@
 
                         <div class="form-group mb-0">
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-block btn-success">
+                                <button type="submit" class="btn btn-block btn-primary">
                                     {{ __('Login') }}
                                 </button>
 
