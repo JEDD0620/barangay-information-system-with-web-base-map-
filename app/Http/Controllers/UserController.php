@@ -45,6 +45,7 @@ class UserController extends Controller
         $user->username = $req->username;
         $user->f_name = $req->f_name;
         $user->contact_no = $req->contact_no;
+        $user->email = $req->email;
 
         if (isset($req->password)) {
             $user->password = Hash::make($req->password);

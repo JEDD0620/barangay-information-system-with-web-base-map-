@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => false, 'logout'=>true]);
 
 Route::middleware('verified')->group(function () {
 

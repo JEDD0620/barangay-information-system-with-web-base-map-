@@ -68,7 +68,7 @@ const Account = () => {
                         <Col md={6}>
                             <Form.Group>
                                 <Form.Label>Email</Form.Label>
-                                <Form.Control type="text" name='email' defaultValue={!!user ? user.email : ''} disabled onChange={handleChange} required />
+                                <Form.Control type="text" name='email' defaultValue={!!user ? user.email : ''} onChange={handleChange} required />
                             </Form.Group>
                         </Col>
                     </Row>

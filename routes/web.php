@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Auth::routes(['verify' => true]);
+Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 // Route::view('test', 'pdf/certificate');
 Route::get('test/{id}', [RequestController::class, "approveRequest"]);
