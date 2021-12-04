@@ -22,12 +22,7 @@ class CreateRequestsTable extends Migration
             $table->dateTime('date')->nullable();
             $table->string('status')->default('pending');
 
-            $table->string('f_name')->nullable();
-            $table->date('b_date')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('address')->nullable();
-            $table->string('contact_no')->nullable();
-            $table->string('job')->nullable();
+            $table->text('reason')->nullable();
             $table->timestamps();
         });
     }

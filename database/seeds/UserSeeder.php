@@ -16,7 +16,6 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'f_name' => 'Administrator',
                 'username' => 'admin',
                 'email' => 'admin@sfbis.test',
                 'email_verified_at' => now(),
@@ -26,7 +25,6 @@ class UserSeeder extends Seeder
             ],
 
             [
-                'f_name' => 'Resident User',
                 'username' => 'resident',
                 'email' => 'resident@sfbis.test',
                 'email_verified_at' => now(),

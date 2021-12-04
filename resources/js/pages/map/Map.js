@@ -7,7 +7,7 @@ import { Col, Row, Button, Form, Badge } from 'react-bootstrap';
 import { CreateModal, RemoveModal } from './components/Modals';
 import Axios from 'axios';
 import { queryUser } from '../../utils/user';
-import { pick } from 'lodash';
+import moment from 'moment';
 const params = {
     v: 'weekly',
     key: 'AIzaSyCcXqxbe5qJEi8g6ZhMPScT3yH8p1bQD9M',
@@ -44,20 +44,32 @@ const Map = () => {
         Axios.get('/api/map')
             .then(res => {
                 if (!!res.data) {
-                    residentData.current = res.data
-                    let items = res.data.map(obj => {
+                    residentData.current = res.data.structures.concat(res.data.events)
+                    console.log(residentData.current);
+                    let structures = res.data.structures.map(obj => {
                         return (
                             <Marker
                                 key={obj.id}
                                 lat={obj.lat}
                                 lng={obj.lng}
                                 draggable={false}
-                                // fillColor={obj.type == 'SK' ? "#6cb2eb" : obj.type == 'Officials' ? "#ffed4a" : "#e3342f"}
-                                // strokeColor={obj.type == 'SK' ? "#6cb2eb" : obj.type == 'Officials' ? "#ffed4a" : "#e3342f"}
                                 icon={{
-                                    url: obj.type == 'SK' ? "http://maps.google.com/mapfiles/kml/paddle/blu-circle.png"
-                                        : obj.type == 'Officials' ? "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png"
-                                            : "http://maps.google.com/mapfiles/kml/paddle/red-circle.png"
+                                    url: "http://maps.google.com/mapfiles/kml/paddle/blu-circle.png"
+                                }}
+                                onClick={onMarkerClick}
+                                label={!!obj.f_name ? obj.f_name : obj.label}
+                            />
+                        )
+                    })
+                    let events = res.data.events.map(obj => {
+                        return (
+                            <Marker
+                                key={obj.id}
+                                lat={obj.lat}
+                                lng={obj.lng}
+                                draggable={false}
+                                icon={{
+                                    url: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png"
                                 }}
                                 onClick={onMarkerClick}
                                 label={!!obj.f_name ? obj.f_name : obj.label}
@@ -65,7 +77,7 @@ const Map = () => {
                         )
                     })
 
-                    setMarkers(items)
+                    setMarkers(structures.concat(events))
                 }
             })
             .catch(err => {
@@ -76,7 +88,7 @@ const Map = () => {
     const onMapCreated = (map) => {
         map.setOptions({
             disableDefaultUI: true,
-            streetViewControl:true,
+            streetViewControl: true,
             styles: [
                 {
                     featureType: "poi",
@@ -124,9 +136,8 @@ const Map = () => {
                 <Col md={10}>
                     <h2 className='d-inline-block'>Map</h2>
                     <h2 className='d-inline-block h3'>
-                        <Badge variant='danger p-2 ml-md-3 mr-md-2 mr-1 ml-0'>Highlights</Badge>
-                        <Badge variant='warning p-2 ml-md-2 mr-md-2 mr-1 ml-1'>Officials</Badge>
-                        <Badge variant='info p-2 ml-md-2 mr-md-2 mr-0 ml-1'>SK</Badge>
+                        <Badge variant='danger p-2 ml-md-3 mr-md-2 mr-1 ml-0'>Structures</Badge>
+                        <Badge variant='warning p-2 ml-md-2 mr-md-2 mr-1 ml-1'>Events</Badge>
                     </h2>
                     <br />
                     {!!user && (user.role == 'Admin' || user.role == 'Staff') ?
@@ -195,8 +206,24 @@ const Map = () => {
                         lng={location.lng}
                         content={`
                             <div style="display:flex">
-                                <div><img style="object-fit: cover;" src="${info.photo}" width="100" height="150"/></div>
-                                <div style="min-width:200px; margin-left:10px"><h5>${!!info.f_name ? info.f_name : info.label}</h5><p>${info.details}</p></div>
+                                ${!!info.photo ? `<div><img style="object-fit: cover;" src=${info.photo} width="100" height="150" /></div>` : ''}
+                                
+                                ${!!info.details ? `<div style="min-width:200px; margin-left:10px"><h5>${info.label}</h5><p>${info.details}</p></div>` : ''}
+                                ${!!info.body ? `<div style="min-width:200px; margin-left:10px"><h5>${!!info.title && info.title}</h5>
+                                ${!!info.from_date ?
+                                    `<div style="min-width:200px; margin-left:10px">
+                                        <span>
+                                        ${`${moment(info.from_date).format('D MMM YYYY')}${!!info.to_date ? ` to ${moment(info.to_date).format('D MMM YYYY')}` : ''}`}
+                                        ${!!info.from_time ?
+                                        `<br /><small>
+                                                ${` at ${moment(info.from_time, "HH:mm:ss").format("hh:mm A")}${!!info.to_time ? ` to ${moment(info.to_time, "HH:mm:ss").format("hh:mm A")}` : ''}`}
+                                           </small>`
+                                        : ""
+                                    }
+                                        </span>
+                                        </div>`
+                                    : ''}
+                                <p style="margin-top:10px">${info.body}</p></div>` : ""}
                             </div>
                         `}
                         onCloseClick={() => { setInfo(false); setLocation(null); }}

@@ -70,6 +70,12 @@ return [
             'root' => public_path('images/map'),
         ],
 
+        'reports' => [
+            'driver' => 'local',
+            'root' => public_path('images/reports'),
+        ],
+
+
     ],
 
     /*

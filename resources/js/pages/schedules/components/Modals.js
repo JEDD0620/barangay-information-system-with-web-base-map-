@@ -14,7 +14,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
         out: '17:00',
         times: 1,
     })
-    const [searchInput, setSearchInput] = useState()
+    const [searchInput, setSearchInput] = useState("")
     const [options, setOptions] = useState()
 
     useEffect(() => {
@@ -106,6 +106,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                                 <Form.Label>Duty Date</Form.Label>
                                 <Form.Control
                                     type="date"
+                                    min={moment().format("yyyy-MM-DD")}
                                     name='duty'
                                     placeholder="input date here ..."
                                     required onChange={handleChange}
@@ -178,7 +179,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
 }
 
 
-export const EditModal = ({ data, setData, handleAction, setDeleteData }) => {
+export const EditModal = ({ data, setData, handleAction, setArchiveData }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormdata] = useState(
         {
@@ -206,7 +207,7 @@ export const EditModal = ({ data, setData, handleAction, setDeleteData }) => {
         })
     }, [data])
 
-    const [searchInput, setSearchInput] = useState()
+    const [searchInput, setSearchInput] = useState("")
     const [options, setOptions] = useState()
 
     useEffect(() => {
@@ -288,6 +289,7 @@ export const EditModal = ({ data, setData, handleAction, setDeleteData }) => {
                                 <Form.Label>Duty Date</Form.Label>
                                 <Form.Control
                                     type="date"
+                                    min={moment().format("yyyy-MM-DD")}
                                     name='duty'
                                     placeholder="input date here ..."
                                     required onChange={handleChange}
@@ -351,8 +353,8 @@ export const EditModal = ({ data, setData, handleAction, setDeleteData }) => {
                     <Button type='button' variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button type='button' variant="danger" onClick={() => {setDeleteData(data); setData(false)}}>
-                        Delete
+                    <Button type='button' variant="danger" onClick={() => {setArchiveData(data); setData(false)}}>
+                        Archive
                     </Button>
                     <Button variant="warning" type='submit' disabled={loading}>
                         {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Edit Schedule'}
@@ -364,7 +366,7 @@ export const EditModal = ({ data, setData, handleAction, setDeleteData }) => {
     )
 }
 
-export const DeleteModal = ({ data, setData, handleAction }) => {
+export const ArchiveModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
 
     const onAction = () => {
@@ -380,15 +382,15 @@ export const DeleteModal = ({ data, setData, handleAction }) => {
     return (
         <Modal show={!!data} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Delete Schedule</Modal.Title>
+                <Modal.Title>Archive Schedule</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Are you sure you want to delete {data.f_name} schedule?</Modal.Body>
+            <Modal.Body>Are you sure you want to archive {data.f_name} schedule?</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
                 <Button variant="danger" onClick={onAction} disabled={loading}>
-                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Delete'}
+                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Archive'}
                 </Button>
             </Modal.Footer>
         </Modal>

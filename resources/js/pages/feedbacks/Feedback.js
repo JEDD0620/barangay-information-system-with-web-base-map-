@@ -5,7 +5,7 @@ import { Button, Spinner, Badge, Card, Accordion, useAccordionToggle, Dropdown }
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
-import { DeleteCommentModal, EditModal } from './components/Modals'
+import { ArchiveCommentModal, EditModal } from './components/Modals'
 import { getParams, getParamsID } from '../../utils/links'
 import { queryUser } from '../../utils/user'
 import { CommentForm } from './components/CommentForm'
@@ -21,7 +21,7 @@ const Feedback = () => {
 
     //modals
     const [editData, setEditData] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
+    const [archiveData, setArchiveData] = useState(false);
 
     //toast
     const [showToast, setShowToast] = useState(false);
@@ -74,15 +74,15 @@ const Feedback = () => {
             .catch(err => console.log(err))
     }
 
-    const deleteFeedback = (setModalLoading) => {
-        Axios.delete(`/api/feedback/${deleteData.id}`)
+    const archiveFeedback = (setModalLoading) => {
+        Axios.delete(`/api/feedback/${archiveData.id}`)
             .then(res => {
-                if (deleteData.id == getParamsID()) {
+                if (archiveData.id == getParamsID()) {
                     location = '/feedbacks'
                 }
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name}'s comment Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.f_name}'s comment Archived!`);
+                setArchiveData(false);
                 getFeedback(true);
             })
             .catch(err => console.log(err))
@@ -111,7 +111,7 @@ const Feedback = () => {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {/* <Dropdown.Item onClick={() => setEditData(val)}>Edit</Dropdown.Item> */}
-                        <Dropdown.Item onClick={() => setDeleteData(val)}>Delete</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setArchiveData(val)}>Archive</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             )
@@ -222,7 +222,7 @@ const Feedback = () => {
                 <Spinner animation="border" variant="primary" className='mt-5' />
             }
             <Button variant='primary btn-block mt-3' onClick={() => window.history.back()}>Back</Button>
-            <DeleteCommentModal data={deleteData} setData={setDeleteData} handleAction={deleteFeedback} />
+            <ArchiveCommentModal data={archiveData} setData={setArchiveData} handleAction={archiveFeedback} />
             {/* <EditModal data={editData} setData={setEditData} handleAction={editFeedback} /> */}
 
         </Layout>

@@ -7,7 +7,7 @@ export const NavUser = ({ user }) => {
         <nav className='bg-dark text-light'>
             <div className='user-nav'>
                 <i className="fas fa-user-circle"></i>
-                <div>{!!user && user.f_name}</div>
+                <div>{!!user && user.username}</div>
                 <a className='btn btn-link p-0' href='/account'>Account</a> | <button className='btn btn-link p-0' onClick={logoutUser}>Logout</button>
             </div>
 

@@ -1,3 +1,4 @@
+import moment from 'moment-timezone'
 import React, { useEffect, useState } from 'react'
 import { Modal, Button, Spinner, Row, Col, Form } from 'react-bootstrap'
 
@@ -60,7 +61,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Birthday</Form.Label>
-                                <Form.Control type="date" name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
+                                <Form.Control type="date" max={moment().subtract(18, 'years').format("yyyy-MM-DD")} name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
@@ -84,7 +85,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Contact Number</Form.Label>
-                                <Form.Control type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                <Form.Control type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -114,7 +115,10 @@ export const EditModal = ({ data, setData, handleAction }) => {
             id: data.id,
             f_name: data.f_name,
             role: data.role,
-            gender: data.gender,
+            civil_status: data.civil_status,
+            residency_date: data.residency_date,
+            height: data.height,
+            weight: data.weight,
             address: data.address,
             b_date: data.b_date,
             contact_no: data.contact_no,
@@ -172,7 +176,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Birthday</Form.Label>
-                                <Form.Control defaultValue={data.b_date} type="date" name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
+                                <Form.Control defaultValue={data.b_date} max={moment().subtract(18, 'years').format("yyyy-MM-DD")} type="date" name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
@@ -196,7 +200,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Contact Number</Form.Label>
-                                <Form.Control defaultValue={data.contact_no} type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                <Form.Control defaultValue={data.contact_no} type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -216,7 +220,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
     )
 }
 
-export const DeleteModal = ({ data, setData, handleAction }) => {
+export const ArchiveModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
 
     const onAction = () => {
@@ -232,15 +236,15 @@ export const DeleteModal = ({ data, setData, handleAction }) => {
     return (
         <Modal show={!!data} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Delete {data.f_name}</Modal.Title>
+                <Modal.Title>Archive {data.f_name}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Are you sure you want to delete {data.f_name}?</Modal.Body>
+            <Modal.Body>Are you sure you want to archive {data.f_name}?</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
                 <Button variant="danger" onClick={onAction} disabled={loading}>
-                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Delete'}
+                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Archive'}
                 </Button>
             </Modal.Footer>
         </Modal>

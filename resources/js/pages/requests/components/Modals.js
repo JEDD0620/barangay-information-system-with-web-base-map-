@@ -18,7 +18,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
         queryUser(setUser)
     }, [])
 
-    const [searchInput, setSearchInput] = useState()
+    const [searchInput, setSearchInput] = useState("")
     const [options, setOptions] = useState()
 
     useEffect(() => {
@@ -192,7 +192,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
         })
     }, [data])
 
-    const [searchInput, setSearchInput] = useState()
+    const [searchInput, setSearchInput] = useState("")
     const [options, setOptions] = useState()
 
     useEffect(() => {
@@ -360,14 +360,24 @@ export const ViewModal = ({ data, setData, handleAction }) => {
                         {'Address: ' + data.address}<br />
                         {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
                         {'Gender: ' + data.gender}<br />
+                        {'Residency: ' + moment().diff(moment(data.residency_date), 'years')} years<br />
                         {'Contact No.: ' + data.contact_no}<br />
                         {/* {!!data.job && 'Job: ' + data.job} */}
                     </>
                     :
-                    <>
-                        Address: {data.resident_address} <br />
-                        Contact No: {data.resident_contact_no} <br />
-                    </>
+                    data.type == 'Clearance' ?
+                        <>
+                            Address: {data.resident_address} <br />
+                            Contact No: {data.resident_contact_no} <br />
+                            Contact No: {data.civil_status} <br />
+                            Contact No: {data.height} cm <br />
+                            Contact No: {data.weight} kg <br />
+                        </>
+                        :
+                        <>
+                            Address: {data.resident_address} <br />
+                            Contact No: {data.resident_contact_no} <br />
+                        </>
                 }
             </Modal.Body>
             <Modal.Footer>
@@ -412,7 +422,7 @@ export const ApproveModal = ({ data, setData, handleAction }) => {
                         <Col md={12}>
                             <Form.Group className="mb-3 mt-3">
                                 <Form.Label>Claim Date</Form.Label>
-                                <Form.Control type="date" name='date' placeholder="set claim date" required onChange={handleChange} />
+                                <Form.Control type="date" min={moment().format("yyyy-MM-DD")} name='date' placeholder="set claim date" required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -433,10 +443,12 @@ export const ApproveModal = ({ data, setData, handleAction }) => {
 
 export const DisapprovedModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
+    const [formData, setFormData] = useState("")
 
-    const onAction = () => {
+    const onAction = (e) => {
+        e.preventDefault()
         setLoading(true)
-        handleAction(setLoading)
+        handleAction(formData, setLoading)
     }
 
     const handleClose = () => {
@@ -449,33 +461,45 @@ export const DisapprovedModal = ({ data, setData, handleAction }) => {
             <Modal.Header closeButton>
                 <Modal.Title>Disapproved  {data.type}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                Are you sure you want to disapproved this {data.type}? <br />
-                Resident: {data.type == 'Residency' ? data.f_name : data.resident_name} <br />
+            <Form onSubmit={onAction}>
+                <Modal.Body>
+                    Are you sure you want to disapproved this {data.type}? <br />
+                    Resident: {data.type == 'Residency' ? data.f_name : data.resident_name} <br />
 
-                {data.type == 'Residency' ?
-                    <>
-                        {'Address: ' + data.address}<br />
-                        {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
-                        {'Gender: ' + data.gender}<br />
-                        {'Contact No.: ' + data.contact_no}<br />
-                        {/* {!!data.job && 'Job: ' + data.job} */}
-                    </>
-                    :
-                    <>
-                        Address: {data.resident_address} <br />
-                        Contact No: {data.resident_contact_no} <br />
-                    </>
-                }
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                <Button variant="danger" onClick={onAction} disabled={loading}>
-                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Disapproved '}
-                </Button>
-            </Modal.Footer>
+                    {data.type == 'Residency' ?
+                        <>
+                            {'Address: ' + data.address}<br />
+                            {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
+                            {'Gender: ' + data.gender}<br />
+                            {'Contact No.: ' + data.contact_no}<br />
+                            {/* {!!data.job && 'Job: ' + data.job} */}
+                        </>
+                        :
+                        <>
+                            Address: {data.resident_address} <br />
+                            Contact No: {data.resident_contact_no} <br />
+                        </>
+                    }
+                    <br />
+
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Disapprove Reason</Form.Label>
+                                <Form.Control onChange={(e) => setFormData(e.currentTarget.value)} value={formData} as="textarea" name='reason' placeholder="input dissaproving reason ..." required />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" type='button' onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button type='submit' variant="danger" disabled={loading}>
+                        {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Disapproved '}
+                    </Button>
+                </Modal.Footer>
+            </Form>
         </Modal>
     )
 }

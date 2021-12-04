@@ -13,12 +13,6 @@ class Request extends Model
         'purpose',
         'date',
         'status',
-        
-        'f_name',
-        'b_date',
-        'gender',
-        'address',
-        'contact_no',
-        'job',
+        'reason',
     ];
 }

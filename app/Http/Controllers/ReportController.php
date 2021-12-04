@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Mockery\Undefined;
 
 class ReportController extends Controller
 {
@@ -20,7 +22,7 @@ class ReportController extends Controller
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
             ->leftJoin('users', 'reports.user_id', 'users.id')
             ->select(
-                'users.f_name as reporter_name',
+                'users.username as reporter_name',
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
                 'residents.contact_no as resident_contact_no',
@@ -110,13 +112,45 @@ class ReportController extends Controller
 
     public function createReport(Request $req)
     {
-        Auth::user()->reports()->create($req->all());
+        $data = $req->only('case', 'resident_id', 'anonymous');
+        if ($req->file('photo')) {
+            Storage::disk('reports')->putFileAs('', $req->file('photo'), $req->file('photo')->getClientOriginalName());
+            $data['photo'] = "/images/reports/" . $req->file('photo')->getClientOriginalName();
+        }
+
+        if (!isset($req->resident_id) || $req->resident_id == 'undefined') {
+            unset($data['resident_id']);
+        }
+
+        if ($data['anonymous'] == 'true')
+            $data['anonymous'] = true;
+        else
+            $data['anonymous'] = false;
+
+        Auth::user()->reports()->create($data);
         return true;
     }
 
     public function editReport(Request $req, $id)
     {
-        Report::find($id)->update($req->all());
+        $data = $req->only('case', 'resident_id', 'anonymous');
+
+        if ($req->file('photo')) {
+            Storage::disk('reports')->putFileAs('', $req->file('photo'), $req->file('photo')->getClientOriginalName());
+            $data['photo'] = "/images/reports/" . $req->file('photo')->getClientOriginalName();
+        }
+
+        if (!isset($req->resident_id) || $req->resident_id == 'undefined') {
+            unset($data['resident_id']);
+        }
+
+        if ($data['anonymous'] == 'true')
+            $data['anonymous'] = true;
+        else
+            $data['anonymous'] = false;
+
+
+        Report::find($id)->update($data);
         return true;
     }
 
@@ -141,7 +175,7 @@ class ReportController extends Controller
     }
     public function deleteReport($id)
     {
-        Report::find($id)->delete();
+        Report::find($id)->update(['status' => 'archived']);
         return true;
     }
 }

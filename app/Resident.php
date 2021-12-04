@@ -12,9 +12,11 @@ class Resident extends Model
         'role',
         'f_name',
         'b_date',
-        'job',
-        'gender',
         'address',
         'contact_no',
+        'residency_date',
+        'civil_status',
+        'height',
+        'weight',
     ];
 }

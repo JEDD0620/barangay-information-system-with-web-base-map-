@@ -19,7 +19,7 @@ class PostController extends Controller
 
         $events = Post::where('type', 'Event')
             ->leftJoin('users', 'posts.user_id', 'users.id')
-            ->select('users.f_name', 'posts.*')
+            ->select('users.username', 'posts.*')
             ->orderBy($sort, $order);
 
         if (isset($dateSet) && $dateSet == 'done') {
@@ -75,7 +75,7 @@ class PostController extends Controller
         }
 
         $announcements->leftJoin('users', 'posts.user_id', 'users.id')
-            ->select('users.f_name', 'posts.*')
+            ->select('users.username', 'posts.*')
             ->orderBy($sort, $order);
 
         if (isset($filter) && $filter != "") {

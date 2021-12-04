@@ -99,8 +99,8 @@ export const Pendings = ({ toggle, setToggle }) => {
             .catch(err => console.log(err))
     }
 
-    const disapproveRequest = (setModalLoading) => {
-        Axios.put(`/api/request/${disapproveData.id}/disapprove`)
+    const disapproveRequest = (formData, setModalLoading) => {
+        Axios.put(`/api/request/${disapproveData.id}/disapprove`, { reason: formData })
             .then(res => {
                 setModalLoading(false);
                 setShowToast(`${disapproveData.type} Disapproved!`);

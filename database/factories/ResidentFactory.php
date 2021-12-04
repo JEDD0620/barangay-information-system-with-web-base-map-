@@ -22,9 +22,17 @@ $factory->define(Resident::class, function (Faker $faker) {
     return [
         'f_name' => $faker->name($gender),
         'b_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-        'gender' => $gender,
+        'residency_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
         'address' => $faker->streetAddress,
-        'job' => $faker->jobTitle,
+        'weight' => random_int(20, 200),
+        'height' => random_int(20, 200),
+        'civil_status' => $faker->randomElement([
+            'Single',
+            'Married',
+            'Widowed',
+            'Separated',
+            'Divorced',
+        ]),
         'contact_no' => $faker->numerify('092########'),
     ];
 });

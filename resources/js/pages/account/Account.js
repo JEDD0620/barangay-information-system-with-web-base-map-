@@ -88,7 +88,7 @@ const Account = () => {
                         </Col>
                     </Row>
 
-                    <Row>
+                    {/* <Row>
                         <Col md={6}>
                             <Form.Group>
                                 <Form.Label>Full Name</Form.Label>
@@ -98,10 +98,10 @@ const Account = () => {
                         <Col md={6}>
                             <Form.Group>
                                 <Form.Label>Contact No</Form.Label>
-                                <Form.Control type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' defaultValue={!!user ? user.contact_no : ''} disabled={!!!user} onChange={handleChange} required />
+                                <Form.Control type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' defaultValue={!!user ? user.contact_no : ''} disabled={!!!user} onChange={handleChange} required />
                             </Form.Group>
                         </Col>
-                    </Row>
+                    </Row> */}
 
                     <Row>
                         <Col md={12}>

@@ -21,5 +21,7 @@ class Post extends Model
         'to_date',
         'from_time',
         'to_time',
+        'lat',
+        'lng',
     ];
 }

@@ -3,7 +3,7 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../../elements/FillPaginate'
 import moment from 'moment'
-import { CancelModal, CreateModal, DeleteModal, EditModal, ViewModal } from './Modals'
+import { CancelModal, CreateModal, ArchiveModal, EditModal, ViewModal } from './Modals'
 import { queryUser } from '../../../utils/user'
 import { getParams, setParams } from '../../../utils/links'
 
@@ -22,7 +22,7 @@ export const Pendings = ({ toggle, setToggle }) => {
     const [createData, setCreateData] = useState(false);
     const [editData, setEditData] = useState(false);
     const [cancelData, setCancelData] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
+    const [archiveData, setArchiveData] = useState(false);
 
     //toast
     const [showToast, setShowToast] = useState(false);
@@ -104,7 +104,14 @@ export const Pendings = ({ toggle, setToggle }) => {
     }
 
     const createReport = (setModalLoading, data) => {
-        Axios.post(`/api/report`, data)
+
+        let formData = new FormData();
+        formData.append('photo', data.photo)
+        formData.append('anonymous', data.anonymous)
+        formData.append('resident_id', data.resident_id)
+        formData.append('case', data.case)
+
+        Axios.post(`/api/report`, formData)
             .then(res => {
                 setModalLoading(false);
                 setShowToast(`Report created!`);
@@ -116,7 +123,13 @@ export const Pendings = ({ toggle, setToggle }) => {
     }
 
     const editReport = (setModalLoading, data) => {
-        Axios.put(`/api/report/${editData.id}`, data)
+        let formData = new FormData();
+        formData.append('photo', data.photo)
+        formData.append('anonymous', data.anonymous)
+        formData.append('resident_id', data.resident_id)
+        formData.append('case', data.case)
+
+        Axios.post(`/api/report/${editData.id}`, formData)
             .then(res => {
                 setModalLoading(false);
                 setShowToast(`Report editted!`);
@@ -127,12 +140,12 @@ export const Pendings = ({ toggle, setToggle }) => {
             .catch(err => console.log(err))
     }
 
-    const deleteReport = (setModalLoading, data) => {
-        Axios.delete(`/api/report/${deleteData.id}`)
+    const archiveReport = (setModalLoading, data) => {
+        Axios.delete(`/api/report/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`Report Deleted!`);
-                setDeleteData(false);
+                setShowToast(`Report Archived!`);
+                setArchiveData(false);
                 setToggle(!toggle)
                 getReports(true);
             })
@@ -191,14 +204,14 @@ export const Pendings = ({ toggle, setToggle }) => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'users.f_name')}>
-                                        <span>Reporter</span>
+                                    <th onClick={changeSort.bind(this, 'residents.f_name')}>
+                                        <span>Complainant</span>
                                         <span className="float-right">
                                             <i className={`fa fa-sort${!!sort && sort === 'residents.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'residents.f_name')}>
-                                        <span>Resident</span>
+                                        <span>Defendant</span>
                                         <span className="float-right">
                                             <i className={`fa fa-sort${!!sort && sort === 'residents.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
@@ -224,7 +237,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                                 {!!reports && reports.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.reporter_name}</td>
+                                            <td>{obj.anonymous ? 'Anonymous' : obj.reporter_name}</td>
                                             <td>{obj.resident_name}</td>
                                             <td>{obj.resident_address}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
@@ -234,7 +247,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                                                     {!!user && user.id == obj.user_id && <>
                                                         <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
                                                     </>}
-                                                    <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
+                                                    <Button variant="danger" onClick={() => setArchiveData(obj)}>Archive</Button>
                                                 </ButtonGroup>
                                             </td>
                                         </tr>
@@ -262,7 +275,7 @@ export const Pendings = ({ toggle, setToggle }) => {
             <CancelModal data={cancelData} setData={setCancelData} handleAction={cancelReport} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createReport} />
             <EditModal data={editData} setData={setEditData} handleAction={editReport} />
-            <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteReport} />
+            <ArchiveModal data={archiveData} setData={setArchiveData} handleAction={archiveReport} />
 
         </>
     );

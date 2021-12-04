@@ -18,7 +18,7 @@ class FeedbackController extends Controller
 
         $events = Feedback::where('parent_id', null)
             ->leftJoin('users', 'feedbacks.user_id', 'users.id')
-            ->select('users.f_name', 'feedbacks.*')
+            ->select('users.username', 'feedbacks.*')
             ->withCount('comment')
             ->orderBy($sort, $order);
 
@@ -39,14 +39,14 @@ class FeedbackController extends Controller
 
         $events = Feedback::where('feedbacks.id', $id)
             ->leftJoin('users', 'feedbacks.user_id', 'users.id')
-            ->select('users.f_name', 'feedbacks.*')
+            ->select('users.username', 'feedbacks.*')
             ->with(['comment' =>  function ($q) {
                 $q->leftJoin('users', 'feedbacks.user_id', 'users.id')
-                    ->select('users.f_name', 'feedbacks.*')
+                    ->select('users.username', 'feedbacks.*')
                     ->orderBy('created_at', 'asc')
                     ->with(['comment' =>  function ($q) {
                         $q->leftJoin('users', 'feedbacks.user_id', 'users.id')
-                            ->select('users.f_name', 'feedbacks.*')
+                            ->select('users.username', 'feedbacks.*')
                             ->orderBy('created_at', 'asc');
                     }]);;
             }]);

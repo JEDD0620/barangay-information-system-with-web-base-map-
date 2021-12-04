@@ -26,16 +26,9 @@ $factory->define(Request::class, function (Faker $faker) {
 
     return [
         'user_id' => $faker->randomElement($users),
-        'resident_id' => $type == 'Residency' ? null : $faker->randomElement($residents),
+        'resident_id' =>  $faker->randomElement($residents),
         'type' =>  $type,
         'purpose' => $faker->realText($maxNbChars = 20, $indexSize = 1),
         'updated_at' => now()->subWeek(rand(1, 52))->format('Y-m-d'),
-
-        'f_name' => $type == 'Residency' ? $faker->name($gender) : null,
-        'address' => $type == 'Residency' ? $faker->streetAddress : null,
-        'b_date' => $type == 'Residency' ? $faker->date($format = 'Y-m-d', $max = 'now') : null,
-        'gender' => $type == 'Residency' ? $gender : null,
-        'contact_no' => $type == 'Residency' ? $faker->numerify('092########') : null,
-        'job' => $type == 'Residency' ? $faker->randomElement([$faker->jobTitle, null]) : null,
     ];
 });

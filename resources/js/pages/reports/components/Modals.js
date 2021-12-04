@@ -8,9 +8,10 @@ import { queryUser } from '../../../utils/user'
 export const CreateModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormdata] = useState({
+        anonymous: true
     })
 
-    const [searchInput, setSearchInput] = useState()
+    const [searchInput, setSearchInput] = useState("")
     const [options, setOptions] = useState()
 
     useEffect(() => {
@@ -50,7 +51,15 @@ export const CreateModal = ({ data, setData, handleAction }) => {
 
     const handleChange = e => {
         const { name, value } = e.target;
-        setFormdata({ ...formData, [name]: value });
+
+        if (name == 'photo') {
+            setFormdata({ ...formData, [name]: e.currentTarget.files[0] });
+        } else if (name == 'anonymous') {
+            setFormdata({ ...formData, [name]: !formData.anonymous });
+        }
+        else {
+            setFormdata({ ...formData, [name]: value });
+        }
 
         if (name == 'body') {
             e.target.style.height = "0px";
@@ -71,7 +80,22 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                     <Row>
                         <Col md={12}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Resident</Form.Label>
+                                <Form.Check
+                                    type="switch"
+                                    id="custom-switch"
+                                    label="Anonymous"
+                                    name='anonymous'
+                                    onChange={handleChange}
+                                    defaultChecked
+                                />
+                                {/* <Form.Check type="checkbox" defaultChecked name='Anonymous' label='Anonymous' onChange={handleChange} /> */}
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Defendant</Form.Label>
                                 <Select
                                     options={options}
                                     onInputChange={(v) => setSearchInput(v)}
@@ -80,6 +104,24 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                                     onChange={(e) => setFormdata({ ...formData, resident_id: e.value })}
                                     required
                                     isDisabled={formData.type == 'Residency'}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Photo</Form.Label>
+                                <Form.Control
+                                    type='file'
+                                    name='photo'
+                                    id="custom-file"
+                                    accept="image/*" capture
+                                    custom
+                                    placeholder="upload photo ..."
+                                    onChange={handleChange}
+                                    defaultValue={data.photo}
                                 />
                             </Form.Group>
                         </Col>
@@ -125,6 +167,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
         id: data.id,
         case: data.case,
         resident_id: data.resident_id,
+        anonymous: data.anonymous,
     })
 
     useEffect(() => {
@@ -132,10 +175,11 @@ export const EditModal = ({ data, setData, handleAction }) => {
             id: data.id,
             case: data.case,
             resident_id: data.resident_id,
+            anonymous: data.anonymous,
         })
     }, [data])
 
-    const [searchInput, setSearchInput] = useState()
+    const [searchInput, setSearchInput] = useState("")
     const [options, setOptions] = useState()
 
     useEffect(() => {
@@ -175,7 +219,15 @@ export const EditModal = ({ data, setData, handleAction }) => {
 
     const handleChange = e => {
         const { name, value } = e.target;
-        setFormdata({ ...formData, [name]: value });
+
+        if (name == 'photo') {
+            setFormdata({ ...formData, [name]: e.currentTarget.files[0] });
+        } else if (name == 'anonymous') {
+            setFormdata({ ...formData, [name]: !formData.anonymous });
+        }
+        else {
+            setFormdata({ ...formData, [name]: value });
+        }
 
         if (name == 'body') {
             e.target.style.height = "0px";
@@ -196,7 +248,21 @@ export const EditModal = ({ data, setData, handleAction }) => {
                     <Row>
                         <Col md={12}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Resident</Form.Label>
+                                <Form.Check
+                                    type="switch"
+                                    id="custom-switch"
+                                    label="Anonymous"
+                                    name='anonymous'
+                                    onChange={handleChange}
+                                    defaultChecked={formData.anonymous}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Defendant</Form.Label>
                                 {!!data &&
                                     <Select
                                         options={options}
@@ -208,6 +274,20 @@ export const EditModal = ({ data, setData, handleAction }) => {
                                         defaultValue={{ value: data.resident_id, label: data.resident_name }}
                                     />
                                 }
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Photo</Form.Label>
+                                <Form.Control
+                                    type='file'
+                                    name='photo'
+                                    placeholder="upload photo ..."
+                                    onChange={handleChange}
+                                // defaultValue={data.photo}
+                                />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -270,12 +350,13 @@ export const ViewModal = ({ data, setData, handleAction }) => {
                 <Modal.Title>View Report</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                Resident: {data.resident_name} <br />
+                Defendant: {data.resident_name} <br />
                 Address: {data.resident_address} <br />
                 Contact No: {data.resident_contact_no} <br />
                 <p className='mt-3'>
                     {data.case}
                 </p>
+                <img src={data.photo} alt="" width='100%' height='auto' />
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
@@ -358,7 +439,7 @@ export const ViewClosedModal = ({ data, setData }) => {
                 <Modal.Title>View Report</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                Resident: {data.resident_name} <br />
+                Defendant: {data.resident_name} <br />
                 Address: {data.resident_address} <br />
                 Contact No: {data.resident_contact_no} <br />
                 <p className='mt-3'>
@@ -394,7 +475,7 @@ export const CancelModal = ({ data, setData, handleAction }) => {
             </Modal.Header>
             <Modal.Body>
                 Are you sure you want to cancel this report? <br />
-                Resident: {data.resident_name} <br />
+                Defendant: {data.resident_name} <br />
                 Address: {data.resident_address} <br />
                 Contact No: {data.resident_contact_no} <br />
                 <p className='mt-3'>
@@ -414,7 +495,7 @@ export const CancelModal = ({ data, setData, handleAction }) => {
     )
 }
 
-export const DeleteModal = ({ data, setData, handleAction }) => {
+export const ArchiveModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
 
     const onAction = () => {
@@ -430,11 +511,11 @@ export const DeleteModal = ({ data, setData, handleAction }) => {
     return (
         <Modal show={!!data} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Delete {data.type}</Modal.Title>
+                <Modal.Title>Archive {data.type}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                Are you sure you want to delete this report? <br />
-                Resident: {data.resident_name} <br />
+                Are you sure you want to archive this report? <br />
+                Defendant: {data.resident_name} <br />
                 Address: {data.resident_address} <br />
                 Contact No: {data.resident_contact_no} <br />
                 <p className='mt-3'>
@@ -447,7 +528,7 @@ export const DeleteModal = ({ data, setData, handleAction }) => {
                     Close
                 </Button>
                 <Button variant="danger" onClick={onAction} disabled={loading}>
-                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Delete '}
+                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Archive '}
                 </Button>
             </Modal.Footer>
         </Modal>

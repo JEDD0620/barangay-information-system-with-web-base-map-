@@ -12,7 +12,7 @@ export const CreateRequest = ({ data, setData }) => {
         gender: 'Male',
     })
 
-    const [searchInput, setSearchInput] = useState()
+    const [searchInput, setSearchInput] = useState("")
     const [options, setOptions] = useState()
 
     useEffect(() => {
@@ -163,7 +163,7 @@ export const CreateRequest = ({ data, setData }) => {
                                 <Col md={6}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Birthday</Form.Label>
-                                        <Form.Control type="date" name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
+                                        <Form.Control type="date" max={moment().subtract(18, 'years').format("yyyy-MM-DD")} name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
                                     </Form.Group>
                                 </Col>
                                 <Col md={6}>
@@ -187,7 +187,7 @@ export const CreateRequest = ({ data, setData }) => {
                                 <Col md={6}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Contact Number</Form.Label>
-                                        <Form.Control type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                        <Form.Control type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -215,7 +215,7 @@ export const CreateReport = ({ data, setData }) => {
     const [formData, setFormdata] = useState({
     })
 
-    const [searchInput, setSearchInput] = useState()
+    const [searchInput, setSearchInput] = useState("")
     const [options, setOptions] = useState()
 
     useEffect(() => {

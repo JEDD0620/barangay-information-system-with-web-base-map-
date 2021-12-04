@@ -5,7 +5,7 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
-import { DeleteModal, CreateModal, EditModal, ViewModal } from './components/Modals'
+import { ArchiveModal, CreateModal, EditModal, ViewModal } from './components/Modals'
 import { queryUser } from '../../utils/user'
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
@@ -21,7 +21,7 @@ const Schedules = () => {
     //modals
     const [createData, setCreateData] = useState(false);
     const [editData, setEditData] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
+    const [archiveData, setArchiveData] = useState(false);
     const [viewData, setViewData] = useState(false);
     const [events, setEvents] = useState([]);
 
@@ -150,12 +150,12 @@ const Schedules = () => {
             .catch(err => console.log(err))
     }
 
-    const deleteSchedule = (setModalLoading) => {
-        Axios.delete(`/api/schedule/${deleteData.id}`)
+    const archiveSchedule = (setModalLoading) => {
+        Axios.delete(`/api/schedule/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name} schedule Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.f_name} schedule Archived!`);
+                setArchiveData(false);
                 getSchedules();
             })
             .catch(err => console.log(err))
@@ -194,9 +194,9 @@ const Schedules = () => {
                 events={events}
             />
 
-            <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteSchedule} />
+            <ArchiveModal data={archiveData} setData={setArchiveData} handleAction={archiveSchedule} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createSchedule} />
-            <EditModal data={editData} setData={setEditData} handleAction={editSchedule} setDeleteData={setDeleteData} />
+            <EditModal data={editData} setData={setEditData} handleAction={editSchedule} setArchiveData={setArchiveData} />
 
         </Layout>
     );

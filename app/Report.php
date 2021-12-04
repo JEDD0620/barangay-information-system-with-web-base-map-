@@ -11,6 +11,9 @@ class Report extends Model
         'resident_id',
         'case',
         'status',
-        'staff_id'
+        'staff_id',
+        'reason',
+        'photo',
+        'anonymous',
     ];
 }

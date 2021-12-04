@@ -19,7 +19,10 @@ class CreateReportsTable extends Migration
             $table->unsignedBigInteger('resident_id')->nullable();
             $table->unsignedBigInteger('staff_id')->nullable();
             $table->text('case');
+            $table->string('photo')->nullable();
             $table->string('status')->default('Pending');
+            $table->text('reason')->nullable();
+            $table->boolean('anonymous')->default(true);
             $table->timestamps();
         });
     }

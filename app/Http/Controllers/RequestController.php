@@ -26,7 +26,11 @@ class RequestController extends Controller
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
                 'residents.contact_no as resident_contact_no',
-                'users.f_name as user_name',
+                'residents.residency_date',
+                'residents.civil_status',
+                'residents.weight',
+                'residents.height',
+                'users.username as user_name',
                 'requests.*'
             )
             ->orderBy($sort, $order);
@@ -61,7 +65,7 @@ class RequestController extends Controller
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
                 'residents.contact_no as resident_contact_no',
-                'users.f_name as user_name',
+                'users.username as user_name',
                 'requests.*'
             )
             ->orderBy($sort, $order);
@@ -125,9 +129,9 @@ class RequestController extends Controller
         return true;
     }
 
-    public function disapproveRequest($id)
+    public function disapproveRequest(Req $req, $id)
     {
-        Request::find($id)->update(['status' => 'disapproved']);
+        Request::find($id)->update(['status' => 'disapproved', 'reason' => $req->reason]);
         return true;
     }
 

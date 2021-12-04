@@ -5,7 +5,7 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
-import { DeleteModal, AssignModal, CreateModal, EditModal } from './components/Modals'
+import { ArchiveModal, AssignModal, CreateModal, EditModal } from './components/Modals'
 import { getParams, setParams, tosef } from '../../utils/links'
 
 const Feedbacks = () => {
@@ -20,7 +20,7 @@ const Feedbacks = () => {
     //modals
     const [createData, setCreateData] = useState(false);
     const [editData, setEditData] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
+    const [archiveData, setArchiveData] = useState(false);
     const [assignData, setAssignData] = useState(false);
 
     //toast
@@ -102,12 +102,12 @@ const Feedbacks = () => {
             .catch(err => console.log(err))
     }
 
-    const deleteFeedback = (setModalLoading) => {
-        Axios.delete(`/api/feedback/${deleteData.id}`)
+    const archiveFeedback = (setModalLoading) => {
+        Axios.delete(`/api/feedback/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name} Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.f_name} Archived!`);
+                setArchiveData(false);
                 getFeedbacks(true);
             })
             .catch(err => console.log(err))
@@ -221,7 +221,7 @@ const Feedbacks = () => {
                 </Col>
             </Row>
 
-            <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteFeedback} />
+            <ArchiveModal data={archiveData} setData={setArchiveData} handleAction={archiveFeedback} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createFeedback} />
 
         </Layout>

@@ -4,8 +4,8 @@ import { Layout } from '../../layout/Layout'
 import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, Toast, Badge } from 'react-bootstrap'
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
-import moment from 'moment'
-import { DeleteModal, AssignModal, CreateModal, EditModal } from './components/Modals'
+import moment from 'moment-timezone'
+import { ArchiveModal, AssignModal, CreateModal, EditModal } from './components/Modals'
 import { getParams, setParams } from '../../utils/links'
 import { PendingResident } from './components/PendingResident'
 
@@ -21,7 +21,7 @@ const Residents = () => {
     //modals
     const [createData, setCreateData] = useState(false);
     const [editData, setEditData] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
+    const [archiveData, setArchiveData] = useState(false);
     const [assignData, setAssignData] = useState(false);
 
     //toast
@@ -103,12 +103,12 @@ const Residents = () => {
             .catch(err => console.log(err))
     }
 
-    const deleteResident = (setModalLoading) => {
-        Axios.delete(`/api/resident/${deleteData.id}`)
+    const archiveResident = (setModalLoading) => {
+        Axios.delete(`/api/resident/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name} Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.f_name} Archived!`);
+                setArchiveData(false);
                 getResidents(true);
             })
             .catch(err => console.log(err))
@@ -152,7 +152,7 @@ const Residents = () => {
                 </Col>
                 <Col md={3}>
                     <FormControl
-                    className='mt-2 mt-md-0'
+                        className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -183,10 +183,28 @@ const Residents = () => {
                                             <i className={`fa fa-sort${!!sort && sort === 'b_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th onClick={changeSort.bind(this, 'gender')}>
-                                        <span>Gender</span>
+                                    <th onClick={changeSort.bind(this, 'weight')}>
+                                        <span>Weight</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'gender' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'weight' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
+                                    <th onClick={changeSort.bind(this, 'height')}>
+                                        <span>Height</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'height' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
+                                    <th onClick={changeSort.bind(this, 'civil_status')}>
+                                        <span>Status</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'civil_status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
+                                    <th onClick={changeSort.bind(this, 'civil_status')}>
+                                        <span>Residency</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'civil_status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'address')}>
@@ -225,7 +243,10 @@ const Residents = () => {
                                             <td>{obj.f_name}</td>
                                             <td>{obj.role}</td>
                                             <td>{moment(obj.b_date).format('D MMM YYYY')}</td>
-                                            <td>{obj.gender}</td>
+                                            <td>{obj.weight}</td>
+                                            <td>{obj.height}</td>
+                                            <td>{obj.civil_status}</td>
+                                            <td>{`${moment().diff(moment(obj.residency_date), 'years')} years`}</td>
                                             <td>{obj.address}</td>
                                             <td>{obj.contact_no}</td>
                                             {/* <td>{obj.job}</td> */}
@@ -233,7 +254,7 @@ const Residents = () => {
                                             <td className='text-center'>
                                                 <ButtonGroup size='sm'>
                                                     <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
-                                                    <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
+                                                    <Button variant="danger" onClick={() => setArchiveData(obj)}>Archive</Button>
                                                 </ButtonGroup>
                                             </td>
                                         </tr>
@@ -253,7 +274,7 @@ const Residents = () => {
                 </Col>
             </Row>
 
-            <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteResident} />
+            <ArchiveModal data={archiveData} setData={setArchiveData} handleAction={archiveResident} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createResident} />
             <EditModal data={editData} setData={setEditData} handleAction={editResident} />
 

@@ -32,7 +32,7 @@ export const ApproveModal = ({ data, setData, handleAction }) => {
     )
 }
 
-export const DeleteModal = ({ data, setData, handleAction }) => {
+export const ArchiveModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
 
     const onAction = () => {
@@ -48,15 +48,15 @@ export const DeleteModal = ({ data, setData, handleAction }) => {
     return (
         <Modal show={!!data} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Delete {data.f_name}</Modal.Title>
+                <Modal.Title>Archive {data.f_name}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Are you sure you want to delete {data.f_name}?</Modal.Body>
+            <Modal.Body>Are you sure you want to archive {data.f_name}?</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
                 <Button variant="danger" onClick={onAction} disabled={loading}>
-                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Delete'}
+                    {loading ? <Spinner animation="border" size='sm' variant="light" /> : 'Archive'}
                 </Button>
             </Modal.Footer>
         </Modal>

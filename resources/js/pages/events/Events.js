@@ -5,7 +5,7 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
-import { DeleteModal, CreateModal, EditModal, ViewModal } from './components/Modals'
+import { ArchiveModal, CreateModal, EditModal, ViewModal } from './components/Modals'
 import { queryUser } from '../../utils/user'
 import { getParams, setParams } from '../../utils/links'
 import { capitalize } from 'lodash'
@@ -24,7 +24,7 @@ const Events = () => {
     //modals
     const [createData, setCreateData] = useState(false);
     const [editData, setEditData] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
+    const [archiveData, setArchiveData] = useState(false);
     const [viewData, setViewData] = useState(false);
 
     //toast
@@ -111,12 +111,12 @@ const Events = () => {
             .catch(err => console.log(err))
     }
 
-    const deleteEvent = (setModalLoading) => {
-        Axios.delete(`/api/post/${deleteData.id}`)
+    const archiveEvent = (setModalLoading) => {
+        Axios.delete(`/api/post/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name} Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.f_name} Archived!`);
+                setArchiveData(false);
                 getEvents(true);
             })
             .catch(err => console.log(err))
@@ -239,14 +239,14 @@ const Events = () => {
                                                         (moment().isBetween(moment(obj.from_time, "HH:mm:ss"), moment(obj.to_time, "HH:mm:ss"))) || (!!!obj.to_time && !!!obj.from_time) ?
                                                             'Ongoing'
                                                             : (moment().isBefore(moment(obj.from_time, "HH:mm:ss"))) ?
-                                                                'Upcomming'
+                                                                'Upcoming'
                                                                 : (!!!obj.to_time && moment().isAfter(moment(obj.from_time, "HH:mm:ss"))) ?
                                                                     'Ongoing'
                                                                     :
                                                                     'Just Done'
 
                                                         : ((!!!obj.to_date && moment().isBefore(obj.from_date))) || ((!!obj.to_date && moment().isBefore(obj.to_date)) || moment().isBefore(obj.from_date)) ?
-                                                            'Upcomming'
+                                                            'Upcoming'
                                                             :
                                                             'Done'
                                                 }</td>
@@ -255,7 +255,7 @@ const Events = () => {
                                                         <ButtonGroup size='sm'>
                                                             <Button variant="info" onClick={() => setViewData(obj)}>View</Button>
                                                             <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>
-                                                            <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
+                                                            <Button variant="danger" onClick={() => setArchiveData(obj)}>Archive</Button>
                                                         </ButtonGroup>
                                                     </td>
                                                 }
@@ -280,14 +280,14 @@ const Events = () => {
                                             (moment().isBetween(moment(obj.from_time, "HH:mm:ss"), moment(obj.to_time, "HH:mm:ss"))) || (!!!obj.to_time && !!!obj.from_time) ?
                                                 <Badge variant='success'>Ongoing</Badge>
                                                 : (moment().isBefore(moment(obj.from_time, "HH:mm:ss"))) ?
-                                                    <Badge variant='warning'>Upcomming</Badge>
+                                                    <Badge variant='warning'>Upcoming</Badge>
                                                     : (!!!obj.to_time && moment().isAfter(moment(obj.from_time, "HH:mm:ss"))) ?
                                                         <Badge variant='success'>Ongoing</Badge>
                                                         :
                                                         <Badge variant='secondary'>Just Done</Badge>
 
                                             : ((!!!obj.to_date && moment().isBefore(obj.from_date))) || ((!!obj.to_date && moment().isBefore(obj.to_date)) || moment().isBefore(obj.from_date)) ?
-                                                <Badge variant='warning'>Upcomming</Badge>
+                                                <Badge variant='warning'>Upcoming</Badge>
                                                 :
                                                 <Badge variant='secondary'>Done</Badge>
                                     }
@@ -319,7 +319,7 @@ const Events = () => {
                 </Col>
             </Row>
 
-            <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteEvent} />
+            <ArchiveModal data={archiveData} setData={setArchiveData} handleAction={archiveEvent} />
             <CreateModal data={createData} setData={setCreateData} handleAction={createEvent} />
             <ViewModal data={viewData} setData={setViewData} handleAction={setEditData} />
             <EditModal data={editData} setData={setEditData} handleAction={editEvent} />

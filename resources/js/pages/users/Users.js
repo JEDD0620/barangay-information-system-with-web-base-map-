@@ -5,7 +5,7 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../elements/FillPaginate'
 import moment from 'moment'
-import { DeleteModal, AssignModal } from './components/Modals'
+import { ArchiveModal, AssignModal } from './components/Modals'
 import { getParams, setParams } from '../../utils/links'
 
 const Users = () => {
@@ -20,7 +20,7 @@ const Users = () => {
     //modals
     const [newModal, setNewModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
+    const [archiveData, setArchiveData] = useState(false);
     const [assignData, setAssignData] = useState(false);
 
     //toast
@@ -74,12 +74,12 @@ const Users = () => {
         setPage(1)
     }
 
-    const deleteUser = (setModalLoading) => {
-        Axios.delete(`/api/user/${deleteData.id}`)
+    const archiveUser = (setModalLoading) => {
+        Axios.delete(`/api/user/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${deleteData.username} Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.username} Archived!`);
+                setArchiveData(false);
                 getUsers(true);
             })
             .catch(err => console.log(err))
@@ -207,7 +207,7 @@ const Users = () => {
                                                         <Button variant="info" onClick={() => setAssignData(obj)}>
                                                             {obj.role == 'Staff' ? 'Unset as Staff' : 'Set as Staff'}
                                                         </Button>
-                                                        <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
+                                                        <Button variant="danger" onClick={() => setArchiveData(obj)}>Archive</Button>
                                                     </ButtonGroup>
                                                 }
                                             </td>
@@ -228,7 +228,7 @@ const Users = () => {
                 </Col>
             </Row>
 
-            <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteUser} />
+            <ArchiveModal data={archiveData} setData={setArchiveData} handleAction={archiveUser} />
             <AssignModal data={assignData} setData={setAssignData} handleAction={assignUser} />
 
         </Layout>

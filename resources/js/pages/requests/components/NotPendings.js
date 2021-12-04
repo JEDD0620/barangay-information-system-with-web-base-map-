@@ -65,22 +65,22 @@ export const NotPendings = (toggle) => {
     }
 
     const approveRequest = (setModalLoading) => {
-        Axios.delete(`/api/request/${deleteData.id}`)
+        Axios.delete(`/api/request/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name} Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.f_name} Archived!`);
+                setArchiveData(false);
                 getRequests(true);
             })
             .catch(err => console.log(err))
     }
 
     const disapproveRequest = (setModalLoading) => {
-        Axios.delete(`/api/request/${deleteData.id}`)
+        Axios.delete(`/api/request/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name} Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.f_name} Archived!`);
+                setArchiveData(false);
                 getRequests(true);
             })
             .catch(err => console.log(err))
@@ -161,6 +161,13 @@ export const NotPendings = (toggle) => {
                                         </span>
                                     </th>
 
+                                    <th onClick={changeSort.bind(this, 'requests.reason')}>
+                                        <span>Reason</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'requests.reason' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
+
                                     <th onClick={changeSort.bind(this, 'requests.status')}>
                                         <span>Status</span>
                                         <span className="float-right">
@@ -177,6 +184,7 @@ export const NotPendings = (toggle) => {
                                             <td>{obj.type}</td>
                                             <td>{obj.purpose}</td>
                                             <td>{!!obj.date ? moment(obj.date).format('D MMM YYYY') : "No Claim Date"}</td>
+                                            <td>{obj.reason}</td>
                                             <td
                                                 className={`text-capitalize font-weight-bold ${obj.status == 'approved' ? 'text-success' : obj.status == 'cancelled' ? 'text-secondary' : 'text-danger'}`}
                                             >

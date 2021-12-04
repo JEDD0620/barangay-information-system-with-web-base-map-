@@ -3,7 +3,7 @@ import { Row, Col, Table, ButtonGroup, Button, Dropdown, FormControl, Spinner, T
 import Axios from 'axios'
 import { FillPaginate } from '../../../elements/FillPaginate'
 import moment from 'moment'
-import { DeleteModal, ApproveModal } from './PendingModals'
+import { ArchiveModal, ApproveModal } from './PendingModals'
 import { getParams, setParams } from '../../../utils/links'
 
 export const PendingResident = () => {
@@ -17,7 +17,7 @@ export const PendingResident = () => {
 
     //modals
     const [approveData, setAppoveData] = useState(false);
-    const [deleteData, setDeleteData] = useState(false);
+    const [archiveData, setArchiveData] = useState(false);
 
     //toast
     const [showToast, setShowToast] = useState(false);
@@ -82,12 +82,12 @@ export const PendingResident = () => {
             .catch(err => console.log(err))
     }
 
-    const deleteResident = (setModalLoading) => {
-        Axios.delete(`/api/resident/${deleteData.id}`)
+    const archiveResident = (setModalLoading) => {
+        Axios.delete(`/api/resident/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${deleteData.f_name} Deleted!`);
-                setDeleteData(false);
+                setShowToast(`${archiveData.f_name} Archived!`);
+                setArchiveData(false);
                 getResidents(true);
             })
             .catch(err => console.log(err))
@@ -203,7 +203,7 @@ export const PendingResident = () => {
                                                 <td className='text-center'>
                                                     <ButtonGroup size='sm'>
                                                         <Button variant="info" onClick={() => setAppoveData(obj)}>Approve</Button>
-                                                        <Button variant="danger" onClick={() => setDeleteData(obj)}>Delete</Button>
+                                                        <Button variant="danger" onClick={() => setArchiveData(obj)}>Archive</Button>
                                                     </ButtonGroup>
                                                 </td>
                                             </tr>
@@ -223,7 +223,7 @@ export const PendingResident = () => {
                     </Col>
                 </Row>
 
-                <DeleteModal data={deleteData} setData={setDeleteData} handleAction={deleteResident} />
+                <ArchiveModal data={archiveData} setData={setArchiveData} handleAction={archiveResident} />
                 <ApproveModal data={approveData} setData={setAppoveData} handleAction={handleApprove} />
 
             </>
