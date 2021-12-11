@@ -70,7 +70,7 @@ export const OnGoing = ({ toggle, setToggle }) => {
         Axios.put(`/api/report/${viewData.id}/close`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${viewData.resident_name} case is now closed!`);
+                setShowToast(`Case is now closed!`);
                 setViewData(false);
                 setToggle(!toggle)
 
@@ -139,10 +139,10 @@ export const OnGoing = ({ toggle, setToggle }) => {
                                             <i className={`fa fa-sort${!!sort && sort === 'residents.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th onClick={changeSort.bind(this, 'users.f_name')}>
+                                    <th onClick={changeSort.bind(this, 'users.username')}>
                                         <span>Respondent</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'users.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'users.username' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
 
@@ -161,7 +161,7 @@ export const OnGoing = ({ toggle, setToggle }) => {
                                 {!!reports && reports.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.anonymous ? 'Anonymous' : obj.reporter_name}</td>
+                                            <td>{obj.anonymous ? 'Anonymous' : !!obj.complainant_name? obj.complainant_name: obj.reporter_name}</td>
                                             <td>{obj.resident_name}</td>
                                             <td>{obj.staff_name}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>

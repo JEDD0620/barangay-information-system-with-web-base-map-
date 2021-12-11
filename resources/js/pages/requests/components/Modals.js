@@ -9,7 +9,6 @@ export const CreateModal = ({ data, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormdata] = useState({
         type: 'Indigency',
-        gender: 'Male',
     })
 
     const [user, setUser] = useState();
@@ -166,7 +165,6 @@ export const EditModal = ({ data, setData, handleAction }) => {
         f_name: data.f_name,
         address: data.address,
         b_date: data.b_date,
-        gender: data.gender,
         contact_no: data.contact_no,
         // job: data.job,
     })
@@ -186,7 +184,6 @@ export const EditModal = ({ data, setData, handleAction }) => {
             f_name: data.f_name,
             address: data.address,
             b_date: data.b_date,
-            gender: data.gender,
             contact_no: data.contact_no,
             // job: data.job,
         })
@@ -352,26 +349,26 @@ export const ViewModal = ({ data, setData, handleAction }) => {
                 <Modal.Title>View {data.type}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                Resident: {data.type == 'Residency' ? data.f_name : data.resident_name} <br />
 
 
+                Resident: {data.resident_name} <br />
                 {data.type == 'Residency' ?
                     <>
-                        {'Address: ' + data.address}<br />
-                        {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
-                        {'Gender: ' + data.gender}<br />
-                        {'Residency: ' + moment().diff(moment(data.residency_date), 'years')} years<br />
-                        {'Contact No.: ' + data.contact_no}<br />
-                        {/* {!!data.job && 'Job: ' + data.job} */}
+                        {'Address: ' + data.resident_address}<br />
+                        {'Civil Status: ' + data.civil_status}<br />
+                        {'Years In Brgy: ' + moment().diff(moment(data.residency_date), 'years')} years<br />
+                        {'Contact No.: ' + data.resident_contact_no}<br />
                     </>
                     :
                     data.type == 'Clearance' ?
                         <>
                             Address: {data.resident_address} <br />
-                            Contact No: {data.resident_contact_no} <br />
-                            Contact No: {data.civil_status} <br />
-                            Contact No: {data.height} cm <br />
-                            Contact No: {data.weight} kg <br />
+                            Birthdate: {moment(data.bdate).format('D MMM YYYY')} <br />
+                            {'Civil Status: ' + data.civil_status}<br />
+                            Height: {data.height} cm <br />
+                            Weight: {data.weight} kg <br />
+                            Gender: {data.gender}<br />
+                            {'Contact No.: ' + data.resident_contact_no}<br />
                         </>
                         :
                         <>
@@ -470,7 +467,6 @@ export const DisapprovedModal = ({ data, setData, handleAction }) => {
                         <>
                             {'Address: ' + data.address}<br />
                             {'Birthdate: ' + moment(data.b_date).format('D MMM YYYY')}<br />
-                            {'Gender: ' + data.gender}<br />
                             {'Contact No.: ' + data.contact_no}<br />
                             {/* {!!data.job && 'Job: ' + data.job} */}
                         </>

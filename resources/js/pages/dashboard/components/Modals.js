@@ -9,7 +9,6 @@ export const CreateRequest = ({ data, setData }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormdata] = useState({
         type: 'Indigency',
-        gender: 'Male',
     })
 
     const [searchInput, setSearchInput] = useState("")
@@ -162,17 +161,8 @@ export const CreateRequest = ({ data, setData }) => {
                             <Row>
                                 <Col md={6}>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Birthday</Form.Label>
+                                        <Form.Label>Birthdate</Form.Label>
                                         <Form.Control type="date" max={moment().subtract(18, 'years').format("yyyy-MM-DD")} name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Gender</Form.Label>
-                                        <select className="custom-select d-block" name='gender' required onChange={handleChange}>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -187,7 +177,7 @@ export const CreateRequest = ({ data, setData }) => {
                                 <Col md={6}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Contact Number</Form.Label>
-                                        <Form.Control type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                        <Form.Control type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                                     </Form.Group>
                                 </Col>
                             </Row>

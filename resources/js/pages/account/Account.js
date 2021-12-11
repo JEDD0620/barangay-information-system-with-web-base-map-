@@ -88,21 +88,6 @@ const Account = () => {
                         </Col>
                     </Row>
 
-                    {/* <Row>
-                        <Col md={6}>
-                            <Form.Group>
-                                <Form.Label>Full Name</Form.Label>
-                                <Form.Control type="text" name='f_name' defaultValue={!!user ? user.f_name : ''} disabled={!!!user} onChange={handleChange} required />
-                            </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                            <Form.Group>
-                                <Form.Label>Contact No</Form.Label>
-                                <Form.Control type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' defaultValue={!!user ? user.contact_no : ''} disabled={!!!user} onChange={handleChange} required />
-                            </Form.Group>
-                        </Col>
-                    </Row> */}
-
                     <Row>
                         <Col md={12}>
                             <Button variant='primary float-right' type='submit' disabled={!!!user || !isValid}>Update</Button>

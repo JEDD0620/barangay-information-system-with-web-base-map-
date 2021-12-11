@@ -178,7 +178,7 @@ const Residents = () => {
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'b_date')}>
-                                        <span>Birthday</span>
+                                        <span>Birthdate</span>
                                         <span className="float-right">
                                             <i className={`fa fa-sort${!!sort && sort === 'b_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
@@ -225,12 +225,12 @@ const Residents = () => {
                                             <i className={`fa fa-sort${!!sort && sort === 'job' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th> */}
-                                    <th onClick={changeSort.bind(this, 'updated_at')}>
+                                    {/* <th onClick={changeSort.bind(this, 'updated_at')}>
                                         <span>Updated</span>
                                         <span className="float-right">
                                             <i className={`fa fa-sort${!!sort && sort === 'updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
-                                    </th>
+                                    </th> */}
                                     <th>
                                         <span>Action</span>
                                     </th>
@@ -250,7 +250,7 @@ const Residents = () => {
                                             <td>{obj.address}</td>
                                             <td>{obj.contact_no}</td>
                                             {/* <td>{obj.job}</td> */}
-                                            <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
+                                            {/* <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td> */}
                                             <td className='text-center'>
                                                 <ButtonGroup size='sm'>
                                                     <Button variant="warning" onClick={() => setEditData(obj)}>Edit</Button>

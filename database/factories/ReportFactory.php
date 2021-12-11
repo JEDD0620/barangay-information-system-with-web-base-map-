@@ -24,6 +24,7 @@ $factory->define(Report::class, function (Faker $faker) {
 
     return [
         'user_id' => $faker->randomElement($users),
+        'anonymous' => $faker->randomElement([true, false]),
         'resident_id' => $faker->randomElement($residents),
         'case' => $faker->realText($maxNbChars = 500, $indexSize = 1),
         'updated_at' => now()->subWeek(rand(1, 52))->format('Y-m-d'),

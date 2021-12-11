@@ -127,10 +127,10 @@ export const NotPendings = (toggle) => {
                                             <i className={`fa fa-sort${!!sort && sort === 'residents.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th onClick={changeSort.bind(this, 'users.f_name')}>
+                                    <th onClick={changeSort.bind(this, 'users.username')}>
                                         <span>Respondent</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'users.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'users.username' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
 
@@ -150,9 +150,9 @@ export const NotPendings = (toggle) => {
                                 {!!reports && reports.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.anonymous ? 'Anonymous' : obj.reporter_name}</td>
+                                            <td>{obj.anonymous ? 'Anonymous' : !!obj.complainant_name ? obj.complainant_name : obj.reporter_name}</td>
                                             <td>{obj.resident_name}</td>
-                                            <td>{obj.status == 'cancelled' ? 'Cancelled by Complainant' : obj.staff_name}</td>
+                                            <td>{obj.status == 'cancelled' ? 'Cancelled by Complainant' : obj.status == 'archived' ? "Archived by Admin/Staff" : obj.staff_name}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>
                                                 <ButtonGroup size='sm'>

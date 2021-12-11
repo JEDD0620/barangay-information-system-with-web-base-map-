@@ -18,6 +18,7 @@ class CreateResidentsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('owner_id')->nullable();
             $table->string('f_name')->nullable();
+            $table->string('gender')->nullable();
             $table->date('b_date')->nullable();
             $table->date('residency_date')->nullable();
             $table->string('address')->nullable();

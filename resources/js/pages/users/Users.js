@@ -137,7 +137,7 @@ const Users = () => {
                 </Col>
                 <Col md={3}>
                     <FormControl
-                    className='mt-2 mt-md-0'
+                        className='mt-2 mt-md-0'
                         placeholder="search ..."
                         onChange={(e) => setTerm(e.target.value)}
                     />
@@ -150,12 +150,6 @@ const Users = () => {
                         <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
-                                    <th onClick={changeSort.bind(this, 'f_name')}>
-                                        <span>Full Name</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
                                     <th onClick={changeSort.bind(this, 'username')}>
                                         <span>Username</span>
                                         <span className="float-right">
@@ -166,12 +160,6 @@ const Users = () => {
                                         <span>Email</span>
                                         <span className="float-right">
                                             <i className={`fa fa-sort${!!sort && sort === 'email' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                        </span>
-                                    </th>
-                                    <th onClick={changeSort.bind(this, 'contact_no')}>
-                                        <span>Contact Number</span>
-                                        <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'contact_no' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'email_verified_at')}>
@@ -195,10 +183,8 @@ const Users = () => {
                                 {!!users && users.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.f_name}</td>
                                             <td>{obj.username}</td>
                                             <td>{obj.email}</td>
-                                            <td>{obj.contact_no}</td>
                                             <td>{!!obj.email_verified_at ? 'yes' : 'no'}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>

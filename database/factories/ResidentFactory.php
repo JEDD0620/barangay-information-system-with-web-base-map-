@@ -21,6 +21,7 @@ $factory->define(Resident::class, function (Faker $faker) {
 
     return [
         'f_name' => $faker->name($gender),
+        'gender' => $gender,
         'b_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
         'residency_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
         'address' => $faker->streetAddress,

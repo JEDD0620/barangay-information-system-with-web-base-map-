@@ -16,6 +16,7 @@ class Resident extends Model
         'contact_no',
         'residency_date',
         'civil_status',
+        'gender',
         'height',
         'weight',
     ];

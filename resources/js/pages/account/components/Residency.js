@@ -37,10 +37,11 @@ export const Residency = ({ user, setToast }) => {
                         id: !!res.data.id ? res.data.id : '',
                         f_name: !!res.data.f_name ? res.data.f_name : '',
                         b_date: !!res.data.b_date ? res.data.b_date : '',
-                        civil_status: res?.civil_status,
-                        residency_date: res?.residency_date,
-                        height: res?.height,
-                        weight: res?.weight,
+                        civil_status: res.data?.civil_status,
+                        residency_date: res.data?.residency_date,
+                        height: res.data?.height,
+                        gender: res.data?.gender,
+                        weight: res.data?.weight,
                         address: !!res.data.address ? res.data.address : '',
                         contact_no: !!res.data.contact_no ? res.data.contact_no : '',
                         // job: !!res.data.job ? res.data.job : '',
@@ -79,7 +80,7 @@ export const Residency = ({ user, setToast }) => {
                 </Col>
                 <Col md={4}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Birthday</Form.Label>
+                        <Form.Label>Birthdate</Form.Label>
                         <Form.Control value={formData.b_date} type="date" max={moment().subtract(18, 'years').format("yyyy-MM-DD")} name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
                     </Form.Group>
                 </Col>
@@ -121,16 +122,26 @@ export const Residency = ({ user, setToast }) => {
             </Row>
 
             <Row>
-                <Col md={6}>
+                <Col md={4}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Gender</Form.Label>
+                        <select value={formData.gender} className="custom-select d-block" name='gender' required onChange={handleChange}>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </Form.Group>
+                </Col>
+
+                <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label>Address</Form.Label>
                         <Form.Control value={formData.address} type="text" name='address' placeholder="input address ..." required onChange={handleChange} />
                     </Form.Group>
                 </Col>
-                <Col md={6}>
+                <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label>Contact Number</Form.Label>
-                        <Form.Control value={formData.contact_no} type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                        <Form.Control value={formData?.contact_no} type="tel" pattern='[0-9]{11}' title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                     </Form.Group>
                 </Col>
             </Row>

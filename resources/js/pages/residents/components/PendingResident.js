@@ -129,7 +129,7 @@ export const PendingResident = () => {
                     </Col>
                     <Col md={3}>
                         <FormControl
-                        className='mt-2 mt-md-0'
+                            className='mt-2 mt-md-0'
                             placeholder="search ..."
                             onChange={(e) => setTerm(e.target.value)}
                         />
@@ -148,22 +148,34 @@ export const PendingResident = () => {
                                                 <i className={`fa fa-sort${!!sort && sort === 'f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
-                                        <th onClick={changeSort.bind(this, 'role')}>
-                                            <span>Status</span>
-                                            <span className="float-right">
-                                                <i className={`fa fa-sort${!!sort && sort === 'role' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
-                                            </span>
-                                        </th>
                                         <th onClick={changeSort.bind(this, 'b_date')}>
-                                            <span>Birthday</span>
+                                            <span>Birthdate</span>
                                             <span className="float-right">
                                                 <i className={`fa fa-sort${!!sort && sort === 'b_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
-                                        <th onClick={changeSort.bind(this, 'gender')}>
-                                            <span>Gender</span>
+                                        <th onClick={changeSort.bind(this, 'weight')}>
+                                            <span>Weight</span>
                                             <span className="float-right">
-                                                <i className={`fa fa-sort${!!sort && sort === 'gender' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                                <i className={`fa fa-sort${!!sort && sort === 'weight' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
+                                        <th onClick={changeSort.bind(this, 'height')}>
+                                            <span>Height</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'height' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
+                                        <th onClick={changeSort.bind(this, 'civil_status')}>
+                                            <span>Status</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'civil_status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
+                                        <th onClick={changeSort.bind(this, 'civil_status')}>
+                                            <span>Residency</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'civil_status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
                                         <th onClick={changeSort.bind(this, 'address')}>
@@ -178,12 +190,12 @@ export const PendingResident = () => {
                                                 <i className={`fa fa-sort${!!sort && sort === 'contact_no' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
-                                        <th onClick={changeSort.bind(this, 'updated_at')}>
+                                        {/* <th onClick={changeSort.bind(this, 'updated_at')}>
                                             <span>Updated</span>
                                             <span className="float-right">
                                                 <i className={`fa fa-sort${!!sort && sort === 'updated_at' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
-                                        </th>
+                                        </th> */}
                                         <th>
                                             <span>Action</span>
                                         </th>
@@ -194,12 +206,14 @@ export const PendingResident = () => {
                                         return (
                                             <tr key={i}>
                                                 <td>{obj.f_name}</td>
-                                                <td>{obj.role}</td>
                                                 <td>{moment(obj.b_date).format('D MMM YYYY')}</td>
-                                                <td>{obj.gender}</td>
+                                                <td>{obj.weight}</td>
+                                                <td>{obj.height}</td>
+                                                <td>{obj.civil_status}</td>
+                                                <td>{`${moment().diff(moment(obj.residency_date), 'years')} years`}</td>
                                                 <td>{obj.address}</td>
                                                 <td>{obj.contact_no}</td>
-                                                <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
+                                                {/* <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td> */}
                                                 <td className='text-center'>
                                                     <ButtonGroup size='sm'>
                                                         <Button variant="info" onClick={() => setAppoveData(obj)}>Approve</Button>

@@ -81,7 +81,7 @@ const Feedback = () => {
                     location = '/feedbacks'
                 }
                 setModalLoading(false);
-                setShowToast(`${archiveData.f_name}'s comment Archived!`);
+                setShowToast(`${archiveData.username}'s comment Archived!`);
                 setArchiveData(false);
                 getFeedback(true);
             })
@@ -126,7 +126,7 @@ const Feedback = () => {
                         <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                         <Card.Body>
                             <h6>
-                                {feedback.f_name}
+                                {feedback.username}
                                 <small className='text-muted'>
                                     <i className="far fa-clock align-baseline ml-2"></i> {moment(feedback.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}
                                     {options(feedback)}
@@ -152,7 +152,7 @@ const Feedback = () => {
                                         <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                                         <Card.Body>
                                             <h6>
-                                                {obj.f_name}
+                                                {obj.username}
                                                 <small className='text-muted'>
                                                     <i className="far fa-clock align-baseline ml-2"></i> {moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}
                                                     {options(obj)}
@@ -166,15 +166,18 @@ const Feedback = () => {
                                                 obj.comment.map((obj2, i2) => {
                                                     return (
                                                         <Card key={obj2.id} className='mb-3'>
-                                                            <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
-                                                            <Card.Body>
+                                                            <div className='d-flex align-items-center'>
+
+                                                            <Card.Img variant="top rounded-circle d-none d-md-block mr-3" src="/images/profile/user-circle-solid.svg" />
                                                                 <h6>
-                                                                    {obj2.f_name}
+                                                                    {obj2.username}
                                                                     <small className='text-muted'>
                                                                         <i className="far fa-clock align-baseline ml-2"></i> {moment(obj2.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}
                                                                         {options(obj2)}
                                                                     </small>
                                                                 </h6>
+                                                            </div>
+                                                            <Card.Body>
                                                                 <Card.Text>
                                                                     {obj2.body}
                                                                 </Card.Text>
@@ -187,11 +190,7 @@ const Feedback = () => {
                                                 <CustomToggle eventKey={obj.id}>Reply</CustomToggle>
                                                 <Accordion.Collapse eventKey={obj.id}>
                                                     <Card className='mb-3'>
-                                                        <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                                                         <Card.Body>
-                                                            <h6>
-                                                                {user.f_name}
-                                                            </h6>
                                                             <CommentForm type='reply' id={obj.id} update={getFeedback} />
                                                         </Card.Body>
                                                     </Card>
@@ -208,11 +207,7 @@ const Feedback = () => {
 
                     {!!user &&
                         <Card className='mt-3'>
-                            <Card.Img variant="top rounded-circle d-none d-md-block" src="/images/profile/user-circle-solid.svg" />
                             <Card.Body>
-                                <h6>
-                                    {user.f_name}
-                                </h6>
                                 <CommentForm type='comment' id={feedback.id} update={getFeedback} />
                             </Card.Body>
                         </Card>

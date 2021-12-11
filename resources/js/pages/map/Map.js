@@ -54,7 +54,7 @@ const Map = () => {
                                 lng={obj.lng}
                                 draggable={false}
                                 icon={{
-                                    url: "http://maps.google.com/mapfiles/kml/paddle/blu-circle.png"
+                                    url: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png"
                                 }}
                                 onClick={onMarkerClick}
                                 label={!!obj.f_name ? obj.f_name : obj.label}

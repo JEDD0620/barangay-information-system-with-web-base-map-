@@ -104,7 +104,7 @@ const Announcements = () => {
         Axios.put(`/api/post`, data)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${data.f_name} Edited!`);
+                setShowToast(`${data.username} Edited!`);
                 setEditData(false);
                 getAnnouncements(true);
             })
@@ -115,7 +115,7 @@ const Announcements = () => {
         Axios.delete(`/api/post/${archiveData.id}`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${archiveData.f_name} Archived!`);
+                setShowToast(`${archiveData.username} Archived!`);
                 setArchiveData(false);
                 getAnnouncements(true);
             })
@@ -190,10 +190,10 @@ const Announcements = () => {
                                                 <i className={`fa fa-sort${!!sort && sort === 'posts.title' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
-                                        <th onClick={changeSort.bind(this, 'users.f_name')}>
+                                        <th onClick={changeSort.bind(this, 'users.username')}>
                                             <span>Author</span>
                                             <span className="float-right">
-                                                <i className={`fa fa-sort${!!sort && sort === 'users.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                                <i className={`fa fa-sort${!!sort && sort === 'users.username' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
                                         <th onClick={changeSort.bind(this, 'posts.from_date')}>
@@ -229,7 +229,7 @@ const Announcements = () => {
                                         return (
                                             <tr key={i}>
                                                 <td>{obj.title}</td>
-                                                <td>{obj.f_name}</td>
+                                                <td>{obj.username}</td>
                                                 <td>{`${moment(obj.from_date).format('D MMM YYYY')}${!!obj.to_date ? ' - ' + moment(obj.to_date).format('D MMM YYYY') : ''}`}</td>
                                                 <td>{`${!!obj.from_time ? moment(obj.from_time, "HH:mm:ss").format("hh:mm A") : ''}${!!obj.to_time ? ' - ' + moment(obj.to_time, "HH:mm:ss").format("hh:mm A") : ''}`}</td>
                                                 <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>

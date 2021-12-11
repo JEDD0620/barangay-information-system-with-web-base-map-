@@ -20,8 +20,10 @@ class ReportController extends Controller
 
         $reports = Report::where('status', 'pending')
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
+            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.id')
             ->leftJoin('users', 'reports.user_id', 'users.id')
             ->select(
+                'complainant.f_name as complainant_name',
                 'users.username as reporter_name',
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
@@ -51,14 +53,16 @@ class ReportController extends Controller
 
         $reports = Report::where('status', 'ongoing')
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
+            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.id')
             ->leftJoin('users as staff', 'reports.staff_id', 'staff.id')
             ->leftJoin('users as reporter', 'reports.user_id', 'reporter.id')
             ->select(
+                'complainant.f_name as complainant_name',
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
                 'residents.contact_no as resident_contact_no',
-                'staff.f_name as staff_name',
-                'reporter.f_name as reporter_name',
+                'staff.username as staff_name',
+                'reporter.username as reporter_name',
                 'reports.*'
             )
             ->orderBy($sort, $order);
@@ -84,17 +88,20 @@ class ReportController extends Controller
 
         $reports = Report::where(function ($q) {
             $q->where('status',  'closed')
-                ->orWhere('status', 'cancelled');
+                ->orWhere('status', 'cancelled')
+                ->orWhere('status', 'archived');
         })
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
+            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.id')
             ->leftJoin('users as staff', 'reports.staff_id', 'staff.id')
             ->leftJoin('users as reporter', 'reports.user_id', 'reporter.id')
             ->select(
+                'complainant.f_name as complainant_name',
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
                 'residents.contact_no as resident_contact_no',
-                'staff.f_name as staff_name',
-                'reporter.f_name as reporter_name',
+                'staff.username as staff_name',
+                'reporter.username as reporter_name',
                 'reports.*'
             )
             ->orderBy($sort, $order);

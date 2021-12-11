@@ -60,7 +60,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Birthday</Form.Label>
+                                <Form.Label>Birthdate</Form.Label>
                                 <Form.Control type="date" max={moment().subtract(18, 'years').format("yyyy-MM-DD")} name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
                             </Form.Group>
                         </Col>
@@ -85,7 +85,7 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Contact Number</Form.Label>
-                                <Form.Control type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                <Form.Control type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -175,7 +175,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Birthday</Form.Label>
+                                <Form.Label>Birthdate</Form.Label>
                                 <Form.Control defaultValue={data.b_date} max={moment().subtract(18, 'years').format("yyyy-MM-DD")} type="date" name='b_date' placeholder="20 Mar 1994" required onChange={handleChange} />
                             </Form.Group>
                         </Col>
@@ -200,7 +200,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Contact Number</Form.Label>
-                                <Form.Control defaultValue={data.contact_no} type="number" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
+                                <Form.Control defaultValue={data.contact_no} type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>

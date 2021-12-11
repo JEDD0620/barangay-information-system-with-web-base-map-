@@ -170,10 +170,10 @@ const Feedbacks = () => {
                                             <i className={`fa fa-sort${!!sort && sort === 'feedbacks.title' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th onClick={changeSort.bind(this, 'users.f_name')}>
+                                    <th onClick={changeSort.bind(this, 'users.username')}>
                                         <span>Author</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'users.f_name' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'users.username' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'comment_count')}>
@@ -198,7 +198,7 @@ const Feedbacks = () => {
                                     return (
                                         <tr key={i}>
                                             <td><a href={`/feedback/${tosef(obj.title)}.${obj.id}`}>{obj.title}</a></td>
-                                            <td>{obj.f_name}</td>
+                                            <td>{obj.username}</td>
                                             <td><span>{obj.comment_count}</span></td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>
                                             <td className='text-center'>

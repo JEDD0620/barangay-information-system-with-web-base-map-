@@ -83,7 +83,7 @@ export const Pendings = ({ toggle, setToggle }) => {
         Axios.put(`/api/report/${viewData.id}/investigate`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${viewData.resident_name} case is now ongoing investigation!`);
+                setShowToast(`Case is now ongoing investigation!`);
                 setViewData(false);
                 setToggle(!toggle)
                 getReports(true);
@@ -95,7 +95,7 @@ export const Pendings = ({ toggle, setToggle }) => {
         Axios.put(`/api/report/${cancelData.id}/cancel`)
             .then(res => {
                 setModalLoading(false);
-                setShowToast(`${cancelData.resident_name} case cancelled!`);
+                setShowToast(`Case cancelled!`);
                 setCancelData(false);
                 setToggle(!toggle)
                 getReports(true);
@@ -237,7 +237,7 @@ export const Pendings = ({ toggle, setToggle }) => {
                                 {!!reports && reports.data.map((obj, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{obj.anonymous ? 'Anonymous' : obj.reporter_name}</td>
+                                            <td>{obj.anonymous ? 'Anonymous' : !!obj.complainant_name ? obj.complainant_name : obj.reporter_name}</td>
                                             <td>{obj.resident_name}</td>
                                             <td>{obj.resident_address}</td>
                                             <td>{moment(obj.updated_at).calendar(null, { sameElse: 'D MMM YYYY' })}</td>

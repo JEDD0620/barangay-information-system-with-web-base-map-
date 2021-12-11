@@ -25,6 +25,7 @@ class RequestController extends Controller
             ->select(
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
+                'residents.gender as gender',
                 'residents.contact_no as resident_contact_no',
                 'residents.residency_date',
                 'residents.civil_status',
@@ -64,6 +65,7 @@ class RequestController extends Controller
             ->select(
                 'residents.f_name as resident_name',
                 'residents.address as resident_address',
+                'residents.gender as gender',
                 'residents.contact_no as resident_contact_no',
                 'users.username as user_name',
                 'requests.*'
@@ -112,7 +114,6 @@ class RequestController extends Controller
         //             'b_date',
         //             'contact_no',
         //             'f_name',
-        //             'gender',
         //             'job',
         //         ])
         //     );

@@ -13,16 +13,7 @@ class ResidentController extends Controller
     public function getResident($id)
     {
 
-        return Resident::select(
-            'id',
-            'f_name',
-            'b_date',
-            'gender',
-            'address',
-            'contact_no',
-            'job',
-        )
-            ->where('owner_id', $id)
+        return Resident::where('owner_id', $id)
             ->first();
     }
 

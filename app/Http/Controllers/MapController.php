@@ -43,8 +43,8 @@ class MapController extends Controller
     {
         $map = Map::query()
             ->get();
-        $events = Post::query()
-            ->where(['type' => 'Event'])
+
+        $events = Post::where(['type' => 'Event'])
             ->whereNotNull(['lat', 'lng'])
             ->where(function ($q) {
                 $q->whereDate('from_date', '>=', now()->format('Y-m-d'))

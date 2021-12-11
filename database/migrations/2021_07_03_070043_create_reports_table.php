@@ -23,6 +23,7 @@ class CreateReportsTable extends Migration
             $table->string('status')->default('Pending');
             $table->text('reason')->nullable();
             $table->boolean('anonymous')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

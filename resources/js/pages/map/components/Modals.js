@@ -2,6 +2,7 @@ import { Button, Modal, Form, Row, Col, Spinner } from 'react-bootstrap'
 import Select from 'react-select'
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
+import moment from 'moment-timezone'
 
 export const CreateModal = ({ data, location, setLocation, setData, handleAction }) => {
     const [loading, setLoading] = useState(false)
@@ -198,13 +199,13 @@ export const CreateModal = ({ data, location, setLocation, setData, handleAction
                                 <Col md={6}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Start Date</Form.Label>
-                                        <Form.Control type="date" name='from_date' placeholder="input date here ..." required onChange={handleChange} />
+                                        <Form.Control type="date" min={moment().format("yyyy-MM-DD")} name='from_date' placeholder="input date here ..." required onChange={handleChange} />
                                     </Form.Group>
                                 </Col>
                                 <Col md={6}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>End Date <small className='text-info'>optional</small></Form.Label>
-                                        <Form.Control type="date" name='to_date' placeholder="input date here ..." onChange={handleChange} />
+                                        <Form.Control type="date" min={moment().format("yyyy-MM-DD")} name='to_date' placeholder="input date here ..." onChange={handleChange} />
                                     </Form.Group>
                                 </Col>
                             </Row>

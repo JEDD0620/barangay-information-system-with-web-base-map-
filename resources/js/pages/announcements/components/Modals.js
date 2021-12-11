@@ -75,13 +75,13 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Start Date</Form.Label>
-                                <Form.Control type="date" name='from_date' placeholder="input date here ..." required onChange={handleChange} />
+                                <Form.Control type="date" min={moment().format("yyyy-MM-DD")} name='from_date' placeholder="input date here ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>End Date <small className='text-info'>optional</small></Form.Label>
-                                <Form.Control type="date" name='to_date' placeholder="input date here ..." onChange={handleChange} />
+                                <Form.Control type="date" min={moment().format("yyyy-MM-DD")} name='to_date' placeholder="input date here ..." onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -210,13 +210,13 @@ export const EditModal = ({ data, setData, handleAction }) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Start Date</Form.Label>
-                                <Form.Control defaultValue={data.from_date} type="date" name='from_date' placeholder="input date here ..." required onChange={handleChange} />
+                                <Form.Control defaultValue={data.from_date} min={moment().format("yyyy-MM-DD")} type="date" name='from_date' placeholder="input date here ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>End Date <small className='text-info'>optional</small></Form.Label>
-                                <Form.Control defaultValue={data.to_date} type="date" name='to_date' placeholder="input date here ..." onChange={handleChange} />
+                                <Form.Control defaultValue={data.to_date} min={moment().format("yyyy-MM-DD")} type="date" name='to_date' placeholder="input date here ..." onChange={handleChange} />
                             </Form.Group>
                         </Col>
                     </Row>
