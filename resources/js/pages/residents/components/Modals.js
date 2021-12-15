@@ -8,6 +8,8 @@ export const CreateModal = ({ data, setData, handleAction }) => {
     const [formData, setFormdata] = useState({
         role: 'Resident',
         gender: 'Male',
+        residency_date: moment().toLocaleString(),
+        civil_status: 'Single',
     })
 
     const onAction = (e) => {
@@ -90,6 +92,41 @@ export const CreateModal = ({ data, setData, handleAction }) => {
                         </Col>
                     </Row>
 
+                    <Row>
+                        <Col md={4}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Residency Date</Form.Label>
+                                <Form.Control value={formData?.residency_date} type="date" max={moment().format("yyyy-MM-DD")} name='residency_date' required onChange={handleChange} />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Civil Status</Form.Label>
+                                <select value={formData?.civil_status} className="custom-select d-block" name='civil_status' required onChange={handleChange}>
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Widowed">Widowed</option>
+                                    <option value="Separated">Separated</option>
+                                    <option value="Divorced">Divorced</option>
+                                </select>
+                            </Form.Group>
+                        </Col>
+
+                        <Col md={2}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Height</Form.Label>
+                                <Form.Control value={formData?.height} type="number" name='height' placeholder='in cm' required onChange={handleChange} />
+                            </Form.Group>
+                        </Col>
+                        <Col md={2}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Weight</Form.Label>
+                                <Form.Control value={formData?.weight} type="number" name='weight' placeholder='in kg' required onChange={handleChange} />
+                            </Form.Group>
+                        </Col>
+
+                    </Row>
+
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type='button' variant="secondary" onClick={handleClose}>
@@ -117,6 +154,7 @@ export const EditModal = ({ data, setData, handleAction }) => {
             role: data.role,
             civil_status: data.civil_status,
             residency_date: data.residency_date,
+            gender: data.gender,
             height: data.height,
             weight: data.weight,
             address: data.address,
@@ -203,6 +241,41 @@ export const EditModal = ({ data, setData, handleAction }) => {
                                 <Form.Control defaultValue={data.contact_no} type="tel" pattern="[0-9]{11}" title="e.g. 09123456789" name='contact_no' placeholder="input contact number ..." required onChange={handleChange} />
                             </Form.Group>
                         </Col>
+                    </Row>
+
+                    <Row>
+                        <Col md={4}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Residency Date</Form.Label>
+                                <Form.Control value={formData?.residency_date} type="date" max={moment().format("yyyy-MM-DD")} name='residency_date' required onChange={handleChange} />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Civil Status</Form.Label>
+                                <select value={formData?.civil_status} className="custom-select d-block" name='civil_status' required onChange={handleChange}>
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Widowed">Widowed</option>
+                                    <option value="Separated">Separated</option>
+                                    <option value="Divorced">Divorced</option>
+                                </select>
+                            </Form.Group>
+                        </Col>
+
+                        <Col md={2}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Height</Form.Label>
+                                <Form.Control value={formData?.height} type="number" name='height' placeholder='in cm' required onChange={handleChange} />
+                            </Form.Group>
+                        </Col>
+                        <Col md={2}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Weight</Form.Label>
+                                <Form.Control value={formData?.weight} type="number" name='weight' placeholder='in kg' required onChange={handleChange} />
+                            </Form.Group>
+                        </Col>
+
                     </Row>
 
                 </Modal.Body>

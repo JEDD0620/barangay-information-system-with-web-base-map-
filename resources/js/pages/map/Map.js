@@ -136,7 +136,7 @@ const Map = () => {
                 <Col md={10}>
                     <h2 className='d-inline-block'>Map</h2>
                     <h2 className='d-inline-block h3'>
-                        <Badge variant='danger p-2 ml-md-3 mr-md-2 mr-1 ml-0'>Structures</Badge>
+                        <Badge variant='danger p-2 ml-md-3 mr-md-2 mr-1 ml-0'>Infrastructures</Badge>
                         <Badge variant='warning p-2 ml-md-2 mr-md-2 mr-1 ml-1'>Events</Badge>
                     </h2>
                     <br />

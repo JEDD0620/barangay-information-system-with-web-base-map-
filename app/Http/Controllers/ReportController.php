@@ -20,7 +20,7 @@ class ReportController extends Controller
 
         $reports = Report::where('status', 'pending')
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
-            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.id')
+            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.owner_id')
             ->leftJoin('users', 'reports.user_id', 'users.id')
             ->select(
                 'complainant.f_name as complainant_name',
@@ -53,7 +53,7 @@ class ReportController extends Controller
 
         $reports = Report::where('status', 'ongoing')
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
-            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.id')
+            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.owner_id')
             ->leftJoin('users as staff', 'reports.staff_id', 'staff.id')
             ->leftJoin('users as reporter', 'reports.user_id', 'reporter.id')
             ->select(
@@ -92,7 +92,7 @@ class ReportController extends Controller
                 ->orWhere('status', 'archived');
         })
             ->leftJoin('residents', 'reports.resident_id', 'residents.id')
-            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.id')
+            ->leftJoin('residents as complainant', 'reports.user_id', 'complainant.owner_id')
             ->leftJoin('users as staff', 'reports.staff_id', 'staff.id')
             ->leftJoin('users as reporter', 'reports.user_id', 'reporter.id')
             ->select(

@@ -107,7 +107,7 @@ export const CreateModal = ({ data, location, setLocation, setData, handleAction
                             <Form.Group className="mb-3">
                                 <Form.Label>Type</Form.Label>
                                 <select className="custom-select d-block" name='type' required onChange={handleChange}>
-                                    <option value="Structures">Structures</option>
+                                    <option value="Structures">Infrastructures</option>
                                     <option value="Events">Events</option>
                                 </select>
                             </Form.Group>
