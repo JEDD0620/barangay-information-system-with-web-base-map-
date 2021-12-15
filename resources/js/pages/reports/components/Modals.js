@@ -401,6 +401,7 @@ export const ViewOngoingModal = ({ data, setData, handleAction }) => {
                 <p className='mt-3'>
                     {data.case}
                 </p>
+                <img src={data.photo} alt="" width='100%' height='auto' />
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
@@ -445,6 +446,7 @@ export const ViewClosedModal = ({ data, setData }) => {
                 <p className='mt-3'>
                     {data.case}
                 </p>
+                <img src={data.photo} alt="" width='100%' height='auto' />
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>

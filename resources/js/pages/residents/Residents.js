@@ -183,6 +183,12 @@ const Residents = () => {
                                             <i className={`fa fa-sort${!!sort && sort === 'b_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
+                                    <th onClick={changeSort.bind(this, 'gender')}>
+                                        <span>Gender</span>
+                                        <span className="float-right">
+                                            <i className={`fa fa-sort${!!sort && sort === 'gender' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                        </span>
+                                    </th>
                                     <th onClick={changeSort.bind(this, 'weight')}>
                                         <span>Weight</span>
                                         <span className="float-right">
@@ -201,10 +207,10 @@ const Residents = () => {
                                             <i className={`fa fa-sort${!!sort && sort === 'civil_status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
-                                    <th onClick={changeSort.bind(this, 'civil_status')}>
+                                    <th onClick={changeSort.bind(this, 'residency_date')}>
                                         <span>Residency</span>
                                         <span className="float-right">
-                                            <i className={`fa fa-sort${!!sort && sort === 'civil_status' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            <i className={`fa fa-sort${!!sort && sort === 'residency_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                         </span>
                                     </th>
                                     <th onClick={changeSort.bind(this, 'address')}>
@@ -243,6 +249,7 @@ const Residents = () => {
                                             <td>{obj.f_name}</td>
                                             <td>{obj.role}</td>
                                             <td>{moment(obj.b_date).format('D MMM YYYY')}</td>
+                                            <td>{obj.gender}</td>
                                             <td>{obj.weight}</td>
                                             <td>{obj.height}</td>
                                             <td>{obj.civil_status}</td>

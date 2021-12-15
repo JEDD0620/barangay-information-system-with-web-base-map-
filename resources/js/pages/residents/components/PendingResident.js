@@ -154,6 +154,12 @@ export const PendingResident = () => {
                                                 <i className={`fa fa-sort${!!sort && sort === 'b_date' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
                                             </span>
                                         </th>
+                                        <th onClick={changeSort.bind(this, 'gender')}>
+                                            <span>Gender</span>
+                                            <span className="float-right">
+                                                <i className={`fa fa-sort${!!sort && sort === 'gender' ? order === 'asc' ? '-up' : '-down' : ''} `}></i>
+                                            </span>
+                                        </th>
                                         <th onClick={changeSort.bind(this, 'weight')}>
                                             <span>Weight</span>
                                             <span className="float-right">
@@ -207,6 +213,7 @@ export const PendingResident = () => {
                                             <tr key={i}>
                                                 <td>{obj.f_name}</td>
                                                 <td>{moment(obj.b_date).format('D MMM YYYY')}</td>
+                                                <td>{obj.gender}</td>
                                                 <td>{obj.weight}</td>
                                                 <td>{obj.height}</td>
                                                 <td>{obj.civil_status}</td>

@@ -55,6 +55,12 @@ class MapController extends Controller
         return response()->json(['events' => $events, 'structures' => $map]);
     }
 
+    public function deleteEvent($id)
+    {
+        Post::find($id)->delete();
+        return true;
+    }
+
     public function deleteLoc($id)
     {
         Map::find($id)->delete();

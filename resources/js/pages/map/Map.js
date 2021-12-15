@@ -72,7 +72,7 @@ const Map = () => {
                                     url: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png"
                                 }}
                                 onClick={onMarkerClick}
-                                label={!!obj.f_name ? obj.f_name : obj.label}
+                                label={!!obj.f_name ? obj.f_name : obj.title}
                             />
                         )
                     })

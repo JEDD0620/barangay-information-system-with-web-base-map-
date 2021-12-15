@@ -13,7 +13,8 @@ export const Residency = ({ user, setToast }) => {
         b_date: '',
         address: '',
         contact_no: '',
-        // job: '',
+        gender: 'Male',
+        civil_status: 'Single',
         role: 'Request',
     });
 

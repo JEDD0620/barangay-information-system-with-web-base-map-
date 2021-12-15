@@ -259,13 +259,22 @@ export const RemoveModal = ({ data, location, setLocation, setData, handleAction
 
     const handleArchive = () => {
         setLoading(true)
-        Axios.delete(`/api/map/${removeData.id}`)
-            .then(res => {
-                handleAction(setLoading)
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        if (!!removeData?.title)
+            Axios.delete(`/api/map/event/${removeData.id}`)
+                .then(res => {
+                    handleAction(setLoading)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        else
+            Axios.delete(`/api/map/loc/${removeData.id}`)
+                .then(res => {
+                    handleAction(setLoading)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
     }
 
     const handleClose = () => {

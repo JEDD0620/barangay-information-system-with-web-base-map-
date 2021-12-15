@@ -129,10 +129,13 @@ class ReportController extends Controller
             unset($data['resident_id']);
         }
 
-        if ($data['anonymous'] == 'true')
+
+        if ($data['anonymous'] == "true") {
             $data['anonymous'] = true;
-        else
+        } else {
             $data['anonymous'] = false;
+            $data['user_id'] = Auth::id();
+        }
 
         Auth::user()->reports()->create($data);
         return true;

@@ -106,6 +106,7 @@ Route::middleware('verified')->group(function () {
     Route::prefix('map')->group(function () {
         Route::get('/', [MapController::class, "getLoc"]);
         Route::post('/', [MapController::class, "newLoc"])->middleware('staff');
-        Route::delete('/{id}', [MapController::class, "deleteLoc"])->middleware('staff');
+        Route::delete('/loc/{id}', [MapController::class, "deleteLoc"])->middleware('staff');
+        Route::delete('/event/{id}', [MapController::class, "deleteEvent"])->middleware('staff');
     });
 });
